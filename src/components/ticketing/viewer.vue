@@ -1,0 +1,1235 @@
+<template>
+   <div  v-if="mentionCheck" style="z-index:99" class="border border-solid border-black w-[350px] h-[300px] fixed bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
+   <div style="z-index:1"> <div class="p-2 hover:cursor-pointer" @click="mentionCheck = false" style="z-index:1"><font-awesome-icon icon="fa-solid fa-multiply"/></div>
+    <div class="w-full h-[200px] overflow-y-scroll relative p-5" style="z-index:1">
+      
+      <div class="w-full flex flex-row justify-between mt-2"  style="z-index:1" v-for="(mention, mentionCounter) in mentions">
+        <vss searchable="true" :options="computedUsers" v-model="mentions[mentionCounter]" style="z-index:0"/>
+       <div class="p-2  hover:cursor-pointer" @click="addMention(mentionCounter)">
+         <font-awesome-icon icon="fa-solid fa-plus"/>
+       </div>
+       <div class="p-2 hover:cursor-pointer" @click="removeMention(mentionCounter)" v-if="mentionCounter != 0">
+         <font-awesome-icon icon="fa-solid fa-minus"/>
+       </div>
+       
+    </div>
+    
+    </div>
+ </div>
+  <div>  
+    <div class="w-full  bg-gray-400 h-12" style="z-index: 2;"> 
+          <input style="z-index: 2;" type="text" name="" class="h-full w-full px-4 py-2 bg-gray-200" placeholder="Message (optional)" id="" v-model="mentionMessage">
+    </div>
+    <div class="flex flex-row w-full justify-between items-center bg-gray-300">
+  
+       
+       <div class="mr-10 hover:cursor-pointer p-2" @click="makeMentions"><font-awesome-icon icon="fa-regular fa-paper-plane" size="lg"/></div>
+    </div></div>
+ </div>
+
+
+<div v-if="commentFilesCheck" style="z-index:999999" class="border border-solid border-black w-[350px] h-[300px] fixed bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
+  <div> <div class="p-2 hover:cursor-pointer" @click="commentFilesCheck = false"><font-awesome-icon icon="fa-solid fa-multiply"/></div>
+   <div class="w-full h-[120px] overflow-y-scroll relative p-5" >
+     
+     <div class="w-full flex flex-row justify-between" v-for="(file, fileCounter) in commentFiles">
+      <div>{{ file.name }}</div>
+      <div class="p-2 hover:cursor-pointer" @click="removeCommentFiles(fileCounter)"><font-awesome-icon icon="fa-solid fa-minus"/>
+         
+      </div>
+   </div>
+   
+   </div>
+</div>
+ <div>  
+   <div class="w-full  bg-gray-400 h-12"> 
+         <input type="text" name="" class="h-full w-full px-4 py-2 bg-gray-200" placeholder="Caption (optional)" id="" v-model="caption">
+   </div>
+   <div class="flex flex-row w-full justify-between items-center bg-gray-300">
+    <label for="file" class="hover:cursor-pointer ml-4">  <div class="p-3"><font-awesome-icon icon="fa-solid fa-plus" size="lg"/>
+        
+      </div></label>
+      <input type="file" name="Attack File" id="file" placeholder="Attach File" class='hidden' multiple  @change="setCommentFiles($event)" />
+      <div class="mr-10 hover:cursor-pointer" @click="sendCommentFiles"><font-awesome-icon icon="fa-regular fa-paper-plane" size="lg"/></div>
+   </div></div>
+</div>
+ 
+<div class=" w-2/4 h-auto bg-white flex flex-col rounded-md p-5 pt-10 border border-solid border-black" style="left:350px; top:-200px; z-index:4000;  transition:0.5s smooth;  position:fixed" ref="modal" id="modal">
+   <div class="flex flex-col w-full h-full" >
+                   
+
+                
+                     <div class="flex flex-row w-full mt-4">
+                         <div class="w-1/6 font-bold text-center" >
+                                                Comment:
+                                            
+                                     </div>
+                                            <div class="w-5/6 ">
+                                                  <textarea  class="border-2 border-solid w-full border-slate-300 p-3" v-model="comments" ></textarea>
+                                            </div>
+                     </div>
+                   </div>
+         
+                   <div class="flex flex-row w-full h-full justify-end " >
+           <button  class="bg-blue-500  text-white font-bold mr-2  mt-10 p-2 border border-solid    rounded-sm" @click="closeTicketProceed">Proceed</button> 
+           <button  class="bg-slate-300  text-black  border border-solid b  font-bold mr-2  mt-10 p-2 rounded-sm" @click="closeTicket">Cancel</button>
+        </div>
+
+</div>
+
+<Chat :ticketId="ticket._id" :user="ticket.currentHandler.empName"  v-if="this.authStore.getUser.mailAddress == ticket.raisedBy.mailAddress && ticket.status != 'Closed Ticket'"/>
+   <div class="flex flex-row w-full h-[92vh]" ref="main" >
+
+
+
+
+
+      <!-- <button @click="submitMessage" class="bg-red-500">Send message</button> -->
+
+     <!-- <CommentModal ref="commentModal" @modal-Call="handleModalCall" @cancel="cancel" @file-Change="handleFileChange" @comment-Change="handleCommentChange" @info-Change="handleInfoChange" @call="handleCall" @approver-Change="handleApproverChange" @remove-File="handleRemoveFile"  /> -->
+
+     
+   
+     <div class="  w-2/6 h-[92vh]    p-2 border bg-gray-100 border-solid border-black ">
+
+           
+<div class="flex flex-row w-full justify-center font-bold bg-gray-200 p-2 border border-solid border-black border-b-0">Raiser Info</div>
+<div class="border border-solid border-black p-5 overflow-y-scroll h-[22vh] mb-2 border-t-0">   
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Raised By:
+  </div>
+
+  <div class="w-2/4 text-right">
+         {{ticket.raisedBy.empName}} 
+       
+  </div>
+</div>
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Raiser's Email:
+  </div>
+
+  <div class="w-2/4 text-right" >
+        <span v-if="ticket.email">{{ ticket.email }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Raiser's Phone:
+  </div>
+
+  <div class="w-2/4 text-right">
+     <span v-if="ticket.phone">{{ ticket.phone }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Raiser's Extension:
+  </div>
+
+  <div class="w-2/4 text-right">
+     <span v-if="ticket.extension">{{ ticket.extension }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Raiser's Location:
+  </div>
+
+  <div class="w-2/4 text-right">
+     <span v-if="ticket.location">{{ ticket.location }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+
+<div class="flex flex-row w-11/12 mt-3">
+  <div class="w-2/4">
+       Responder Comment:
+  </div>
+
+  <div class="w-2/4 text-lg  text-black text-right">
+       <template v-if="ticket.remarks">{{ ticket.remarks }}</template>
+       <template v-else>Not Available</template>
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-3 ">
+  <div class="w-2/4">
+       Relevant Files:
+  </div>
+
+  <div class="w-2/4 text-lg font-bold text-black text-right">
+     <div class="flex flex-col ">
+
+        <div v-for="(file, fileCounter) in ticket.actions[0].files" :key="fileCounter"><a :href="globalUrl + 'uploads/' + file.fileName" target="__blank" class="underline" >{{file.originalName}}</a></div>
+     </div>
+       
+  </div>
+</div>
+</div>
+<div class="flex flex-row w-full justify-center font-bold bg-gray-200 p-2 mt-5 border-b-0 border border-solid border-black" >Ticket Info</div>
+<div class="border border-t-0 border-solid border-black p-5 overflow-y-scroll h-[22vh]">          
+
+<div class="flex flex-row w-11/12 mt-2" v-if="ticket.raisedFor">
+  <div class="w-2/4">
+       Raised On Behalf Of:
+  </div>
+
+  <div class="w-2/4 text-right" v-if="ticket.raisedFor && ticket.raisedFor.mailAddress != null">
+         {{ticket.raisedFor.empName}} 
+        <i>{{ ticket.raisedFor.Designation}}, {{ticket.raisedFor.unit }}</i> <br/>
+        <i>Extension:<template v-if="ticket.raisedFor.extension">{{ ticket.raisedFor.extension}},</template><template v-else>N/A,</template> 
+           Phone:<template v-if="ticket.raisedFor.phone">{{ ticket.raisedFor.phone}},</template><template v-else>N/A,</template>
+           Email:<template v-if="ticket.raisedFor.mailAddress">{{ ticket.raisedFor.mailAddress}}</template><template v-else>N/A,</template>
+       </i>
+  </div>
+
+  <div class="w-2/4 text-right" v-else>
+        Not Available
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Request Date:
+  </div>
+
+  <div class="w-2/4 text-right">
+       {{ ticket.actions[0].time }}
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-2 h-auto">
+  <div class="w-2/4 text-lg font-bold text-white p-3 bg-red-500">
+       Problem in Details:
+  </div>
+
+  <div class="w-2/4 text-right text-lg font-bold text-white bg-red-500 p-3 " style="word-wrap: break-word; max-width:50%" >
+       {{ ticket.problemDetails }}
+  </div>
+</div>
+
+
+<template v-if="ticket.details && ticket.details.length > 0">     
+
+<div class="flex flex-row w-11/12 mt-2" v-for="(detail, detailCounter) in ticket.details">
+  <div class="w-2/4">
+       {{detail.label}}
+  </div>
+
+  <div class="w-2/4 text-right">
+       {{ detail.input }}
+  </div>
+</div>
+</template>
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Approval Required:
+  </div>
+
+  <div class="w-2/4 text-right">
+
+     <template v-if="ticket.approvalRequired == 'yes'">
+        Yes
+ </template> 
+ <template v-else>
+  No
+ </template>  
+
+  
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Priority:
+  </div>
+
+  <div class="w-2/4 text-right">
+       {{ priority }}
+  </div>
+</div>
+
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Department:
+  </div>
+
+  <div class="w-2/4 text-right">
+       {{ ticket.department }}
+  </div>
+</div>
+
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Location:
+  </div>
+
+  <div class="w-2/4 text-right">
+       {{ ticket.raisedBy.unit }}
+  </div>
+</div>
+
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Assigned To:
+  </div>
+
+  <div class="w-2/4 text-right">
+  <template v-if="ticket.assignedTo">
+         {{ ticket.assignedTo.mailAddress }}
+  </template> 
+  <template v-else>
+     Not Assigned Yet
+  </template>   
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Department Head:
+  </div>
+
+  <div class="w-2/4 text-right" style="word-wrap: break-word; max-width:50%" >
+
+         {{ ticket.ticketingHead.mailAddress }}
+
+  
+  </div>
+</div>
+
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Higher Approver:
+  </div>
+
+  <div class="w-2/4 text-right">
+
+     <template v-if="ticket.higherApprover">
+        {{ ticket.higherApprover.mailAddress }}
+ </template> 
+ <template v-else>
+    Not Available
+ </template>  
+
+  
+  </div>
+</div>
+
+
+
+
+<div class="flex flex-row w-11/12 mt-3" v-if="ticket.supervisor" >
+  <div class="w-2/4">
+       Supervisor:
+  </div>
+
+  <div class="w-2/4 text-right">
+         {{ticket.supervisor.empName}} 
+        <i>{{ ticket.supervisor.Designation}}, {{ticket.supervisor.unit }}</i> <br/>
+        <i>Extension:<template v-if="ticket.supervisor.extension">{{ ticket.supervisor.extension}},</template><template v-else>N/A,</template> 
+           Phone:<template v-if="ticket.supervisor.phone">{{ ticket.raisedBy.phone}},</template><template v-else>N/A,</template>
+           Email:<template v-if="ticket.supervisor.mailAddress">{{ ticket.supervisor.mailAddress}}</template><template v-else>N/A,</template>
+       </i>
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-3">
+  <div class="w-2/4 font-bold">
+       Current Status:
+  </div>
+
+  <div class="w-2/4 text-lg font-bold text-black text-right">
+       {{ ticket.status }}
+  </div>
+</div>
+
+<div class="flex flex-row w-11/12 mt-3">
+  <div class="w-2/4">
+       Responder Comment:
+  </div>
+
+  <div class="w-2/4 text-lg  text-black text-right">
+       <template v-if="ticket.remarks">{{ ticket.remarks }}</template>
+       <template v-else>Not Available</template>
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-3 ">
+  <div class="w-2/4">
+       Relevant Files:
+  </div>
+
+  <div class="w-2/4 text-lg font-bold text-black text-right">
+     <div class="flex flex-col ">
+
+        <div v-for="(file, fileCounter) in ticket.actions[0].files" :key="fileCounter"><a :href="globalUrl + 'uploads/' + file.fileName" target="__blank" class="underline" >{{file.originalName}}</a></div>
+     </div>
+       
+  </div>
+</div>
+</div>
+<div class="flex flex-row w-full justify-center font-bold bg-gray-200 p-2 mt-5 border-b-0 border border-solid border-black" >Current Handler Info</div>  
+<div class="border border-t-0 border-solid border-black p-5 overflow-y-scroll h-[22vh]">
+<div class="flex flex-row w-11/12 mt-3">
+  <div class="w-2/4 font-bold">
+       Current Handler:
+  </div>
+
+  <div class="w-2/4 text-lg  text-black text-right">
+     {{ticket.currentHandler.empName}} 
+       
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Current Handler's Email:
+  </div>
+
+  <div class="w-2/4 text-right">
+        <span v-if="ticket.currentHandler.mailAddress">{{ ticket.currentHandler.mailAddress }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Current Handler's Phone:
+  </div>
+
+  <div class="w-2/4 text-right">
+     <span v-if="ticket.currentHandler.phone">{{ ticket.currentHandler.phone }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Current Handler's Extension:
+  </div>
+
+  <div class="w-2/4 text-right">
+     <span v-if="ticket.currentHandler.extension">{{ ticket.currentHandler.extension }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+
+<div class="flex flex-row w-11/12 mt-2">
+  <div class="w-2/4">
+       Current Handler's Location:
+  </div>
+
+  <div class="w-2/4 text-right">
+     <span v-if="ticket.currentHandler.location">{{ ticket.currentHandler.location }}</span><span v-else>Not Available</span>
+  </div>
+</div>
+</div>
+
+
+
+
+
+</div>
+   
+       <div class="w-2/6  h-[90vh] overflow-y-scroll  pr-2 text-center bg-blue">
+     
+     <!-- <ActionStatus :ticket="ticket"  /> -->
+
+    
+
+<div v-if="showConversationCheck == true" class="mt-2 mr-4">
+   <div class="text-2xl font-bold underline">Conversation:</div>
+   <div class="flex flex-col h-[400px] w-auto bg-red" >
+
+<div class="flex flex-col  h-full w-full p-3  " id="messageArea" ref="messageArea">
+   <div class="flex flex-row w-full "  v-for="(message, messageCounter) in messages"  :key="messageCounter">
+
+    <div class="flex flex-col  justify-end items-end  w-full mb-2"  v-if="message && message.from.mailAddress == userForCheck.mailAddress">
+        
+    <template v-if="message.type == 'text'">  <div class="text-xs flex flex-row justify-end">{{message.time}} </div>
+        <div class="bg-blue-500 p-3 rounded-md text-white text-xs" style="word-wrap: break-word; max-width:50%"  > {{message.message}} </div>
+        <div class="text-xs flex flex-row justify-end">{{message.from.empName}} </div>
+    </template>
+    <template v-else-if="message.type == 'files'">  
+      <div class="text-xs flex flex-row justify-end mb-2">{{message.time}} </div>
+      <div class="bg-blue-500 p-3  text-white " style="word-wrap: break-word; max-width:50%"  v-for="(file, fileCounter) in message.files" :key="fileCounter" >
+        <a :href="this.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
+        </div>
+      <div class="text-xs flex flex-row justify-end">{{message.from.empName}} </div>
+  </template>
+
+      
+    </div>
+
+    <div class="flex flex-col w-full h-auto justify-start items-start " v-else>
+      
+      <template v-if="message.type == 'text'">  <div class="text-xs flex flex-row justify-end">{{message.time}} </div>
+        <div class="bg-gray-200 p-3 rounded-md text-black w-[200px]" style="word-wrap: break-word;" >{{ message.message }}  </div>
+        <div class="text-xs flex flex-row justify-end">{{message.from.empName}} </div>
+    </template>
+    <template v-else-if="message.type == 'files'" >  
+      
+      <div class="text-xs flex flex-row justify-end ">{{message.time}} </div>
+      
+      <div class="bg-gray-200 p-3  text-black w-[200px]" style="word-wrap: break-word;"  v-for="(file, fileCounter) in message.files" :key="fileCounter" >
+        <a :href="this.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
+        </div>
+      <div class="text-xs flex flex-row justify-end">{{message.from.empName}} </div>
+  </template>
+   </div>
+  
+  
+  </div>
+
+
+  </div>
+
+
+
+
+
+
+</div>
+</div>
+
+<div class="flex flex-row  w-full justify-end h-auto ">     
+   
+   
+    <button class="bg-amber-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showDetails">Show Details</button>
+    <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        
+         
+   </div>
+   
+   
+
+   </div>
+
+
+   <div class="flex flex-row w-2/6 justify-start " style="z-index:1">
+             <div class="border border-solid flex flex-col w-full p-4  " style="z-index: 99;"  >
+                    
+               <div class="font-bold flex flex-row text-4xl pb-2">
+                  <div class="mr-4">
+                           <font-awesome-icon icon="fa-regular fa-pen-to-square" size="2x"/>
+                         </div>Comments</div>
+                     <div class="border border-solid border-gray-400 flex flex-col overflow-y-scroll h-[60vh]" ref="commentBox">
+                     <div class="flex flex-col mb-2 mt-2 mx-2 bg-gray-200 p-4" v-for="(note, notesCounter) in notes">
+                      <div class="flex flex-row justify-start  items-end h-full ">
+                       <div class="font-bold  text-lg">{{note.takenBy}}</div>  
+                     
+                     </div>
+                      <div class="flex flex-row justify-between items-center " v-if="note.type == 'text' ">{{note.data}}
+                        <div class="text-[10px] ml-3 mr-1 font-extralight">{{ note.date }}</div>
+                     </div>
+                     <div class="flex flex-col justify-between items-center " v-else-if="note.type == 'file' ">
+                    <div class="flex flex-col w-full">
+                     <div class="flex flex-row w-full items-center justify-start pb-3">{{note.caption}}</div>    
+                     <div v-for="(file, fileCounter) in note.files" :key="fileCounter" class="flex flex-row w-full">
+                           <a :href="this.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline hover:cursor-pointer">{{file.originalName}}</a>
+                           
+                     </div>
+                  </div>
+                        <div class="text-[10px] ml-3 mr-1 font-extralight flex flex-row w-full justify-end">{{ note.date }}</div>
+                     </div>
+
+                     <div class="flex flex-col justify-between items-center " v-else-if="note.type == 'mention' ">
+                        <div class="flex flex-col w-full">
+                         <div class="flex flex-row w-full items-center justify-start pb-3">{{note.caption}}</div>    
+                         <div v-for="(mention, mentionCounter) in note.mentions" :key="mentionCounter" class="mt-2 flex flex-row w-full text-blue-500 underline">
+                             @{{mention.empName}}
+                               
+                         </div>
+                      </div>
+                            <div class="text-[10px] ml-3 mr-1 font-extralight flex flex-row w-full justify-end">{{ note.date }}</div>
+                         </div>
+                     </div>
+                     </div>
+                     
+                     <div class="flex flex-row w-full justify-center  items-center border border-solid border-gray-200">
+                       
+                         <div  class="flex flex-col  justify-center items-center pt-2">
+                            <textarea name="" id="" cols="52" rows="2" v-model="note" placeholder="Comment here" class="p-3 border border-solid border-gray-400" @input="handleInput"> 
+                             
+                            </textarea>
+                            <ul v-if="showSuggestions" class="mention-suggestions">
+                              <li v-for="suggestion in suggestions"  @click="selectSuggestion(suggestion)">
+                                {{ suggestion.empName }}
+                              </li>
+                              </ul>
+                         <div class="flex flex-row justify-around w-full items-center">   <div class="mt-4 bg-emerald-500 text-white font-bold text-lg p-3 rounded-sm  hover:cursor-pointer  mb-2" @click="addNote">Submit</div>
+                         <div for="file" class='hover:cursor-pointer bg-emerald-500 h-auto text-white font-bold p-3 text-lg mt-4 mb-2' @click="openMention()">Mention</div>
+                         <div for="file" class='hover:cursor-pointer bg-emerald-500 h-auto text-white font-bold p-3 text-lg mt-4 mb-2' @click="openCommentFiles()">Attach File</div>
+                      </div>
+                         </div>   
+                         
+                     </div>
+         
+                  </div>
+     </div>
+ 
+       
+
+
+     
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+     
+   
+   </div>
+
+
+   
+   
+   
+   <div class="flex flex-col bg-white text-black  w-[900px] h-[500px] pt-10  mt-10 px-10 fixed overflow-y-scroll border-2 border-black border-solid" style="top:50px; z-index:12312321123; left:250px; display:none; transition: 0.50s;" ref="details">
+      <div class="flex flex-row text-4xl font-extrabold">Details</div> 
+      <template v-for="(action, actionCounter) in reversedActions" :key="actionCounter">
+    
+         <div class="flex flex-col bg-white mt-10">
+                  
+                  <span class="ml-10 ">{{ action.time }}</span>  
+                  <hr class="border border-solid border-black w-3/4"/>  
+
+                  <div class="flex flex-row pl-10 ">
+                     <div class="w-1/4 flex flex-row justify-between">
+                         <div >Action Serial Number</div>
+                         <div>:</div>
+
+                     </div>
+                     <div class="w-3/4 ml-4">{{ action.serial }}</div>
+                  </div>
+
+
+                  <div class="flex flex-row pl-10 mt-1">
+                     <div class="w-1/4 flex flex-row justify-between">
+                         <div >Action Type</div>
+                         <div>:</div>
+
+                     </div>
+                     <div class="w-3/4 ml-4">
+                     
+                        {{ getActionType(action) }}
+                     
+                     </div>
+                  </div>
+
+             
+
+                    
+              <template v-if="action.type == 0">
+                 <Actions v-if="ticket.approvalRequired == 'yes'" :action="'Raised By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
+                 <Actions v-else :action="'Raised By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
+              </template>
+
+
+              <template v-else-if="action.type == 1">
+                 <Actions  :action="'Approved By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
+                
+              </template>
+
+              <template v-else-if="action.type == 3">
+                 <Actions  :action="'Approved By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
+                
+              </template>
+
+
+              <template v-else-if="action.type == 2">
+                 <Actions  :action="'Request By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
+                
+              </template>
+
+              <template v-else-if="action.type == 5">
+
+                 <Actions  :action="'Assigned By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
+              </template>
+
+
+              <template v-else-if="action.type == 10">
+
+                 <Actions  :action="'Requested By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
+              </template>
+
+
+              <template v-else-if="action.type == 11">
+
+                 <Actions  :action="'Response By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwared To'" :comment="action.comments" />
+              </template>
+
+
+              <template v-else-if="action.type == 12">
+
+             <Actions  :action="'Response By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwared To'" :comment="action.comments" />
+            </template>
+
+
+            
+
+            <template v-else-if="action.type == 6">
+
+<Actions  :action="'Asked By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Asked From'" :comment="action.comments" />
+</template>
+
+<template v-else-if="action.type == 7">
+
+<Actions  :action="'Given By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Give To'" :comment="action.comments" />
+</template>
+
+<template v-else-if="action.type == 8">
+
+<Actions  :action="'Rejected By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Ticket From'" :comment="action.comments" />
+</template>
+
+<template v-else-if="action.type == 4">
+
+<Actions  :action="'Assigned By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Assigned To'" :comment="action.comments" />
+</template>
+
+
+<template v-else-if="action.type == 9">
+
+<Actions  :action="'Assigned By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Assigned To'" :comment="action.comments" />
+</template>
+       
+           
+
+
+                 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
+
+
+                  
+           </div>
+
+
+
+      </template>
+
+      <div class="flex flex-row items-center justify-end mb-2 sticky bottom-2">
+         <div class="p-3 text-white font-bold bg-blue-500 rounded-sm hover:cursor-pointer" @click="showDetails" >Close</div>
+       </div>  
+      
+         
+   </div>
+   
+   
+   </template>
+   
+   
+   
+   <script>
+   import axios from 'axios'
+   import Actions from './actions.vue'
+   import Buttons from './buttons.vue'
+   import CommentModal from './commentModal.vue'
+   import mixin from './handlerMixin.js'
+   import ActionStatus from './actionStatus.vue'
+   import { io } from 'socket.io-client'; 
+   import Chat from '../../components/chat.vue' 
+   import StarRating from 'vue-star-rating'
+  
+   export default{
+      data(instance){
+       return {
+           showDetailsCheck:false,
+           comment:'',
+           commentCall:false,
+           users:[],
+           componentTicket:null,
+           files:[],
+           additionalInfo:'',
+           approver:null,
+        
+           socket:null,
+           showConversationCheck:false,
+           messages:[],
+           userForCheck:null,
+           closeCheck:false,
+           comments:"",
+           rating:0,
+           note:"",
+           notes:[],
+
+           commentFiles:[],
+           caption:'',
+           commentFilesCheck:false,
+           mentionCheck:false,
+           mentions:['',],
+           mentionMessage:''
+    
+       
+        
+       }
+      },
+
+      mixins:[mixin],
+
+      mounted(){
+        this.componentTicket = this.ticket
+      },
+
+      created(){
+          this.getApprovers();
+          this.getNotes();
+   
+          this.userForCheck = this.authStore.getUser
+      },
+   
+      props:['ticket', 'currentHandlerType'],
+      components:{Actions, Buttons, CommentModal, ActionStatus, Chat, StarRating},
+
+      computed:{
+            user(){
+               var user = this.authStore.getUser
+               return user
+            },
+            reversedActions(){
+               return this.ticket.actions.slice().reverse()
+            },
+
+            computedUsers(){
+            var newUsers = this.users.map((user)=>{
+                return `${user.empName} --- ${user.mailAddress} (${user.designation})`
+            })
+
+            return newUsers
+        }
+      },
+
+      methods:{
+         addMention(){
+         var newMention = '';
+         this.mentions.push(newMention)
+    },
+
+    removeMention(counter){
+      this.mentions.splice(counter, 1)
+
+    },
+
+    makeMentions(){
+      var vm = this;
+      var ticket = this.ticket;
+      var user = this.authStore.getUser;
+      var mentions = this.mentions;
+      var newMentions = mentions.map((mention)=>{
+         var splitted = mention.split("---")[1].split("(")[0].trim()
+         var user = vm.users.find((user)=>{
+            return user.mailAddress == splitted
+         })
+
+         return user;
+      })
+
+      console.log("New Mentions")
+      console.log(newMentions)
+
+      var data = new FormData();
+      data.append("user", JSON.stringify(user));
+      data.append("mentions", JSON.stringify(newMentions));
+
+      data.append("date", new Date().toDateString());
+      data.append("ticket", JSON.stringify(ticket));
+      data.append("message", vm.mentionMessage)
+
+      axios.post(vm.globalUrl + "makeMentions", data).then((result)=>{
+                    
+         console.log("this is the result")
+            vm.notes = [...vm.notes, result.data]
+            vm.$nextTick(() => {
+
+
+this.$refs.commentBox.scrollTo({
+  top: this.$refs.commentBox.scrollHeight,
+  behavior: 'smooth'
+});
+});
+
+
+      }).catch((error)=>vm.$toast.warning(error))
+
+
+
+
+    
+
+    },
+
+    openMention(){
+         this.mentionCheck = !this.mentionCheck
+    },
+
+         setRating(rating){
+            this.rating = rating
+         },
+
+         submitMessage() {
+    const CHAT_ROOM = this.ticket._id;
+    const message = "this is the message from the viewer";
+    SocketioService.sendMessage({message, roomName: CHAT_ROOM}, cb => {
+      console.log(cb);
+    })
+  },
+
+  showConversation(){
+          var vm = this;
+          var id = this.ticket._id;
+          var data = new FormData();
+          data.append("id", id)
+
+          
+    if(this.showConversationCheck == false){
+
+      axios.post(vm.globalUrl + "getChat", data).then((result)=>{
+        vm.messages = result.data.conversation
+        vm.showConversationCheck = true;
+      
+
+
+      }).catch((error)=>vm.$toast.warning(error))
+      
+
+
+    }else{
+      vm.showConversationCheck = false
+
+    }
+       
+    },
+
+      showDetails(){
+       this.showDetailsCheck = !this.showDetailsCheck
+    },
+
+    sendMessage(){
+         this.socket.emit("message", "this is the message from the client")
+    },
+
+    modalToggle(value){
+     if (this.$refs.commentModal) {
+        this.$refs.commentModal.commentBox(value);
+      }
+    },
+
+    handleCall(value){
+          this.modalToggle(value)
+    },
+
+    cancel(){
+      this.modalToggle('cancel')
+    },
+
+
+    setFile(event){
+            for(var x of event.target.files){
+                this.files.push(x)
+            }
+        },
+
+   removeFile(counter){
+            this.files.splice(counter, 1)
+         },
+
+
+   handleRemoveFile(counter){
+        this.removeFile(counter)
+   },
+
+   openCommentFiles(){
+       this.commentFilesCheck = !this.commentFilesCheck
+    },
+
+    setCommentFiles(event){
+      var vm = this;
+       for(var x of event.target.files){
+           vm.commentFiles.push(x)
+       }
+    },
+
+    removeCommentFiles(counter){
+      var vm = this;
+      vm.commentFiles.splice(counter, 1)
+    },
+
+
+    sendCommentFiles(){
+         var vm = this;
+         var ticket = this.ticket;
+       
+         var token = this.authStore.getToken;
+         var userName = this.authStore.getUser.empName;
+         var date = new Date().toDateString()
+         var data = new FormData();
+         for(var x of vm.commentFiles){
+                data.append('file', x)
+            }
+         data.append("token", token);
+         data.append("caption", vm.caption)
+  
+         data.append("id", ticket._id);
+         data.append("userName", userName)
+         data.append("date", date)
+         axios.post(vm.globalUrl + "uploadCommentFiles", data).then((result)=>{
+            console.log("this is the result")
+            vm.notes = [...vm.notes, result.data]
+            vm.$nextTick(() => {
+
+
+this.$refs.commentBox.scrollTo({
+  top: this.$refs.commentBox.scrollHeight,
+  behavior: 'smooth'
+});
+});
+         }).catch((error)=>{
+            vm.$toast.warning(error)
+         })
+        },
+
+
+
+   handleModalCall(value){
+      console.log("entered Handle Modal Call")
+      if(value == 'Supervisor Approved'){
+         this.supervisorApprove(this.comment, this.ticket)
+      }else if(value == 'Higher Authority Approved'){
+         this.higherApprove(this.comment, this.ticket)
+      }else if(value == "Request For Higher Approval"){
+         
+         this.seekHigherApproval(this.comment, this.approver, this.ticket)
+      }else if(value == 'Ticket Assigned'){
+           this.assignTicket(this.comment, this.approver, this.ticket)
+    }else if(value == 'Close Request'){
+      this.closeRequest(this.comment, this.ticket)
+    }else if(value == 'Close Request Accepted'){
+      this.closeTicket(this.comment, this.ticket)
+    }else if(value == 'Close Request Rejected'){
+      this.closeRequestReject(this.comment, this.ticket)
+    }else if(value == 'Asking For Information'){
+      this.ask(this.comment, this.ticket)
+    }else if(value == 'Giving Information'){
+      this.giveInfo(this.comment, this.files, this.ticket, this.additionalInfo)
+    }
+
+   
+      },
+
+      handleFileChange(value){
+         for(var x of value){
+                this.files.push(x)
+            }
+      },
+
+      handleCommentChange(value){
+         this.comment = value
+      },
+
+      handleInfoChange(value){
+         this.additionalInfo = value
+      },
+
+      handleApproverChange(value){
+            this.approver = value
+      },
+
+      getActionType(action){
+         if(action.type == 0){
+            return "New Ticket Raised"
+         }else if(action.type == 1){
+            return "Approval From Supervisor"
+         }else if(action.type == 3){
+            return "Seeking Higher Approval"
+         }else if(action.type == 4){
+            return "Assigned Ticket"
+         }else if(action.type == 5){
+            return "Assigned Ticket"
+         }else if(action.type == 6){
+            return "Asking For More Information"
+         }else if(action.type == 7){
+            return "Giving More Information"
+         }else if(action.type == 8){
+            return "Reject Ticket"
+         }else if(action.type == 9){
+            return "Reassign Ticket"
+         }else if(action.type == 10){
+            return "Ticket Close Request"
+         }else if(action.type == 11){
+            return "Ticket Close Request Accept"
+         }else if(action.type == 12){
+            console.log("rejecting request")
+            return "Ticket Close Request Reject"
+         }
+      },
+
+
+      closeTicket(){
+            if(this.closeCheck == false){
+               this.$refs.modal.style.top = '100px'
+               this.closeCheck = true
+            }else{
+               this.$refs.modal.style.top = '-200px'
+               this.closeCheck = false
+            }
+      },
+
+
+      closeTicketProceed(){
+         var vm = this;
+            this.$toast.info("Closing Ticket...")
+            var user = this.authStore.getUser
+            var token = this.authStore.getToken
+            var comment = this.comments
+            var ticket = this.ticket
+            var rating = this.rating
+            
+          
+
+            var data = new FormData()
+
+            data.append('user', JSON.stringify(user))
+            data.append('token', token)
+            data.append('comment', comment)
+            data.append('ticket', JSON.stringify(ticket))
+            data.append("rating", rating)
+
+            axios.post(vm.globalUrl + 'closeTicket', data).then((result)=>{
+                if(result.data == true){
+                    vm.$toast.clear()
+                    vm.$toast.success('Ticket Closed')
+                    this.$router.push('/ticketing/searchTicket')
+                }else{
+                    vm.$toast.clear()
+                    vm.$toast.warning(result.data)
+                }
+            }).catch((error)=>{
+                vm.$toast.clear()
+                vm.$toast.warning(error)
+            })
+
+      },
+
+      showDetails(){
+      if(this.showDetailsCheck == false){
+          this.$refs.details.style.display = "block"
+          this.$refs.main.style.filter = "blur(5px)"
+          this.showDetailsCheck = true        
+      }else{
+         this.$refs.details.style.display = "none"
+         this.$refs.main.style.filter = "blur(0px)"
+         this.showDetailsCheck = false
+      }
+    },
+
+    
+    getNotes(){
+         var vm = this;
+         var token = this.authStore.getToken;
+      
+         var ticketId = this.ticket._id;
+
+         var data = new FormData();
+         data.append("token", token);
+         data.append("id", ticketId);
+      
+
+         axios.post(vm.globalUrl + "getNotes", data).then((result)=>{
+              vm.notes = result.data
+         }).catch((error)=>vm.$toast.warning(error))
+      },
+
+      
+      addNote(){
+         var vm = this;
+         var ticket = this.ticket;
+         var note = this.note;
+         var token = this.authStore.getToken;
+         var userName = this.authStore.getUser.empName;
+         var date = new Date().toDateString()
+         var data = new FormData();
+         data.append("date", date)
+         data.append("token", token);
+         data.append("note", note);
+         data.append("id", ticket._id);
+         data.append("userName", userName)
+         axios.post(vm.globalUrl + "insertNote", data).then((result)=>{
+            console.log("this is the result")
+            vm.notes = [...vm.notes, result.data]
+
+            vm.$nextTick(() => {
+
+
+this.$refs.commentBox.scrollTo({
+  top: this.$refs.commentBox.scrollHeight,
+  behavior: 'smooth'
+});
+});
+         }).catch((error)=>{
+            vm.$toast.warning(error)
+         })
+            },
+
+
+   
+   
+   }
+}
+   
+   
+   
+   </script>

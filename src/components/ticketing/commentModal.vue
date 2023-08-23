@@ -1,0 +1,396 @@
+<template>
+    
+
+    <div class=" w-2/4 h-auto bg-white flex flex-col rounded-md p-5 pt-10 border border-solid border-black" style="left:350px; top:-200px; z-index:4000;  transition:0.5s smooth;  position:fixed" ref="modal" id="modal">
+        
+        <div class="flex flex-row w-full h-full" v-if="value=='Supervisor Approved'  || value=='Close Request Rejected' || value == 'reject' ">
+                   <div class="w-1/6 font-bold text-center" >
+                       Comment:
+                   </div>
+                   <div class="w-5/6 ">
+                         <textarea  class="border-2 border-solid w-full border-slate-300 p-3" @change="handleCommentChange"></textarea>
+                   </div>
+          </div>
+
+
+          <div class="flex flex-col w-full h-full" v-else-if="value=='Asking For Information'">
+                
+            <div class="flex flex-row w-full h-full mb-2">
+              
+                     <div class="w-1/6 font-bold text-center" >
+                                        Seek Information From:
+                                   </div>
+                                   <div class="w-5/6 h-full border-2 border-solid border-slate-300">
+                                        <vss searchable="true" :options="computedUsers" @change="handleApproverChange"/>
+                                   </div>
+            </div>
+            <div class="flex flex-row w-full h-full">
+                     <div class="w-1/6 font-bold text-center" >
+                                           Comment: 
+                                       </div>
+                                       <div class="w-5/6">
+                                             <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
+                                       </div>
+                </div>
+        </div>
+
+        
+        <div class="flex flex-col w-full h-full" v-else-if="value=='Asking For Approval'">
+                
+            <div class="flex flex-row w-full h-full mb-2">
+              
+                     <div class="w-1/6 font-bold text-center" >
+                                        Seek Approval From:
+                                   </div>
+                                   <div class="w-5/6 border-2 border-solid border-slate-300">
+                                        <vss searchable="true" :options="computedUsers" @change="handleApproverChange"/>
+                                   </div>
+            </div>
+            <div class="flex flex-row w-full h-full">
+                     <div class="w-1/6 font-bold text-center" >
+                                           Comment: 
+                                       </div>
+                                       <div class="w-5/6">
+                                             <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
+                                       </div>
+                </div>
+        </div>
+
+          <div class="flex flex-col w-full h-full" v-else-if="value=='Close Request Accepted'">
+                   
+
+          <div class="flex flex-col justify-center items-center w-full mb-5">
+                <div class="w-full font-bold text-center" >
+                                     Please Rate Your Handler:
+                                 
+                          </div>
+                                 <div class="w-full flex flex-row justify-center items-center">
+                                       <StarRating @update:rating ="setRating" :max-rating="10" :show-rating="true" :active-on-click="true" :star-size="30"/>
+                                 </div>
+          </div>
+            <div class="flex flex-row w-full mt-4">
+                <div class="w-1/6 font-bold text-center" >
+                                       Comment:
+                                   
+                            </div>
+                                   <div class="w-5/6 ">
+                                         <textarea  class="border-2 border-solid w-full border-slate-300 p-3" @change="handleCommentChange"></textarea>
+                                   </div>
+            </div>
+          </div>
+
+
+
+          <div class="flex flex-col w-full h-full" v-else-if="value=='Request For Higher Approval'">
+                
+              <div class="flex flex-row w-full h-full mb-2">
+                
+                       <div class="w-1/6 font-bold text-center" >
+                                          Approver:
+                                     </div>
+                                     <div class="w-5/6 border-2 border-solid border-slate-300">
+                                          <vss searchable="true" :options="computedUsers" @change="handleApproverChange"/>
+                                     </div>
+              </div>
+              <div class="flex flex-row w-full h-full">
+                       <div class="w-1/6 font-bold text-center" >
+                                             Comment: 
+                                         </div>
+                                         <div class="w-5/6">
+                                               <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
+                                         </div>
+                  </div>
+          </div>
+
+
+          <div class="flex flex-col w-full h-full" v-else-if="value=='Ticket Assigned'">
+             
+               <div class="flex flex-row w-full h-full mt-2 mb-2">
+                       <div class="w-1/6 font-bold text-center" >
+                                           Assign To:
+                                      </div>
+                                      <div class="w-5/6 border-2 border-solid border-slate-300">
+                                           <vss searchable="true" :options="support" @change="handleApproverChange"/>
+                                      </div>
+               </div>
+               <div class="flex flex-row w-full h-full">
+                       <div class="w-1/6 text-center font-bold" >
+                                           Comment: 
+                                       </div>
+                                       <div class="w-5/6">
+                                             <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
+                                       </div>
+                </div>
+          </div>
+
+
+          <div class="flex flex-col w-full h-full" v-else-if="value=='Reassign'">
+             
+               <div class="flex flex-row w-full h-full mt-2 mb-2">
+                       <div class="w-1/6 font-bold text-center" >
+                                           Assign To:
+                                      </div>
+                                      <div class="w-5/6 border-2 border-solid border-slate-300">
+                                           <vss searchable="true" :options="support" @change="handleApproverChange"/>
+                                      </div>
+               </div>
+               <div class="flex flex-row w-full h-full">
+                       <div class="w-1/6 text-center font-bold" >
+                                           Comment: 
+                                       </div>
+                                       <div class="w-5/6">
+                                             <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
+                                       </div>
+                </div>
+          </div>
+
+
+          <div class="flex flex-col w-full h-full" v-else-if="value=='Ticket Accept'">
+                <div class="flex flex-row w-full h-full">
+                       <div class="w-1/6 text-center font-bold" >
+                                           Comment: 
+                                       </div>
+                                       <div class="w-5/6">
+                                             <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
+                                       </div>
+                </div>
+             
+          </div>
+
+
+
+          <div class="flex flex-col w-full h-full" v-else-if="value == 'Giving Information' || value =='Close Request' || value =='Higher Authority Approved'">
+                
+
+            
+
+
+                 <div class="flex flex-row mt-2 mb-2">
+                       <div class="w-1/6 font-bold text-center" >
+                                            Extra Files:
+                                        </div>
+                                        <div class="w-5/6">
+                                              <input type="file" @change="handleFileChange" multiple>
+                                        
+                                              <div  v-for="(file, fileCounter) in files" :key="fileCounter" class="flex-row flex mt-1 w-full">
+                                         
+                                                 <div class="w-1/2"> {{ file.name }}</div>
+                        
+                                           <div class="w-1/2"> <font-awesome-icon icon="fa-solid fa-circle-minus" class="ml-4 hover:cursor-pointer" @click="removeFile(fileCounter)"/></div>
+                                        </div>
+                                        </div>
+                 </div>
+                 <div class="flex flex-row">
+                       <div class="w-1/6 font-bold text-center mt-2" >
+                                             Comment:
+                                         </div>
+                                         <div class="w-5/6">
+                                               <textarea  class="border-2 border-solid border-slate-300 w-full" @change="handleCommentChange"></textarea>
+                                         </div>
+                  </div>
+          </div>
+
+
+
+          
+          <div class="flex flex-row w-full h-full justify-end " >
+           <button  class="bg-blue-500  text-white font-bold mr-2  mt-10 p-2 border border-solid    rounded-sm" @click="$emit('modalCall', value)">Proceed</button> 
+           <button  class="bg-slate-300  text-black  border border-solid b  font-bold mr-2  mt-10 p-2 rounded-sm" @click="$emit('cancel')">Cancel</button>
+        </div>
+
+          
+     
+
+
+          
+        
+        
+    </div>
+
+
+</template>
+
+
+<script>
+import axios from 'axios'
+import StarRating from 'vue-star-rating'
+export default {
+    data(instance){
+        return {
+            modalCheck:false,
+            comment:'',
+            files:[],
+            value:'',
+            users:[],
+            support:[],
+            filesCheck:false,
+           
+          
+
+        }
+    },
+
+    components:{StarRating},
+
+    props:['ticket'],
+
+    computed:{
+        computedUsers(){
+            var newUsers = this.users.map((user)=>{
+                return `${user.empName} --- ${user.mailAddress} (${user.designation})`
+            })
+
+            return newUsers
+        }
+    },
+
+    created(){
+        this.getApprovers()
+        this.getSupport()
+       
+    },
+
+
+   
+
+
+
+    updated(){
+        console.log('from the updated method')
+        var modal = document.getElementById('modal')
+        if(this.modalCheck){
+            console.log('entered gsap function')
+            this.$gsap.set(modal, { top:100, visibility:'visible'})
+            this.modalCheck = true
+        }
+    
+    },
+
+    methods:{
+        setRating(rating){
+      
+      this.$emit("rating", rating)
+    },
+        commentBox(value){
+          
+             var vm = this;
+           
+             this.value = value;
+         
+                 
+            const modal = this.$refs.modal
+
+            if(this.modalCheck == false){
+                this.$gsap.to(modal, {top:100})
+                this.modalCheck = true
+                // this.$refs.modal.style.top = "300px";
+      
+            }else if(this.modalCheck == true){
+                this.$gsap.to(modal, { top:-300 })
+                this.modalCheck = false
+                // this.$refs.modal.style.top = "10px";
+           
+            }
+
+            
+         
+
+          
+},
+
+
+handleFileChange(event){
+    var vm = this
+  this.$emit('fileChange', event.target.files)
+  for(var x of event.target.files){
+    vm.files.push(x)
+  }
+  this.filesCheck = true
+},
+
+removeFile(counter){
+    this.$emit('removeFile', counter)
+            this.files.splice(counter, 1)
+         },
+
+
+
+handleCommentChange(event){
+    this.$emit('commentChange', event.target.value)
+},
+
+handleInfoChange(event){
+    this.$emit('infoChange', event.target.value)
+},
+
+handleApproverChange(event){
+    console.log('this is the event')
+    console.log(event)
+    var value = event
+    console.log("this is the splitted value");
+    var splitted = value.split("---")[1].split("(")[0].trim();
+    console.log(splitted)
+    var user = this.users.find((user)=>{
+        
+        return user.mailAddress == splitted;
+
+    });
+    console.log("this is the user");
+    console.log(user);
+    this.$emit("approverChange", user)
+},
+
+
+getApprovers(){
+            var vm = this
+            var token = this.authStore.getToken
+            var data = {
+                token
+            }
+			axios.post(vm.globalUrl + 'getUsers', data).then(function(response){
+			    vm.users = response.data.filter((user)=>user.userType == 'normal' || user.userType == 'leader' || user.userType == 'support' );
+		
+			
+				console.log(response.data)}
+				
+			).catch(function(error){
+			   console.log(error);
+			});
+        },
+
+    getSupport(){
+        var vm = this;
+        var token = this.authStore.getToken;
+        var user = this.authStore.getUser;
+        var ticket = this.ticket
+
+        var data = new FormData();
+        data.append("token", token);
+        data.append("user", JSON.stringify(user));
+        data.append("ticket", JSON.stringify(ticket));
+
+        console.log("from get support")
+        console.log(ticket);
+
+
+
+        axios.post(vm.globalUrl + "getSupport", data).then((result)=>{
+            vm.support = result.data.map((res)=>{
+               return `${res.user.empName} --- ${res.user.mailAddress} (${res.user.designation})`
+            });
+            console.log("this is the support");
+            console.log(result.data)
+
+        }).catch((error)=> vm.$toast.warning(error));
+
+
+    }
+
+
+
+    }
+}
+
+
+
+</script>
