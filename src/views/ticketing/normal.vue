@@ -11,26 +11,27 @@
 <div class=" flex flex-row   text-lg  h-[92vh] w-full  bg-[rgb(248,248,248)]  " id="app"  >
 
 
-<div class="flex flex-col h-[92vh] customborder  bg-white w-1/6      py-10"  id="sidePanel">
+<div ref="sidePanel" class="flex flex-col h-[92vh] customborder  bg-white     py-10"  >
 
     <div @click="filter($event, 'my')" ref="my" :class="{selected:selectedItem == 'my', notSelected:selectedItem != 'my'}">
-          <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
+        <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
 
             <div class="w-1/6 hover:cursor-pointer "><font-awesome-icon icon="fa-solid fa-file-export" class=" hover:cursor-pointer " /></div>
-             <label class=" hover:cursor-pointer ">All Tickets</label>
+             <label class=" hover:cursor-pointer text-sm">All Tickets</label>
             
           </div>
-          <label class=" hover:cursor-pointer ">{{ my.length }}</label>
+          <label class=" hover:cursor-pointer text-sm ">{{ my.length }}</label>
+         
      </div>
     
      <div @click="filter($event, 'approval')" ref="approval" :class="{selected:selectedItem == 'approval', notSelected:selectedItem != 'approval'}">
           <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
 
             <div class="w-1/6 hover:cursor-pointer "><font-awesome-icon icon="fa-solid fa-thumbs-up" class=" hover:cursor-pointer " /></div>
-             <label class=" hover:cursor-pointer ">Tickets Requiring My Approval</label>
+             <label class=" hover:cursor-pointer  text-sm ">Tickets Requiring My Approval</label>
             
           </div>
-          <label class=" hover:cursor-pointer ">{{ approval.length }}</label>
+          <label class=" hover:cursor-pointer text-sm  ">{{ approval.length }}</label>
      </div>
 
 
@@ -38,10 +39,10 @@
           <div class="flex flex-row hover:cursor-pointer   w-full items-center">
 
             <div class="w-1/6 hover:cursor-pointer "><font-awesome-icon icon="fa-solid fa-file-import" class=" hover:cursor-pointer " /></div>
-             <label class=" hover:cursor-pointer ">Closed Requests For Me</label>
+             <label class=" hover:cursor-pointer  text-sm ">Closed Requests For Me</label>
             
           </div>
-          <label class=" hover:cursor-pointer ">{{ closeRequestsForMe.length }}</label>
+          <label class=" hover:cursor-pointer  text-sm ">{{ closeRequestsForMe.length }}</label>
      </div>
 
 
@@ -49,10 +50,10 @@
           <div class=" hover:cursor-pointer flex flex-row  w-full items-center">
 
             <div class=" hover:cursor-pointer w-1/6"><font-awesome-icon icon=" hover:cursor-pointer fa-solid fa-info" /></div>
-             <label class=" hover:cursor-pointer ">Information Requested From Me</label>
+             <label class=" hover:cursor-pointer text-sm  ">Information Requested From Me</label>
             
           </div>
-          <label class=" hover:cursor-pointer ">{{ infoMe.length }}</label>
+          <label class=" hover:cursor-pointer  text-sm ">{{ infoMe.length }}</label>
      </div>
 
 
@@ -60,10 +61,10 @@
           <div class=" hover:cursor-pointer flex flex-row  w-full items-center">
 
             <div class=" hover:cursor-pointer w-1/6"><font-awesome-icon icon=" hover:cursor-pointer fa-solid fa-quote-left" /></div>
-             <label class=" hover:cursor-pointer ">Mentions</label>
+             <label class=" hover:cursor-pointer  text-sm ">Mentions</label>
             
           </div>
-          <label class=" hover:cursor-pointer ">{{ mentions.length }}</label>
+          <label class=" hover:cursor-pointer  text-sm ">{{ mentions.length }}</label>
      </div>
 
 
@@ -185,7 +186,8 @@
                filteredTickets:[],
                sort:[ "emergency", "high", "medium", "normal",],
                mentions:[],
-               selectedItem:null
+               selectedItem:null,
+               sidePanelCheck:true,
             }
         },
 
@@ -246,6 +248,17 @@
 
 
         methods:{
+         
+            sidePanelToggle(){
+                 if(this.$refs.sidePanel.style.width == "200px"){
+                    this.$refs.sidePanel.style.width = "0px"
+                    
+                 }else{
+                    this.$refs.sidePanel.style.width = "200px"
+                 }
+            },
+
+
             selectItem(item) {
       if (this.selectedItem === item) {
         this.selectedItem = null; // Deselect the item if already selected
@@ -392,22 +405,8 @@ showProblemDetails(event){
 
 
  #sidePanel div div  label{
-    font-size:10px;
-    margin-right: 20px;
+   margin-right: 10px;
  }
-
- #sidePanel div  label{
-    font-size:10px;
-    margin-right: 2px;
- }
-
-
- #sidePanel div{
-    padding-top:4px;
-    padding-bottom: 4px;
-    align-items: center;
- }
-
 
  .selected{
    background-color: rgb(237,237,237);
@@ -425,24 +424,24 @@ showProblemDetails(event){
 
 
  .notSelected{
-   display:flex;
-   flex-direction: row;
-   justify-content:space-around;
-   justify-items: center;
-   width:100%;
-   padding:20px;
+    display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 1.25rem; /* Equivalent to p-5 */
+  cursor: default;
+  background-color: transparent;
+  border: none;
 
  }
 
  .notSelected:hover{
-    background-color: rgb(237,237,237);
-   border-right: 4px solid #34d399;
-   display:flex;
-   flex-direction: row;
-   justify-content:space-around;
-   justify-items: center;
-   width:100%;
-   padding:20px;
+    cursor: pointer;
+  background-color: rgb(237, 237, 237);
+  border-right-width: 0.25rem; /* Equivalent to border-r-4 */
+  border-right-style: solid;   /* Equivalent to border-solid */
+  border-right-color: #10B981;
 
  }
  

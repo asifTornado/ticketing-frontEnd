@@ -438,15 +438,10 @@
 <style scoped>
 
 
-#sidePanel{
-    width:220px;
-    transition:0.3s
-}
 
-#sidePanel div div label{
-    margin-right: 15px;
-    font-size: 10px;
-}
+ #sidePanel div div  label{
+   margin-right: 10px;
+ }
 
 #arrow{
     position: absolute;
@@ -496,6 +491,7 @@
    justify-items: center;
    width:100%;
    padding:20px;
+   cursor: pointer;
 
  }
 

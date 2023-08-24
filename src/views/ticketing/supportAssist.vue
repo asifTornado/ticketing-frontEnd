@@ -101,22 +101,22 @@
          </thead>
          <tbody>
              <tr @click="showDetails(ticket._id)" :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in this.mainStore.getFilteredTickets" :key="ticketCounter">
-                 <th scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                 <th scope="row" class="cursor-pointer table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                      {{ ticket.number }}
                  </th>
-                 <td class="table-row2 px-6 py-4">
+                 <td class="cursor-pointer table-row2 px-6 py-4">
                      {{ ticket.requestDate }}
                  </td>
-                 <td class="table-row2 px-6 py-4">
+                 <td class="cursor-pointer table-row2 px-6 py-4">
                      {{ticket.status}}
                  </td>
-                 <td class="table-row2 py-3 text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
+                 <td class="cursor-pointer table-row2 py-3 text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
                      {{ticket.problemDetails}}
                  </td>
-                 <td class="table-row2 px-6 py-4">
+                 <td class="cursor-pointer table-row2 px-6 py-4">
                     {{ticket.raisedBy.empName}}
                  </td>
-                 <td class="table-row2 px-6 py-4">
+                 <td class="cursor-pointer table-row2 px-6 py-4">
                     <template v-if="ticket.currentHandler">{{ ticket.currentHandler.empName }}</template> 
                  </td>
              </tr>
