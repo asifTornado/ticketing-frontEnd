@@ -3,7 +3,7 @@
     <div class=" flex flex-row   text-lg  h-[92vh] w-full  bg-[rgb(248,248,248)]  " id="app"  >
  
  
-     <div class="flex flex-col h-[92vh] customborder  bg-white w-1/6      py-10" id="sidePanel" >
+     <div class="flex flex-col h-[92vh] customborder  bg-white w-1/6      py-10" id="sidePanel"  v-if="this.mainStore.getSidePanelCheck">
  
          <div @click="filter($event, 'all')" class="flex flex-row justify-around items-center w-full p-5 hover:cursor-pointer hover:bg-[rgb(237,237,237)] hover:border-r-4 hover:border-solid hover:border-r-emerald-500">
                <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
@@ -73,7 +73,7 @@
  
      </div>
  
- <div class="h-[92vh]  bg-[rgb(248,248,248)] flex flex-col w-5/6 mx-2 p-5">
+ <div class="h-[92vh]  bg-[rgb(248,248,248)] flex flex-col w-full mx-2 p-5">
     <div class="flex flex-row items-end justify-end "> <div @click="this.downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-2"/></div>  <FilterButton/></div>
      <div class="relative overflow-x-auto   mx-2 shadow-md customerborder w-full  max-h-[80vh] overflow-y-scroll">
      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

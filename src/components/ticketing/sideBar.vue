@@ -121,6 +121,16 @@
     </div>
   
 </template>
+
+
+<div @click="this.mainStore.toggleSidePanel()" class="unselectedTab" v-if="this.mainStore.getSidePanelCheck == true">
+  <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>  
+  <font-awesome-icon icon="fa-solid fa-angles-left" size="2x" class=" hover:cursor-pointer"/>
+</div>
+<div @click="this.mainStore.toggleSidePanel()" class="unselectedTab" v-if="this.mainStore.getSidePanelCheck == false">
+  <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>  
+  <font-awesome-icon icon="fa-solid fa-angles-right" size="2x" class=" hover:cursor-pointer"/>
+</div>
 </div>
 
 <!-- <div>

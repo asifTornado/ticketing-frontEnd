@@ -16,7 +16,8 @@ export const useMainStore = defineStore("main", {
         filteredTickets:[],
         initialTickets:[],
         tickets:[],
-        showUser:null, 
+        showUser:null,
+        sidePanelCheck:true 
     };
   },
   actions: {
@@ -53,6 +54,16 @@ export const useMainStore = defineStore("main", {
     setNotifications(value){
       this.$patch((state)=>{
         state.notifications = value
+      })
+    },
+
+    toggleSidePanel(value){
+      this.$patch((state)=>{
+        if(state.sidePanelCheck == false){
+          state.sidePanelCheck = true
+        }else{
+          state.sidePanelCheck = false
+        }
       })
     },
 
@@ -180,6 +191,10 @@ export const useMainStore = defineStore("main", {
 
     getNotificationsCheck(state){
       return state.notificationsCheck
+    },
+
+    getSidePanelCheck(state){
+      return state.sidePanelCheck
     }
   },
 

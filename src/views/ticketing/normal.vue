@@ -11,7 +11,7 @@
 <div class=" flex flex-row   text-lg  h-[92vh] w-full  bg-[rgb(248,248,248)]  " id="app"  >
 
 
-<div ref="sidePanel" class="flex flex-col h-[92vh] customborder  bg-white     py-10"  >
+<div ref="sidePanel" class="flex flex-col h-[92vh] customborder  bg-white     py-10" v-if="this.mainStore.getSidePanelCheck" >
 
     <div @click="filter($event, 'my')" ref="my" :class="{selected:selectedItem == 'my', notSelected:selectedItem != 'my'}">
         <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
@@ -85,7 +85,7 @@
 
 
 
-<div class="h-[92vh]  bg-[rgb(248,248,248)]  flex flex-col w-5/6 mx-2 p-5">
+<div class="h-[92vh]  bg-[rgb(248,248,248)]  flex flex-col w-full mx-2 p-5">
     <div class="flex flex-row items-center justify-between  mb-2 ">
         
         <div class="ml-[400px] text-2xl font-bold">{{ getSelectedItem() }}</div>

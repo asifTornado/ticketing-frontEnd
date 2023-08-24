@@ -9,7 +9,7 @@
    <div class=" flex flex-row   text-lg  h-full w-full  bg-[rgb(248,248,248)]  " id="app"  >
 
 
-    <div class="flex flex-col h-screen customborder  bg-white   pt-2" id="sidePanel" >
+    <div class="flex flex-col h-screen customborder  bg-white   pt-2" id="sidePanel" v-if="this.mainStore.getSidePanelCheck">
        
 
         <div @click="filter($event, 'all')" :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
@@ -97,7 +97,7 @@
     </div>
 
 
-  <div class="h-[100vh]  p-5 bg-[rgb(248,248,248)] flex flex-col w-5/6 mx-2">  
+  <div class="h-[100vh]  p-5 bg-[rgb(248,248,248)] flex flex-col w-full mx-2">  
   <div class="flex flex-row items-center justify-between "><div class="ml-[400px] text-2xl">{{ getSelectedItem() }}</div>
 <div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
     Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-4"/>
