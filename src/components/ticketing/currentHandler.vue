@@ -9,7 +9,7 @@
      
      <div class="w-full flex flex-row justify-between" v-for="(file, fileCounter) in commentFiles">
       <div>{{ file.name }}</div>
-      <div class="p-2 hover:cursor-pointer" @click="removeCommentFiles(fileCounter)"><font-awesome-icon icon="fa-solid fa-minus"/>
+      <div class="p-2 hover:cursor-pointer" @click="removeCommentFiles(fileCounter)"><font-awesome-icon icon="fa-solid fa-multiply"/>
          
       </div>
    </div>
@@ -33,7 +33,7 @@
 
 <!-- mention start -->
 
-<div  v-if="mentionCheck" style="z-index:99" class="border border-solid border-black w-[350px] h-[300px] fixed bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
+<div  v-if="mentionCheck" style="z-index:999999" class="border border-solid border-black w-[350px] h-[300px] fixed bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
    <div style="z-index:1"> <div class="p-2 hover:cursor-pointer" @click="mentionCheck = false" style="z-index:1"><font-awesome-icon icon="fa-solid fa-multiply"/></div>
     <div class="w-full h-[200px] overflow-y-scroll relative p-5" style="z-index:1">
       
@@ -43,7 +43,7 @@
          <font-awesome-icon icon="fa-solid fa-plus"/>
        </div>
        <div class="p-2 hover:cursor-pointer" @click="removeMention(mentionCounter)" v-if="mentionCounter != 0">
-         <font-awesome-icon icon="fa-solid fa-minus"/>
+         <font-awesome-icon icon="fa-solid fa-multiply"/>
        </div>
        
     </div>
@@ -73,7 +73,7 @@
   <!-- <Chat :ticketId="ticket._id" :user="ticket.assignedTo.empName" v-else-if="ticket.currentHandler && ticket.accepted == true && ticket.raisedBy.mailAddress == ticket.currentHandler.mailAddress "/> -->
 
    
-       <div class="  w-2/6 h-[92vh]    p-2 border bg-gray-100 border-solid border-black ">
+       <div class="  w-2/6 h-[92vh]  overflow-y-scroll   p-2 border bg-gray-100 border-solid border-black ">
 
          <vue-collapsible-panel-group accordion>
             <vue-collapsible-panel :expanded="true">
@@ -1252,6 +1252,7 @@ import SocketService from './services/socketService';
 
     makeMentions(){
       var vm = this;
+      vm.mentionCheck = false;
       var ticket = this.ticket;
       var user = this.authStore.getUser;
       var mentions = this.mentions;
@@ -1338,6 +1339,7 @@ this.$refs.commentBox.scrollTo({
 
     sendCommentFiles(){
          var vm = this;
+         vm.commentFilesCheck = false;
          var ticket = this.ticket;
        
          var token = this.authStore.getToken;

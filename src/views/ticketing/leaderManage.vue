@@ -150,7 +150,9 @@
                     {{ticket.status}}
                 </td>
                 <td @click="showProblemDetails($event)"  class="table-row2 py-3 text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
-                    {{ticket.problemDetails}}
+                 <div class="flex flex-row justify-center items-center">
+                    <font-awesome-icon icon="fa-solid fa-up-right-from-square" class="mr-4 text-xs text-red"/>
+                    {{ticket.problemDetails}}</div>
                 </td>
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
                    {{ticket.raisedBy.empName}}

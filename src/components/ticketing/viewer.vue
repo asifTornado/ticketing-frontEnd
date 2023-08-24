@@ -9,7 +9,7 @@
          <font-awesome-icon icon="fa-solid fa-plus"/>
        </div>
        <div class="p-2 hover:cursor-pointer" @click="removeMention(mentionCounter)" v-if="mentionCounter != 0">
-         <font-awesome-icon icon="fa-solid fa-minus"/>
+         <font-awesome-icon icon="fa-solid fa-multiply"/>
        </div>
        
     </div>
@@ -34,7 +34,7 @@
      
      <div class="w-full flex flex-row justify-between" v-for="(file, fileCounter) in commentFiles">
       <div>{{ file.name }}</div>
-      <div class="p-2 hover:cursor-pointer" @click="removeCommentFiles(fileCounter)"><font-awesome-icon icon="fa-solid fa-minus"/>
+      <div class="p-2 hover:cursor-pointer" @click="removeCommentFiles(fileCounter)"><font-awesome-icon icon="fa-solid fa-multiply"/>
          
       </div>
    </div>
@@ -90,7 +90,7 @@
 
      
    
-     <div class="  w-2/6 h-[92vh]    p-2 border bg-gray-100 border-solid border-black ">
+     <div class="  w-2/6 h-[92vh] overflow-y-scroll    p-2 border bg-gray-100 border-solid border-black ">
 
 
       <vue-collapsible-panel-group accordion>
@@ -1238,6 +1238,7 @@
 
     makeMentions(){
       var vm = this;
+      vm.mentionCheck = false;
       var ticket = this.ticket;
       var user = this.authStore.getUser;
       var mentions = this.mentions;
@@ -1383,6 +1384,7 @@ this.$refs.commentBox.scrollTo({
 
     sendCommentFiles(){
          var vm = this;
+         vm.commentFilesCheck = false;
          var ticket = this.ticket;
        
          var token = this.authStore.getToken;
