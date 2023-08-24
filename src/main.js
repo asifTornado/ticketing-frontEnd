@@ -6,6 +6,8 @@ import FilterButton from "../src/components/filterButton.vue"
 import FilterDrawer from "../src/components/filterDrawer.vue"
 import NotificationsDrawer from '../src/components/notificationsDrawer.vue'
 import Popper from "vue3-popper";
+import VueCollapsiblePanel from '@dafcoe/vue-collapsible-panel'
+import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
 
 import 'mavon-editor/dist/css/index.css'
 // import {quillEditor} from 'vue3-quill'
@@ -139,6 +141,7 @@ app.use(pinia)
 app.use(ToastPlugin)
 app.use(VueApexCharts)
 app.use(CKEditor)
+app.use(VueCollapsiblePanel)
 app.component("Tooltip", TooltipComponent)
 app.component("FilterButton", FilterButton)
 app.component("FilterDrawer", FilterDrawer)

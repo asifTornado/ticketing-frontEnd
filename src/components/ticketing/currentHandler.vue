@@ -75,8 +75,380 @@
    
        <div class="  w-2/6 h-[92vh]    p-2 border bg-gray-100 border-solid border-black ">
 
+         <vue-collapsible-panel-group accordion>
+            <vue-collapsible-panel :expanded="true">
+                <template #title>
+                    Ticket Info
+                </template>
+                <template #content>
+                   
+   <div class="flex flex-row w-11/12 mt-2" v-if="ticket.raisedFor">
+      <div class="w-2/4">
+           Raised On Behalf Of:
+      </div>
+    
+      <div class="w-2/4 text-right" v-if="ticket.raisedFor && ticket.raisedFor.mailAddress != null">
+             {{ticket.raisedFor.empName}} 
+            <i>{{ ticket.raisedFor.Designation}}, {{ticket.raisedFor.unit }}</i> <br/>
+            <i>Extension:<template v-if="ticket.raisedFor.extension">{{ ticket.raisedFor.extension}},</template><template v-else>N/A,</template> 
+               Phone:<template v-if="ticket.raisedFor.phone">{{ ticket.raisedFor.phone}},</template><template v-else>N/A,</template>
+               Email:<template v-if="ticket.raisedFor.mailAddress">{{ ticket.raisedFor.mailAddress}}</template><template v-else>N/A,</template>
+           </i>
+      </div>
+    
+      <div class="w-2/4 text-right" v-else>
+            Not Available
+      </div>
+    </div>
+    
+    
+    <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Request Date:
+      </div>
+    
+      <div class="w-2/4 text-right">
+           {{ ticket.actions[0].time }}
+      </div>
+    </div>
+    
+    
+    <div class="flex flex-row w-11/12 mt-2 h-auto">
+      <div class="w-2/4 text-lg font-bold text-white p-3 bg-red-500">
+           Problem in Details:
+      </div>
+    
+      <div class="w-2/4 text-right text-lg font-bold text-white bg-red-500 p-3 " style="word-wrap: break-word; max-width:50%" >
+           {{ ticket.problemDetails }}
+      </div>
+    </div>
+    
+    
+    <template v-if="ticket.details && ticket.details.length > 0">     
+    
+    <div class="flex flex-row w-11/12 mt-2" v-for="(detail, detailCounter) in ticket.details">
+      <div class="w-2/4">
+           {{detail.label}}
+      </div>
+    
+      <div class="w-2/4 text-right">
+           {{ detail.input }}
+      </div>
+    </div>
+    </template>
+    
+    <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Approval Required:
+      </div>
+    
+      <div class="w-2/4 text-right">
+    
+         <template v-if="ticket.approvalRequired == 'yes'">
+            Yes
+     </template> 
+     <template v-else>
+      No
+     </template>  
+    
+      
+      </div>
+    </div>
+    
+    
+    <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Priority:
+      </div>
+    
+      <div class="w-2/4 text-right">
+           {{ priority }}
+      </div>
+    </div>
+    
+    
+    
+    <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Department:
+      </div>
+    
+      <div class="w-2/4 text-right">
+           {{ ticket.department }}
+      </div>
+    </div>
+    
+    
+    
+    <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Location:
+      </div>
+    
+      <div class="w-2/4 text-right">
+           {{ ticket.raisedBy.unit }}
+      </div>
+    </div>
+    
+    
+    
+    <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Assigned To:
+      </div>
+    
+      <div class="w-2/4 text-right">
+      <template v-if="ticket.assignedTo">
+             {{ ticket.assignedTo.mailAddress }}
+      </template> 
+      <template v-else>
+         Not Assigned Yet
+      </template>   
+      </div>
+    </div>
+    
+    
+    <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Department Head:
+      </div>
+    
+      <div class="w-2/4 text-right" style="word-wrap: break-word; max-width:50%" >
+    
+             {{ ticket.ticketingHead.mailAddress }}
+    
+      
+      </div>
+    </div>
+    
+    
+    
+    <!-- <div class="flex flex-row w-11/12 mt-2">
+      <div class="w-2/4">
+           Higher Approver:
+      </div>
+    
+      <div class="w-2/4 text-right">
+    
+         <template v-if="ticket.higherApprover">
+            {{ ticket.higherApprover.mailAddress }}
+     </template> 
+     <template v-else>
+        Not Available
+     </template>  
+    
+      
+      </div>
+    </div> -->
+    
+    
+    
+   <!--  
+    <div class="flex flex-row w-11/12 mt-3" v-if="ticket.supervisor" >
+      <div class="w-2/4">
+           Supervisor:
+      </div>
+    
+      <div class="w-2/4 text-right">
+             {{ticket.supervisor.empName}} 
+            <i>{{ ticket.supervisor.Designation}}, {{ticket.supervisor.unit }}</i> <br/>
+            <i>Extension:<template v-if="ticket.supervisor.extension">{{ ticket.supervisor.extension}},</template><template v-else>N/A,</template> 
+               Phone:<template v-if="ticket.supervisor.phone">{{ ticket.raisedBy.phone}},</template><template v-else>N/A,</template>
+               Email:<template v-if="ticket.supervisor.mailAddress">{{ ticket.supervisor.mailAddress}}</template><template v-else>N/A,</template>
+           </i>
+      </div>
+    </div> -->
+    
+    
+    <div class="flex flex-row w-11/12 mt-3">
+      <div class="w-2/4 font-bold">
+           Current Status:
+      </div>
+    
+      <div class="w-2/4 text-lg font-bold text-black text-right">
+           {{ ticket.status }}
+      </div>
+    </div>
+    
+    <div class="flex flex-row w-11/12 mt-3">
+      <div class="w-2/4">
+           Responder Comment:
+      </div>
+    
+      <div class="w-2/4 text-lg  text-black text-right">
+           <template v-if="ticket.remarks">{{ ticket.remarks }}</template>
+           <template v-else>Not Available</template>
+      </div>
+    </div>
+    
+    
+    <div class="flex flex-row w-11/12 mt-3 ">
+      <div class="w-2/4">
+           Relevant Files:
+      </div>
+    
+      <div class="w-2/4 text-lg font-bold text-black text-right">
+         <div class="flex flex-col ">
+    
+            <div v-for="(file, fileCounter) in ticket.actions[0].files" :key="fileCounter"><a :href="globalUrl + 'uploads/' + file.fileName" target="__blank" class="underline" >{{file.originalName}}</a></div>
+         </div>
            
-                <div class="flex flex-row w-full justify-center font-bold bg-gray-200 p-2 border border-solid border-black border-b-0">Raiser Info</div>
+      </div>
+    </div>
+                </template>
+            </vue-collapsible-panel>
+            <vue-collapsible-panel :expanded="false">
+                <template #title>
+                    Ticket Raiser Info
+                </template>
+                <template #content>
+                  <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Raised By:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                            {{ticket.raisedBy.empName}} 
+                          
+                     </div>
+                   </div>
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Raiser's Email:
+                     </div>
+                   
+                     <div class="w-2/4 text-right" >
+                           <span v-if="ticket.email">{{ ticket.email }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+                   
+                   
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Raiser's Phone:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                        <span v-if="ticket.phone">{{ ticket.phone }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+                   
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Raiser's Extension:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                        <span v-if="ticket.extension">{{ ticket.extension }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Raiser's Location:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                        <span v-if="ticket.location">{{ ticket.location }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+                   
+                   <div class="flex flex-row w-11/12 mt-3">
+                     <div class="w-2/4">
+                          Responder Comment:
+                     </div>
+                   
+                     <div class="w-2/4 text-lg  text-black text-right">
+                          <template v-if="ticket.remarks">{{ ticket.remarks }}</template>
+                          <template v-else>Not Available</template>
+                     </div>
+                   </div>
+                   
+                   
+                   <div class="flex flex-row w-11/12 mt-3 ">
+                     <div class="w-2/4">
+                          Relevant Files:
+                     </div>
+                   
+                     <div class="w-2/4 text-lg font-bold text-black text-right">
+                        <div class="flex flex-col ">
+                   
+                           <div v-for="(file, fileCounter) in ticket.actions[0].files" :key="fileCounter"><a :href="globalUrl + 'uploads/' + file.fileName" target="__blank" class="underline" >{{file.originalName}}</a></div>
+                        </div>
+                          
+                     </div>
+                   </div>
+                </template>
+            </vue-collapsible-panel>
+            <vue-collapsible-panel :expanded="false">
+               <template #title>
+                   Current Handler Info
+               </template>
+               <template #content>
+                  <div class="flex flex-row w-11/12 mt-3">
+                     <div class="w-2/4 font-bold">
+                          Current Handler:
+                     </div>
+                   
+                     <div class="w-2/4 text-lg  text-black text-right">
+                        {{ticket.currentHandler.empName}} 
+                          
+                     </div>
+                   </div>
+                   
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Current Handler's Email:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                           <span v-if="ticket.currentHandler.mailAddress">{{ ticket.currentHandler.mailAddress }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+                   
+                   
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Current Handler's Phone:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                        <span v-if="ticket.currentHandler.phone">{{ ticket.currentHandler.phone }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+                   
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Current Handler's Extension:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                        <span v-if="ticket.currentHandler.extension">{{ ticket.currentHandler.extension }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+                   
+                   <div class="flex flex-row w-11/12 mt-2">
+                     <div class="w-2/4">
+                          Current Handler's Location:
+                     </div>
+                   
+                     <div class="w-2/4 text-right">
+                        <span v-if="ticket.currentHandler.location">{{ ticket.currentHandler.location }}</span><span v-else>Not Available</span>
+                     </div>
+                   </div>
+               </template>
+           </vue-collapsible-panel>
+            ...
+        </vue-collapsible-panel-group>
+
+           
+                <!-- <div class="flex flex-row w-full justify-center font-bold bg-gray-200 p-2 border border-solid border-black border-b-0">Raiser Info</div>
             <div class="border border-solid border-black p-5 overflow-y-scroll h-[22vh] mb-2 border-t-0">   
           
                <div class="flex flex-row w-11/12 mt-2">
@@ -433,7 +805,7 @@
                   </div>
                </div>
    </div>
-   
+    -->
               
               
      

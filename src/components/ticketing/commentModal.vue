@@ -106,12 +106,22 @@
           <div class="flex flex-col w-full h-full" v-else-if="value=='Ticket Assigned'">
              
                <div class="flex flex-row w-full h-full mt-2 mb-2">
-                       <div class="w-1/6 font-bold text-center" >
-                                           Assign To:
-                                      </div>
-                                      <div class="w-5/6 border-2 border-solid border-slate-300">
-                                           <vss searchable="true" :options="support" @change="handleApproverChange"/>
-                                      </div>
+                  <table>
+                    <thead class="mb-10">
+                        <th class="pb-4">User</th>
+                        <th class="pb-4">Email</th>
+                        <th class="pb-4">Currently Assigned</th>
+                        <th class="pb-4"></th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(user, userCounter) in support" :key="userCounter">
+                          <td class="text-start pl-10 pb-5">{{user.user.empName}}</td>
+                          <td class="text-start pl-10 pb-5">{{user.user.mailAddress}}</td>
+                          <td class="text-start pl-10 pb-5">{{user.numbers}}</td>
+                          <td class="text-start pl-10 pb-5" ><input type="radio" :value="user.user.empName" name="assignCheck" @change="handleApproverChange2"></td>
+                        </tr>
+                    </tbody>
+                  </table>
                </div>
                <div class="flex flex-row w-full h-full">
                        <div class="w-1/6 text-center font-bold" >
@@ -224,6 +234,7 @@ export default {
             users:[],
             support:[],
             filesCheck:false,
+            tickets:[]
            
           
 
@@ -245,6 +256,7 @@ export default {
     },
 
     created(){
+        this.getTickets()
         this.getApprovers()
         this.getSupport()
        
@@ -267,6 +279,21 @@ export default {
     },
 
     methods:{
+
+        getTickets(){
+           var vm = this;
+           var user = this.authStore.getUser;
+           var data = new FormData();
+           data.append("user", JSON.stringify(user))
+
+           axios.post(vm.globalUrl + "getTickets", data).then((result)=>{
+            vm.tickets = result.data
+
+           }).catch((error)=>{
+            vm.$toast.warning(error)
+           })
+        },
+
         setRating(rating){
       
       this.$emit("rating", rating)
@@ -341,6 +368,22 @@ handleApproverChange(event){
 },
 
 
+handleApproverChange2(event){
+    console.log('this is the event')
+    console.log(event)
+    var value = event.target.value
+  
+    var user = this.users.find((user)=>{
+        
+        return user.empName == value;
+
+    });
+    console.log("this is the user");
+    console.log(user);
+    this.$emit("approverChange", user)
+},
+
+
 getApprovers(){
             var vm = this
             var token = this.authStore.getToken
@@ -375,8 +418,16 @@ getApprovers(){
 
 
         axios.post(vm.globalUrl + "getSupport", data).then((result)=>{
-            vm.support = result.data.map((res)=>{
-               return `${res.user.empName} --- ${res.user.mailAddress} (${res.user.designation})`
+            vm.support = result.data.map((user)=>{
+               var newObject = {
+                user:user.user,
+                numbers:0
+               }
+
+               var tickets = vm.tickets.filter((ticket)=>ticket.assignedTo && ticket.assignedTo.mailAddress == user.user.mailAddress)
+               newObject.numbers = tickets.length;
+
+               return newObject
             });
             console.log("this is the support");
             console.log(result.data)
