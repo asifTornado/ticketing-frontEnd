@@ -398,11 +398,11 @@ showProblemDetails(event){
 
     <style scoped>
 .table-header2{
-     font-size: 12px;
+     font-size: 15px;
  }
  
  .table-row2{
-     font-size:10px
+     font-size:15px
  }
 
 

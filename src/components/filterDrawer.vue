@@ -1,5 +1,5 @@
 <template>
-<div style="z-index: 1231240129381209318023981203982;" class="border border-solid border-black fixed h-[100vh] w-[30vw] bg-white right-0 p-10 flex flex-col" v-if="this.mainStore.getFilterCheck == true">
+<div style="z-index: 1231240129381209318023981203982;" class="border pb-10 border-solid border-black fixed h-[100vh] w-[30vw] bg-white right-0 p-10 flex flex-col" v-if="this.mainStore.getFilterCheck == true">
 <div class="flex flex-row justify-between items-center mb-10"><label for="" class="text-3xl ">Filter</label>
 <font-awesome-icon icon="fa-solid fa-multiply " class="hover:cursor-pointer" size="2x" @click="toggleFilter"/>
 </div>
@@ -41,7 +41,7 @@
 
 </datalist >
 
-<div class="flex flex-row justify-center items-center hover:cursor-pointer" @click="filter()"><div class="p-2 bg-blue-500 border border-solid border-blue-900 text-white rounded-sm text-lg">Apply Filters</div></div>
+<div class="flex flex-row justify-center items-center hover:cursor-pointer " @click="filter()"><div class="p-2 mb-20 bg-blue-500 border border-solid border-blue-900 text-white rounded-sm text-lg ">Apply Filters</div></div>
 
 </div>
 </template>

@@ -8,7 +8,7 @@
     
     
     <div class="fixed h-[92vh] w-full flex flex-col  z-10 right-0 bg-gray-200 " style="width:0px; transition:0.3s; z-index: 99999;"  ref="drawer"> 
-      <div style="top:480px; left:-45px; z-index: 99999;" class="shadow-md shadow-black absolute   h-24 w-14 z-50 bg-slate-100  rounded-sm border border-solid border-l-gray-400 border-t-gray-400 border-b-gray-400 flex flex-col justify-center items-center" ref="handle" @click="close()"><font-awesome-icon :icon="iconName" size="2x" id="drawerIcon"/></div>   
+      <!-- <div style="top:480px; left:-45px; z-index: 99999;" class="shadow-md shadow-black absolute   h-24 w-14 z-50 bg-slate-100  rounded-sm border border-solid border-l-gray-400 border-t-gray-400 border-b-gray-400 flex flex-col justify-center items-center" ref="handle" @click="close()"><font-awesome-icon :icon="iconName" size="2x" id="drawerIcon"/></div>    -->
         <div class="flex flex-row mt-2 mx-2">
            <button  class="bg-white  font-bold hover:bg-gray-400 text-black  w-32 border border-solid border-black  text-sm p-2 " @click="toggleComponent($event, 'Comments')"  ref="comments" id="Comments">Comments</button> 
            <button  class="bg-white  font-bold hover:bg-gray-400 text-black w-32 border border-solid border-black  text-sm p-2 " @click="toggleComponent($event, 'Infos')"  ref="infos" id="Infos">Past Issues</button>

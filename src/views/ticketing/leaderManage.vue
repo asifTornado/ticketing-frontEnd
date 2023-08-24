@@ -106,20 +106,20 @@
 </div>
     <div class="   overflow-x-auto   mx-2 customerborder w-full   overflow-y-scroll" style="max-height: 80vh; min-height: auto;">
        
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-        <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400">
+    <table class="w-full text-md text-left text-gray-500 dark:text-gray-400 ">
+        <thead class="text-md text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="table-header2 px-6 py-3">
+                <th scope="col" class="table-header2 px-6 py-3 ">
                     Ticket No.
                 </th>
                 
-                <th scope="col" class="table-header2 px-6 py-3">
+                <th scope="col" class="table-header2 px-6 py-3 ">
                     Req. Date
                 </th>
-                <th scope="col" class="table-header2 px-6 py-3">
+                <th scope="col" class="table-header2 px-6 py-3 ">
                     priority
                 </th>
-                <th scope="col" class="table-header2 px-6 py-3">
+                <th scope="col" class="table-header2 px-6 py-3 ">
                     Status
                 </th>
                 <th scope="col" class="table-header2 px-6 py-3">
@@ -440,6 +440,15 @@
 <style scoped>
 
 
+ table th {
+    border: 1px solid lightslategray;
+}
+
+table td {
+    border:1px solid lightslategray;
+}
+
+
 
  #sidePanel div div  label{
    margin-right: 10px;
@@ -451,17 +460,17 @@
 }
 
 .table-header2{
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .table-row2{
-    font-size:10px
+    font-size:15px
 }
 
 
 .selected{
     background-color: rgb(237,237,237);
-   border-right: 4px solid #34d399;
+   border-right: 2px solid #34d399;
    display:flex;
    flex-direction: row;
    justify-content:space-around;
@@ -481,19 +490,21 @@
    justify-items: center;
    width:100%;
    padding:20px;
+   border-bottom:1px solid lightslategray;
+   
    
  }
 
  .notSelected:hover{
    background-color: rgb(237,237,237);
-   border-right: 4px solid #34d399;
-   display:flex;
+    border-right: 2px solid #34d399;
+   /* display:flex;
    flex-direction: row;
    justify-content:space-around;
    justify-items: center;
    width:100%;
    padding:20px;
-   cursor: pointer;
+   cursor: pointer; */
 
  }
 

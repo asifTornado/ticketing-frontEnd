@@ -1,10 +1,14 @@
 <template>
           <FilterDrawer/>
+          <div class="fixed w-[300px] h-[200px] overflow-y-scroll p-3 flex-col bg-yellow-100" id="tooltip" ref="tooltip" style="display:none">
+            <div class="flex flex-row items-end w-full justify-end hover:cursor-pointer sticky top-0 " @click="hideProblemDetails" > <div class="flex flex-col justify-center" style="border-radius: 200%; width:20px; height:20px; background-color: black; padding: 2px;"> <font-awesome-icon icon="fa-solid fa-xmark" class="text-white"/></div></div>
+           <div id="text" style="word-wrap: break-word; max-width:100%"></div>
+           </div>
     
     <div class=" flex flex-row   text-lg  h-full w-full  bg-[rgb(248,248,248)]  " id="app"  >
  
  
-     <div class="flex flex-col h-screen customborder  bg-white w-1/6      py-10" id="sidePanel" >
+     <div class="flex flex-col h-screen customborder  bg-white w-1/6      py-10" id="sidePanel" v-if="this.mainStore.getSidePanelCheck == true" >
  
          <div @click="filter($event, 'all')"  :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
                <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
@@ -96,7 +100,7 @@
  
      </div>
  
- <div class="h-[100vh] p-2  bg-[rgb(248,248,248)] flex flex-col w-5/6 mx-2">
+ <div class="h-[100vh] p-2  bg-[rgb(248,248,248)] flex flex-col w-full mx-2">
     <div class="flex flex-row items-end justify-end "> <div @click="this.downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm  mb-2 mr-2">Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-2"/></div>  <FilterButton/></div>
      <div class="   overflow-x-auto   mx-2 customerborder w-full   overflow-y-scroll" style="max-height: 80vh; min-height: auto;">
      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -141,8 +145,10 @@
                  <td  @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
                      {{ticket.status}}
                  </td>
-                 <td class="table-row2 px-6 py-4">
-                     {{ticket.problemDetails}}
+                 <td class="table-row2 px-6 py-4" @click="showProblemDetails($event)">
+                    <div class="flex flex-row justify-center items-center">
+                        <font-awesome-icon icon="fa-solid fa-up-right-from-square" class="mr-4 text-md text-red-500"/>
+                        {{ticket.problemDetails}}</div>
                  </td>
                  <td class="table-row2 px-6 py-4">
                     {{ticket.raisedBy.empName}}
@@ -249,6 +255,37 @@
        
          
          methods:{
+            hideProblemDetails(event){
+        var tooltip = this.$refs.tooltip
+      
+    
+       tooltip.style.top = 'px';
+       tooltip.style.left = '100px';   
+       tooltip.style.display = 'none'
+     },
+
+            
+            showProblemDetails(event){
+        console.log('entered show problem details')
+        var cell = event.target
+        var rect = cell.getBoundingClientRect();
+    
+        const topOffset = rect.top + window.scrollY;
+        const leftOffset = rect.left + window.scrollX;
+       console.log(cell.innerText)
+       var tooltip = this.$refs.tooltip
+       var textElem = tooltip.querySelector('#text')
+        textElem.innerText = cell.innerText
+       console.log('offset top')
+       console.log(topOffset)
+       tooltip.style.border = '2px solid black'
+       tooltip.style.top = topOffset - 40 + 'px';
+       tooltip.style.left = leftOffset - 40 + 'px';
+       tooltip.style.display = 'block'
+      
+       
+     
+     },
 
             selectItem(item) {
       if (this.selectedItem === item) {
@@ -365,11 +402,11 @@
  
  
  .table-header2{
-     font-size: 12px;
+     font-size: 15px;
  }
  
  .table-row2{
-     font-size:10px
+     font-size:15px
  }
 
 

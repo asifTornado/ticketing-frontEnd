@@ -136,22 +136,32 @@
 
           <div class="flex flex-col w-full h-full" v-else-if="value=='Reassign'">
              
-               <div class="flex flex-row w-full h-full mt-2 mb-2">
-                       <div class="w-1/6 font-bold text-center" >
-                                           Assign To:
-                                      </div>
-                                      <div class="w-5/6 border-2 border-solid border-slate-300">
-                                           <vss searchable="true" :options="support" @change="handleApproverChange"/>
-                                      </div>
-               </div>
-               <div class="flex flex-row w-full h-full">
-                       <div class="w-1/6 text-center font-bold" >
-                                           Comment: 
-                                       </div>
-                                       <div class="w-5/6">
-                                             <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
-                                       </div>
-                </div>
+            <div class="flex flex-row w-full h-full mt-2 mb-2">
+                <table>
+                  <thead class="mb-10">
+                      <th class="pb-4">User</th>
+                      <th class="pb-4">Email</th>
+                      <th class="pb-4">Currently Assigned</th>
+                      <th class="pb-4"></th>
+                  </thead>
+                  <tbody>
+                      <tr v-for="(user, userCounter) in support" :key="userCounter">
+                        <td class="text-start pl-10 pb-5">{{user.user.empName}}</td>
+                        <td class="text-start pl-10 pb-5">{{user.user.mailAddress}}</td>
+                        <td class="text-start pl-10 pb-5">{{user.numbers}}</td>
+                        <td class="text-start pl-10 pb-5" ><input type="radio" :value="user.user.empName" name="assignCheck" @change="handleApproverChange2"></td>
+                      </tr>
+                  </tbody>
+                </table>
+             </div>
+             <div class="flex flex-row w-full h-full">
+                     <div class="w-1/6 text-center font-bold" >
+                                         Comment: 
+                                     </div>
+                                     <div class="w-5/6">
+                                           <textarea  class="border-2 border-solid border-slate-300 w-full p-2" @change="handleCommentChange"></textarea>
+                                     </div>
+              </div>
           </div>
 
 

@@ -10,7 +10,7 @@
     </div>
 </div>
 
-    <div class="w-full h-full  flex flex-row">
+    <div class="w-full h-[92vh] overflow-y-scroll  flex flex-row" ref="app">
 
      
 
@@ -400,7 +400,7 @@
         },
 
         scrollToTop(){
-            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            this.$refs.app.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         },
 
         scrollToSection(sectionRef) {
@@ -408,7 +408,7 @@
       if (element) {
         const rect = element.getBoundingClientRect();
         const offset = 60; // Adjust this value to set the offset you desire
-        window.scrollTo({
+        this.$refs.app.scrollTo({
           top: window.scrollY + rect.top - offset,
           behavior: 'smooth',
         });
