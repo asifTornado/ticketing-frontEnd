@@ -17,7 +17,7 @@
 		  <label class="mb-20 font-bold mt-10" > User Type</label>
 				  <select name="userType" v-model="user.userType" required class="mb-4 h-11 w-full  border border-solid border-gray-200" >
 					
-					<option  value="leader">Team Leader</option>
+					<option  value="leader">Ticket Manager</option>
 					<option  value="support">Support</option>
 					<option  value="normal">Normal</option>
 					<option  value="power">Power User</option>

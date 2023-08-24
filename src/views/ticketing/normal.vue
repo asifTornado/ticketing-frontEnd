@@ -137,7 +137,7 @@
                 {{ticket.status}}
             </td>
             <td @click="showProblemDetails($event)"  class=" table-row2 table-row2 py-3 text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
-                {{ticket.problemDetails}} <font-awesome-icon icon=""
+                {{ticket.problemDetails}} 
             </td>
             <td @click="showDetails(ticket._id)"  class=" table-row2 px-6 py-4">
                {{ticket.raisedBy.empName}}

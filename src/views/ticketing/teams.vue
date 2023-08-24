@@ -26,7 +26,7 @@
     
     
     <div class="flex flex-row justify-end items-end mt-4">
-        <button @click="this.$router.push('/ticketing/teams/add')" class="bg-blue-500 w-36   text-white font-bold text-md h-12 ml-3 rounded-sm mr-1">Add Team</button>
+        <button @click="this.$router.push('/ticketing/teams/add')" class="bg-blue-500 w-36   text-white font-bold text-md h-12 ml-3 rounded-sm mr-1">Add Department</button>
         <button @click="this.$router.push('/ticketing/systemAdmin/manage')" class="bg-gray-300 w-36   text-gray-500 font-bold text-md h-12  rounded-sm mr-3 ">Home</button>
     </div>
     </div>

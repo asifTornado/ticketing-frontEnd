@@ -80,7 +80,7 @@
                 <div class=" mt-5 text-black  w-full flex flex-row">
                     <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>User Type:</div>
                    
-                     <div class="w-8/12 rounded-md h-9  p-1"> {{ user.userType }}</div>
+                     <div class="w-8/12 rounded-md h-9  p-1"> {{user.userType == "leader" ? "Ticket Manager" : user.userType }}</div>
                 </div>
     
     

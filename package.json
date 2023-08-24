@@ -11,6 +11,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^38.1.1",
     "@ckeditor/ckeditor5-vue": "^5.1.0",
+    "@dafcoe/vue-collapsible-panel": "^0.2.0",
     "@dreamonkey/vue-signalr": "^1.1.0",
     "@editorjs/editorjs": "^2.27.2",
     "@editorjs/header": "^2.7.0",
