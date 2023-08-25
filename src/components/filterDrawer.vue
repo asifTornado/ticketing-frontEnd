@@ -92,6 +92,8 @@ export default{
            console.log(tickets)
            console.log("these are the filtered tickets")
            console.log(filteredTickets)
+           console.log("this is the filters lenght");
+           console.log(vm.filters.length)
 
            if(vm.filters.length < 1){
             vm.mainStore.setFilteredTickets(tickets)

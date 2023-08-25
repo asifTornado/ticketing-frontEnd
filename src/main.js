@@ -8,6 +8,7 @@ import NotificationsDrawer from '../src/components/notificationsDrawer.vue'
 import Popper from "vue3-popper";
 import VueCollapsiblePanel from '@dafcoe/vue-collapsible-panel'
 import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
+import ClearButtton from './components/clearButton.vue'
 
 import 'mavon-editor/dist/css/index.css'
 // import {quillEditor} from 'vue3-quill'
@@ -73,6 +74,7 @@ app.component('font-awesome-icon', FontAwesomeIcon)
 app.component('font-awesome-layers', FontAwesomeLayers)
 app.component('font-awesome-layers-text', FontAwesomeLayersText)
 app.component("star", vue3StarRatings);
+app.component("ClearButton", ClearButtton)
 
 app.component('vss', select2)
 app.component("Popper", Popper)

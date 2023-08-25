@@ -9,7 +9,7 @@
    <div class=" flex flex-row   text-lg  h-full w-full  bg-[rgb(248,248,248)]  " id="app"  >
 
 
-    <div class="flex flex-col h-screen customborder  bg-white   pt-2" id="sidePanel" v-if="this.mainStore.getSidePanelCheck">
+    <div class="flex flex-col h-screen customborder  bg-gray-200  pt-2" id="sidePanel" v-if="this.mainStore.getSidePanelCheck">
        
 
         <div @click="filter($event, 'all')" :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
@@ -102,7 +102,9 @@
 <div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
     Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-4"/>
 </div>  
-<FilterButton/></div>
+<FilterButton/>
+<ClearButton/>
+</div>
 </div>
     <div class="   overflow-x-auto   mx-2 customerborder w-full   overflow-y-scroll" style="max-height: 80vh; min-height: auto;">
        
@@ -136,9 +138,9 @@
         </thead>
         <tbody>
             <tr  :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
-                <th @click="showDetails(ticket._id)"  scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td @click="showDetails(ticket._id)"  scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {{ ticket.number }}
-                </th>
+                </td>
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
                     {{ ticket.requestDate }}
                 </td>
@@ -231,6 +233,7 @@
           
                vm.tickets = result.data.filter((ticket) => ticket.status != 'Closed Ticket')
                vm.mainStore.setFilteredTickets(vm.tickets)
+               vm.mainStore.setInitialTickets(vm.tickets)
                vm.mainStore.setTickets(vm.tickets)
                vm.unassigned = vm.tickets.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
                vm.accepted = vm.tickets.filter((ticket)=>ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress)
@@ -441,11 +444,11 @@
 
 
  table th {
-    border: 1px solid lightslategray;
+    border-bottom: 1px solid lightslategray;
 }
 
 table td {
-    border:1px solid lightslategray;
+    border-bottom:1px solid lime;
 }
 
 
@@ -476,7 +479,8 @@ table td {
    justify-content:space-around;
    justify-items: center;
    width:100%;
-  padding:20px
+  padding:20px;
+  margin-bottom: 5px;
 
 
  }
@@ -490,13 +494,15 @@ table td {
    justify-items: center;
    width:100%;
    padding:20px;
+   background-color: white;
    border-bottom:1px solid lightslategray;
+   margin-bottom: 5px;
    
    
  }
 
  .notSelected:hover{
-   background-color: rgb(237,237,237);
+   background-color: white;
     border-right: 2px solid #34d399;
    /* display:flex;
    flex-direction: row;
