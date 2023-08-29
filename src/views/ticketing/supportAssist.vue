@@ -188,7 +188,7 @@
              data.append("token", token);
              data.append("user", JSON.stringify(user));
              axios.post(vm.globalUrl + 'getTickets', data).then((result)=>{
-                vm.tickets = result.data.filter((ticket)=>ticket.raisedBy.mailAddress != user.mailAddress && ticket.status != "Closed Ticket" && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress)
+                vm.tickets = result.data
                 vm.filteredTickets = vm.tickets
                 vm.mainStore.setTickets(vm.tickets);
                 vm.mainStore.setFilteredTickets(vm.filteredTickets)

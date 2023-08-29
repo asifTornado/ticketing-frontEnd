@@ -165,7 +165,7 @@
           </div>
 
 
-          <div class="flex flex-col w-full h-full" v-else-if="value=='Ticket Accept'">
+          <!-- <div class="flex flex-col w-full h-full" v-else-if="value=='Ticket Accept'">
                 <div class="flex flex-row w-full h-full">
                        <div class="w-1/6 text-center font-bold" >
                                            Comment: 
@@ -175,7 +175,7 @@
                                        </div>
                 </div>
              
-          </div>
+          </div> -->
 
 
 

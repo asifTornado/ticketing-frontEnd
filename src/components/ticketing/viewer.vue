@@ -401,7 +401,7 @@
                 </div>
              </template>
          </vue-collapsible-panel>
-         <vue-collapsible-panel :expanded="false">
+         <vue-collapsible-panel :expanded="false" v-if="ticket.currentHandler">
             <template #title>
                 Current Handler Info
             </template>
@@ -892,7 +892,7 @@
 
 <div class="flex flex-row  w-full justify-end h-auto ">     
    
-   
+   <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelf" v-if="ticket.assignedTo == null">Assign To Self</button>
     <button class="bg-amber-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showDetails">Show Details</button>
     <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        
          
@@ -1135,6 +1135,7 @@
       </template>
 
       <div class="flex flex-row items-center justify-end mb-2 sticky bottom-2">
+
          <div class="p-3 text-white font-bold bg-blue-500 rounded-sm hover:cursor-pointer" @click="showDetails" >Close</div>
        </div>  
       
@@ -1226,6 +1227,37 @@
       },
 
       methods:{
+         assignSelf(){
+            var vm = this;
+            var user = this.authStore.getUser;
+            var token = this.authStore.getToken;
+          
+
+            var data = new FormData();
+            console.log("this is the ticket from the main function")
+            console.log(vm.ticket)
+   
+            data.append("token", token);
+
+            data.append("ticket", JSON.stringify(vm.ticket));
+            data.append("user", JSON.stringify(user));
+            data.append("comment", "Not Available")
+
+            this.axios.post(vm.globalUrl + "assignSelf", data).then((result)=>{
+               
+                    vm.$toast.clear()
+                    vm.$toast.success('Done')
+                    
+                    console.log("this is the got ticket")
+                    console.log(this.ticket);
+                    location.reload();
+               
+            }).catch((error)=>{
+                vm.$toast.clear()
+                vm.$toast.warning(error)
+            })
+        },
+       
          addMention(){
          var newMention = '';
          this.mentions.push(newMention)

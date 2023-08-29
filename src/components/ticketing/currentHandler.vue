@@ -383,7 +383,7 @@
                    </div>
                 </template>
             </vue-collapsible-panel>
-            <vue-collapsible-panel :expanded="false">
+            <vue-collapsible-panel :expanded="false" v-if="ticket.currentHandler">
                <template #title>
                    Current Handler Info
                </template>
@@ -823,7 +823,7 @@
    
 
        <div class="w-2/6 h-[92vh] pt-2  text-center bg-blue overflow-y-scroll overflow-x-clip">
-          <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="this.ticket.ticketingHead.mailAddress == this.ticket.currentHandler.mailAddress">
+          <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="ticket.currentHandler && ticket.ticketingHead.mailAddress == ticket.currentHandler.mailAddress">
             
             <span class="font-bold">Set Ticket Priority:</span>
 
