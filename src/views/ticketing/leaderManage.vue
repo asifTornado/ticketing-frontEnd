@@ -188,14 +188,19 @@
          
         </tbody>
     </table>
-</div></div>
+</div>
+
+<Pagination @page-Changed="handlePageChanged" :items="this.mainStore.getFilteredTickets.length" ref="paginator"/>
+
+
+</div>
  
 
 
     
    </div>
     
-    
+
     
     
     
@@ -225,7 +230,9 @@
                filteredTickets:[],
                sort:[ "emergency", "high", "medium", "normal",],
                selectedItem:null,
-               support:[]
+               support:[],
+               currentPage:1,
+               itemsPerPage:2
             }
         },
 
@@ -236,7 +243,9 @@
              tickets.sort(vm.comparator)
              console.log("these are the sorted Tickets")
              console.log(tickets)
-             return tickets
+             var start = (vm.currentPage - 1) * vm.itemsPerPage
+             var end = start + vm.itemsPerPage
+             return tickets.slice(start, end)
             }
 
         },
@@ -246,9 +255,17 @@
          this.loadTickets()
         },
 
+    
+
       
         
         methods:{
+
+            handlePageChanged(page){
+                this.currentPage = page;
+                
+             console.log("handlePageChanged called")
+            },
 
             assignTicket(event, ticket){
             var vm = this;
@@ -364,6 +381,7 @@
             axios.post(vm.globalUrl + 'getTickets', data).then((result)=>{
           
                vm.tickets = result.data.filter((ticket) => ticket.status != 'Closed Ticket')
+               this.$refs.paginator.onClickHandler(1)
                vm.mainStore.setFilteredTickets(vm.tickets)
                vm.mainStore.setInitialTickets(vm.tickets)
                vm.mainStore.setTickets(vm.tickets)
@@ -436,36 +454,44 @@
 
 
             filter(event, type){
-
+                var paginate = this.$refs.paginator.onClickHandler
                 var vm = this;
                 var store = vm.mainStore
                 vm.selectItem(type);
                 switch(type){
                     case "unassigned":
+                    paginate(1);
                     store.setInitialTickets(vm.unassigned)
                     store.setFilteredTickets(vm.unassigned)
+                    
                         break;
                     case "assigned":
+                    paginate(1);
                     store.setInitialTickets(vm.assigned)
                     store.setFilteredTickets(vm.assigned)
                         break;
                     case "accepted":
+                    paginate(1);
                     store.setInitialTickets(vm.accepted)
                     store.setFilteredTickets(vm.accepted)
                         break;
                     case "approval":
+                    paginate(1);
                     store.setInitialTickets(vm.approval)
                     store.setFilteredTickets(vm.approval)
                         break;
                     case "info":
+                    paginate(1);
                     store.setInitialTickets(vm.info)
                     store.setFilteredTickets(vm.info)
                         break;
                     case "close":
+                    paginate(1);
                     store.setInitialTickets(vm.myCloseRequests)
                     store.setFilteredTickets(vm.myCloseRequests)
                         break;
                     case "all":
+                    paginate(1);
                     store.setInitialTickets(vm.tickets)
                     store.setFilteredTickets(vm.tickets)
                         break;

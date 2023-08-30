@@ -10,10 +10,17 @@ import VueCollapsiblePanel from '@dafcoe/vue-collapsible-panel'
 import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
 import ClearButtton from './components/clearButton.vue'
 
+import VueAwesomePaginate from "vue-awesome-paginate";
+import Pagination from './components/pagination.vue'
+
+
+// import the necessary css file
+import "vue-awesome-paginate/dist/style.css";
+
 import 'mavon-editor/dist/css/index.css'
 // import {quillEditor} from 'vue3-quill'
 
-import 'suneditor/dist/css/suneditor.min.css'
+import 'suneditor/dist/css/suneditor.min.css' 
 
 
 
@@ -78,7 +85,7 @@ app.component("ClearButton", ClearButtton)
 
 app.component('vss', select2)
 app.component("Popper", Popper)
-
+app.component("Pagination", Pagination)
 
 
 function downloadExcel() {
@@ -144,6 +151,7 @@ app.use(ToastPlugin)
 app.use(VueApexCharts)
 app.use(CKEditor)
 app.use(VueCollapsiblePanel)
+app.use(VueAwesomePaginate)
 app.component("Tooltip", TooltipComponent)
 app.component("FilterButton", FilterButton)
 app.component("FilterDrawer", FilterDrawer)
