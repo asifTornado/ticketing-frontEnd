@@ -11,7 +11,7 @@
 <div class=" flex flex-row   text-lg  h-[92vh] w-full  bg-[rgb(248,248,248)]  " id="app"  >
 
 
-<div ref="sidePanel" class="flex flex-col h-[92vh] customborder  bg-white     py-10" v-if="this.mainStore.getSidePanelCheck" >
+<div ref="sidePanel" class="flex flex-col h-[92vh] customborder  bg-white     py-10" v-if="this.mainStore.getSidePanelCheck" id="sidePanel" >
 
     <div @click="filter($event, 'my')" ref="my" :class="{selected:selectedItem == 'my', notSelected:selectedItem != 'my'}">
         <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
@@ -125,12 +125,12 @@
     </thead>
     <tbody>
         <tr :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
-            <th @click="showDetails(ticket._id)"  scope="row" class=" table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <td @click="showDetails(ticket._id)"  scope="row" class=" table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 {{ ticket.number }}
-            </th>
-            <th @click="showDetails(ticket._id)"  scope="row" class=" table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            </td>
+            <td @click="showDetails(ticket._id)"  scope="row" class=" table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 {{ ticket.priority }}
-            </th>
+            </td>
             <td @click="showDetails(ticket._id)"  class=" table-row2 px-6 py-4">
                 {{ ticket.requestDate }}
             </td>
@@ -147,6 +147,7 @@
             </td>
             <td @click="showDetails(ticket._id)"  class=" table-row2 px-6 py-4">
                <template v-if="ticket.currentHandler">{{ ticket.currentHandler.empName }}</template> 
+               <template  v-else>Not Available Yet</template> 
             </td>
         </tr>
        
@@ -397,13 +398,7 @@ showProblemDetails(event){
     </script>
 
     <style scoped>
-.table-header2{
-     font-size: 15px;
- }
- 
- .table-row2{
-     font-size:15px
- }
+
 
 
  #sidePanel div div  label{
@@ -445,6 +440,25 @@ showProblemDetails(event){
   border-right-style: solid;   /* Equivalent to border-solid */
   border-right-color: #10B981;
 
+ }
+
+ table th{
+    border-bottom:1px solid rgb(184, 181, 181);
+    background-color: lightgray;
+ }
+
+ table td {
+    border-bottom: 1px solid gray;
+ }
+
+ #sidePanel{
+    background-color: rgb(230, 230, 230);
+ }
+ 
+
+ #sidePanel div{
+   background-color: white;
+   margin-bottom: 5px;
  }
  
 

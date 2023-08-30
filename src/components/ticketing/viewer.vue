@@ -1,4 +1,80 @@
 <template>
+
+   
+<div style="z-index:1233333333333333333333" class=" w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 border border-solid border-black" v-if="assignTicketCheck">
+   <div class="flex flex-col w-full h-full bg-white" >
+             
+      <div class="flex flex-row w-full h-full mt-2 mb-2 bg-white">
+         <table>
+           <thead class="mb-10">
+               <th class="pb-4">User</th>
+               <th class="pb-4">Email</th>
+               <th class="pb-4">Currently Assigned</th>
+               <th class="pb-4"></th>
+           </thead>
+           <tbody>
+               <tr v-for="(user, userCounter) in support" :key="userCounter">
+                 <td class="text-start pl-10 pb-5">{{user.user.empName}}</td>
+                 <td class="text-start pl-10 pb-5">{{user.user.mailAddress}}</td>
+                 <td class="text-start pl-10 pb-5">{{user.numbers}}</td>
+                 <td class="text-start pl-10 pb-5" ><input type="radio" :value="user.user.empName" name="assignCheck" @change="handleApproverChange2"></td>
+               </tr>
+           </tbody>
+         </table>
+      </div>
+      <div class="flex flex-row w-full h-full">
+              <div class="w-1/6 text-center font-bold" >
+                                  Comment: 
+                              </div>
+                              <div class="w-5/6">
+                                    <textarea  class="border-2 border-solid border-slate-300 w-full p-2" v-model="comment"></textarea>
+                              </div>
+       </div>
+ </div>
+
+ <div class="flex flex-row w-full h-full justify-end " >
+   <button  class="bg-blue-500  text-white font-bold mr-2  mt-10 p-2 border border-solid    rounded-sm" @click="assignTicket">Proceed</button> 
+   <button  class="bg-slate-300  text-black  border border-solid b  font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle">Cancel</button>
+</div>
+</div>
+
+
+
+
+
+
+
+<div v-if="assignSelfCheck"   style="z-index:1233333333333333333333" class=" w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 border border-solid border-black" >
+   <div class="flex flex-col w-full h-full bg-white" >
+             
+
+      <div class="flex flex-row w-full h-full">
+              <div class="w-1/6 text-center font-bold" >
+                                  Comment: 
+                              </div>
+                              <div class="w-5/6">
+                                    <textarea  class="border-2 border-solid border-slate-300 w-full p-2" v-model="comment"></textarea>
+                              </div>
+       </div>
+ </div>
+
+ <div class="flex flex-row w-full h-full justify-end " >
+   <button  class="bg-blue-500  text-white font-bold mr-2  mt-10 p-2 border border-solid    rounded-sm" @click="assignSelf">Proceed</button> 
+   <button  class="bg-slate-300  text-black  border border-solid b  font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle">Cancel</button>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
    <div  v-if="mentionCheck" style="z-index:99" class="border border-solid border-black w-[350px] h-[300px] fixed bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
    <div style="z-index:1"> <div class="p-2 hover:cursor-pointer" @click="mentionCheck = false" style="z-index:1"><font-awesome-icon icon="fa-solid fa-multiply"/></div>
     <div class="w-full h-[200px] overflow-y-scroll relative p-5" style="z-index:1">
@@ -77,7 +153,7 @@
 
 </div>
 
-<Chat :ticketId="ticket._id" :user="ticket.currentHandler.empName"  v-if="this.authStore.getUser.mailAddress == ticket.raisedBy.mailAddress && ticket.status != 'Closed Ticket'"/>
+<Chat :ticketId="ticket._id" :user="ticket.currentHandler.empName"  v-if="ticket.currentHander && this.authStore.getUser.mailAddress == ticket.raisedBy.mailAddress && ticket.status != 'Closed Ticket'"/>
    <div class="flex flex-row w-full h-[92vh]" ref="main" >
 
 
@@ -891,8 +967,8 @@
 </div>
 
 <div class="flex flex-row  w-full justify-end h-auto ">     
-   
-   <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelf" v-if="ticket.assignedTo == null">Assign To Self</button>
+   <button class="bg-blue-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle" v-if="ticket.assignedTo == null && user.mailAddress == ticket.ticketingHead.mailAddress">Assign </button>
+   <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle" v-if="ticket.assignedTo == null && ticket.users.includes(user.mailAddress)">Assign To Self</button>
     <button class="bg-amber-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showDetails">Show Details</button>
     <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        
          
@@ -1077,6 +1153,11 @@
              <Actions  :action="'Response By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwared To'" :comment="action.comments" />
             </template>
 
+            <template v-else-if="action.type == 13">
+
+               <Actions  :action="'Unassigned By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwared To'" :comment="action.comments" />
+              </template>
+
 
             
 
@@ -1163,6 +1244,7 @@
        return {
            showDetailsCheck:false,
            comment:'',
+           approver:'',
            commentCall:false,
            users:[],
            componentTicket:null,
@@ -1185,7 +1267,11 @@
            commentFilesCheck:false,
            mentionCheck:false,
            mentions:['',],
-           mentionMessage:''
+           mentionMessage:'',
+           assignSelfCheck:false,
+           assignTicketCheck:false,
+           support:[],
+           tickets:[]
     
        
         
@@ -1199,6 +1285,8 @@
       },
 
       created(){
+         this.getTickets();
+           this.getSupport();
           this.getApprovers();
           this.getNotes();
    
@@ -1227,6 +1315,67 @@
       },
 
       methods:{
+         getTickets(){
+           var vm = this;
+           var user = this.authStore.getUser;
+           var data = new FormData();
+           data.append("user", JSON.stringify(user))
+
+           axios.post(vm.globalUrl + "getTickets", data).then((result)=>{
+            vm.tickets = result.data
+
+           }).catch((error)=>{
+            vm.$toast.warning(error)
+           })
+        },
+         assignTicketToggle(){
+             if(this.assignTicketCheck == false){
+               this.assignTicketCheck = true
+             }else if(this.assignTicketCheck == true){
+               this.assignTicketCheck = false
+             }
+         },
+         assignSelfToggle(){
+            if(this.assignSelfCheck == false){
+               this.assignSelfCheck = true
+             }else if(this.assignSelfCheck == true){
+               this.assignSelfCheck = false
+             }
+         },
+         assignTicket(){
+            console.log("from assign ticket");
+            var vm = this;
+            this.$toast.info("Assigning Ticket...")
+            var user = this.authStore.getUser
+            var token = this.authStore.getToken
+            var comment = comment
+   
+
+            var data = new FormData()
+            var ticket = vm.ticket;
+
+            var approver = this.approver;
+         
+            data.append('token', token)
+            data.append('user', JSON.stringify(user))
+            data.append('comment', comment)
+            data.append('ticket', JSON.stringify(ticket))
+            data.append('approver', JSON.stringify(approver))
+
+            axios.post(vm.globalUrl + 'assign', data).then((result)=>{
+                if(result.data == true){
+                    vm.$toast.clear()
+                    vm.$toast.success('Done')
+                    this.$router.push('/ticketing/myTickets')
+                }else{
+                    vm.$toast.clear()
+                    vm.$toast.warning(result.data)
+                }
+            }).catch((error)=>{
+                vm.$toast.clear()
+                vm.$toast.warning(error)
+            })
+        },
          assignSelf(){
             var vm = this;
             var user = this.authStore.getUser;
@@ -1265,6 +1414,57 @@
 
     removeMention(counter){
       this.mentions.splice(counter, 1)
+
+    },
+
+    handleApproverChange2(event){
+    console.log('this is the event')
+    console.log(event)
+    var value = event.target.value
+  
+    var user = this.users.find((user)=>{
+        
+        return user.empName == value;
+
+    });
+    console.log("this is the user");
+    console.log(user);
+    this.approver = user;
+},
+
+    getSupport(){
+        var vm = this;
+        var token = this.authStore.getToken;
+        var user = this.authStore.getUser;
+        var ticket = this.ticket
+
+        var data = new FormData();
+        data.append("token", token);
+        data.append("user", JSON.stringify(user));
+        data.append("ticket", JSON.stringify(ticket));
+
+        console.log("from get support")
+        console.log(ticket);
+
+
+
+        axios.post(vm.globalUrl + "getSupport", data).then((result)=>{
+            vm.support = result.data.map((user)=>{
+               var newObject = {
+                user:user.user,
+                numbers:0
+               }
+
+               var tickets = vm.tickets.filter((ticket)=>ticket.assignedTo && ticket.assignedTo.mailAddress == user.user.mailAddress)
+               newObject.numbers = tickets.length;
+
+               return newObject
+            });
+            console.log("this is the support");
+            console.log(result.data)
+
+        }).catch((error)=> vm.$toast.warning(error));
+
 
     },
 
@@ -1520,6 +1720,9 @@ this.$refs.commentBox.scrollTo({
          }else if(action.type == 12){
             console.log("rejecting request")
             return "Ticket Close Request Reject"
+         }else if(action.type == 13){
+            console.log("rejecting request")
+            return "Ticket Unassigned"
          }
       },
 

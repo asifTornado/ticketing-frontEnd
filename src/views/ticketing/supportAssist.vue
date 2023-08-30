@@ -16,7 +16,20 @@
           </div>
          
       
- 
+          
+
+          <div @click="filter($event, 'unassigned')" class=" hover:cursor-pointer flex flex-row justify-around w-full p-5  hover:bg-[rgb(237,237,237)] hover:border-r-4 hover:border-solid hover:border-r-emerald-500">
+            <div class=" hover:cursor-pointer flex flex-row  w-full items-center">
+
+              <div class=" hover:cursor-pointer w-1/6"><font-awesome-icon icon=" hover:cursor-pointer fa-solid fa-check" /></div>
+               <label class=" hover:cursor-pointer text-sm">Unassigned Tickets</label>
+              
+            </div>
+            <label class=" hover:cursor-pointer text-sm">{{unassigned.length}}</label>
+       </div>
+
+
+
  
           <div @click="filter($event, 'assigned')" class="flex flex-row justify-around w-full p-5 hover:cursor-pointer hover:bg-[rgb(237,237,237)] hover:border-r-4 hover:border-solid hover:border-r-emerald-500">
                <div class="flex flex-row hover:cursor-pointer   w-full items-center">
@@ -29,16 +42,7 @@
           </div>
  
  
-          <div @click="filter($event, 'accepted')" class=" hover:cursor-pointer flex flex-row justify-around w-full p-5  hover:bg-[rgb(237,237,237)] hover:border-r-4 hover:border-solid hover:border-r-emerald-500">
-               <div class=" hover:cursor-pointer flex flex-row  w-full items-center">
- 
-                 <div class=" hover:cursor-pointer w-1/6"><font-awesome-icon icon=" hover:cursor-pointer fa-solid fa-check" /></div>
-                  <label class=" hover:cursor-pointer text-sm">Accepted Tickets</label>
-                 
-               </div>
-               <label class=" hover:cursor-pointer text-sm">{{ accepted.length }}</label>
-          </div>
- 
+       
  
         
  
@@ -101,9 +105,9 @@
          </thead>
          <tbody>
              <tr @click="showDetails(ticket._id)" :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in this.mainStore.getFilteredTickets" :key="ticketCounter">
-                 <th scope="row" class="cursor-pointer table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                 <td scope="row" class="cursor-pointer table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                      {{ ticket.number }}
-                 </th>
+                 </td>
                  <td class="cursor-pointer table-row2 px-6 py-4">
                      {{ ticket.requestDate }}
                  </td>
@@ -120,7 +124,9 @@
                  </td>
                  <td class="cursor-pointer table-row2 px-6 py-4">
                     <template v-if="ticket.currentHandler">{{ ticket.currentHandler.empName }}</template> 
+                    <template  v-else>Not Available Yet</template> 
                  </td>
+              
              </tr>
             
            
@@ -193,7 +199,7 @@
                 vm.mainStore.setTickets(vm.tickets);
                 vm.mainStore.setFilteredTickets(vm.filteredTickets)
               
-                vm.accepted = vm.tickets.filter((ticket)=>ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress)
+                vm.unassigned = vm.tickets.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
                 vm.assigned = vm.tickets.filter((ticket)=>ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.accepted == false)
                 vm.approval = vm.tickets.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
                 vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress ==user.mailAddress);
@@ -323,6 +329,24 @@
  #sidePanel div div  label{
    margin-right: 10px;
  }
+
+ table th{
+    border-bottom:1px solid gray;
+    background-color: lightgray;
+ }
+
+ table td {
+    border-bottom: 1px solid gray;
+ }
+
+ #sidePanel{
+    background-color: rgb(230, 230, 230);
+ }
  
+
+ #sidePanel div{
+   background-color: white;
+   margin-bottom: 5px;
+ }
  
  </style>

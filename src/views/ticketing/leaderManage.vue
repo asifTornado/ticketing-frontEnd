@@ -44,7 +44,7 @@
          </div>
 
 
-         <div @click="filter($event, 'accepted')" :class="{selected:selectedItem == 'accepted', notSelected:selectedItem != 'accepted'}">
+         <!-- <div @click="filter($event, 'accepted')" :class="{selected:selectedItem == 'accepted', notSelected:selectedItem != 'accepted'}">
               <div class=" hover:cursor-pointer flex flex-row  w-full items-center">
 
                 <div class=" hover:cursor-pointer w-1/6 text-sm "><font-awesome-icon icon=" hover:cursor-pointer fa-solid fa-check" /></div>
@@ -52,7 +52,7 @@
                 
               </div>
               <label class=" hover:cursor-pointer text-sm ">{{ accepted.length }}</label>
-         </div>
+         </div> -->
 
 
          <div @click="filter($event, 'approval')" :class="{selected:selectedItem == 'approval', notSelected:selectedItem != 'approval'}">
@@ -97,7 +97,7 @@
     </div>
 
 
-  <div class="h-[100vh]  p-5 bg-[rgb(248,248,248)] flex flex-col w-full mx-2">  
+  <div class="h-[92vh]  p-5 bg-[rgb(248,248,248)] flex flex-col w-full mx-2">  
   <div class="flex flex-row items-center justify-between "><div class="ml-[400px] text-2xl">{{ getSelectedItem() }}</div>
 <div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
     Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-4"/>
@@ -131,6 +131,11 @@
                 <th scope="col" class="table-header2 px-6 py-3">
                     Requester
                 </th>
+
+                <th scope="col" class="table-header2 px-6 py-3">
+                    Assignee
+                </th>
+
                 <th scope="col" class="table-header2 px-6 py-3">
                     Current Handler
                 </th>
@@ -159,6 +164,21 @@
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
                    {{ticket.raisedBy.empName}}
                 </td>
+                <td  class="table-row2 px-6 py-4">
+                    <template v-if="ticket.assignedTo">
+                        <select name="" id="" @change="assignTicket($event, ticket)">
+                            <option :value="ticket.assignedTo.empName" selected>{{ticket.assignedTo.empName}}</option>
+                            <option value="Unassigned" >Unassigned</option>
+                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="user.empName">{{user.empName}}</option>
+                        </select>
+                    </template> 
+                    <template v-else>
+                        <select name="" id="" @change="assignTicket($event, ticket)" >
+                            <option value="Unassigned" selected>Unassigned</option>
+                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="user.empName">{{user.empName}}</option>
+                        </select>
+                    </template> 
+                 </td>
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
                    <template v-if="ticket.currentHandler">{{ ticket.currentHandler.empName }}</template> 
                 </td>
@@ -204,7 +224,8 @@
                accepted:[],
                filteredTickets:[],
                sort:[ "emergency", "high", "medium", "normal",],
-               selectedItem:null
+               selectedItem:null,
+               support:[]
             }
         },
 
@@ -222,6 +243,117 @@
 
 
         created(){
+         this.loadTickets()
+        },
+
+      
+        
+        methods:{
+
+            assignTicket(event, ticket){
+            var vm = this;
+            vm.$toast.info("Assigning ticket please wait....")
+        
+            var vm = this;
+      
+            var user = this.authStore.getUser
+            var token = this.authStore.getToken
+            var comment = "Not Available"
+            var ticket = ticket
+            var prevAssignee = ticket.assignedTo
+
+            console.log("this is the selected name")
+            console.log(event.target.value);
+
+
+            if(event.target.value == "Unassigned" && ticket.assignedTo != null){
+                var data = new FormData();
+                data.append('token', token)
+                data.append('user', JSON.stringify(user))
+                data.append('comment', comment)
+                data.append('ticket', JSON.stringify(ticket))
+                data.append("prevAssignee", JSON.stringify(prevAssignee))
+
+
+                axios.post(vm.globalUrl + 'unassign', data).then((result)=>{
+                           if(result.data == true){
+                               vm.$toast.clear()
+                               vm.$toast.success('Assigning Done')
+                               vm.loadTickets()
+                           }else{
+                               vm.$toast.clear()
+                               vm.$toast.warning(result.data)
+                           }
+                       }).catch((error)=>{
+                           vm.$toast.clear()
+                           vm.$toast.warning(error)
+                       })
+
+               
+            }else if(ticket.assignedTo != null && event.target.value != "Unassigned"){
+                 var approver = vm.support.filter((user)=>user.empName == event.target.value)[0]
+                 
+                 var data = new FormData();
+                 
+                 data.append('token', token)
+                 data.append('user', JSON.stringify(user))
+                 data.append('comment', comment)
+                 data.append('ticket', JSON.stringify(ticket))
+                 data.append('approver', JSON.stringify(approver))
+
+                 axios.post(vm.globalUrl + 'reassign', data).then((result)=>{
+                    if(result.data == true){
+                        vm.$toast.clear()
+                        vm.$toast.success('Reassigning Done')
+                        vm.loadTickets()
+                      
+                    }else{
+                        vm.$toast.clear()
+                        vm.$toast.warning(result.data)
+                    }
+                }).catch((error)=>{
+                    vm.$toast.clear()
+                    vm.$toast.warning(error)
+                })
+
+
+            }else if(ticket.assignedTo == null && event.target.value != "Unassigned"){
+                var approver = vm.support.filter((user)=> user.empName == event.target.value)[0]
+
+                       console.log("this is the approver")
+                       console.log(approver)
+                       
+                       
+                       var data = new FormData();
+                       
+                       data.append('token', token)
+                       data.append('user', JSON.stringify(user))
+                       data.append('comment', comment)
+                       data.append('ticket', JSON.stringify(ticket))
+                       data.append('approver', JSON.stringify(approver))
+                       
+                       axios.post(vm.globalUrl + 'assign', data).then((result)=>{
+                           if(result.data == true){
+                               vm.$toast.clear()
+                               vm.$toast.success('Assigning Done')
+                               vm.loadTickets()
+                       
+                           }else{
+                               vm.$toast.clear()
+                               vm.$toast.warning(result.data)
+                           }
+                       }).catch((error)=>{
+                           vm.$toast.clear()
+                           vm.$toast.warning(error)
+                       })
+            }
+            
+            
+           
+        },
+
+        loadTickets(){
+            this.getSupport();
             this.$toast.info("Loading Data....")
             var vm = this;
             var token = this.authStore.getToken
@@ -250,9 +382,6 @@
             })
         },
 
-      
-        
-        methods:{
             getSelectedItem(){
                if(this.selectedItem == "all"){
                 return "All Tickets"
@@ -428,6 +557,25 @@
     const data = dataList.map((item) => Object.values(item));
     return [headers, ...data];
   },
+
+
+  getSupport(){
+    var vm = this;
+    var user = this.authStore.getUser;
+    var token = this.authStore.getToken;
+
+    var data = new FormData();
+
+    data.append("user", JSON.stringify(user))
+    data.append("token", JSON.stringify(token))
+
+    axios.post(vm.globalUrl + "getSupportFromHead", data).then((result)=>{
+        vm.support = result.data
+
+    }).catch((error)=>vm.$toast.error(error))
+
+
+  }
         }
     
     
@@ -443,13 +591,6 @@
 <style scoped>
 
 
- table th {
-    border-bottom: 1px solid lightslategray;
-}
-
-table td {
-    border-bottom:1px solid lime;
-}
 
 
 
@@ -512,6 +653,25 @@ table td {
    padding:20px;
    cursor: pointer; */
 
+ }
+
+ table th{
+    border-bottom:1px solid gray;
+    background-color: lightgray;
+ }
+
+ table td {
+    border-bottom: 1px solid gray;
+ }
+
+ #sidePanel{
+    background-color: rgb(230, 230, 230);
+ }
+ 
+
+ #sidePanel div{
+   background-color: white;
+   margin-bottom: 5px;
  }
 
 
