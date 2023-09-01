@@ -12,6 +12,9 @@ import ClearButtton from './components/clearButton.vue'
 
 import VueAwesomePaginate from "vue-awesome-paginate";
 import Pagination from './components/pagination.vue'
+import DepartmentReport from './components/departmentReport.vue'
+
+
 
 
 // import the necessary css file
@@ -50,6 +53,8 @@ import TooltipComponent from './Tooltip.vue'
 import router from './router'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
+import Tabs from './components/tabs.vue'
+import Tab from './components/tab.vue'
 
 /* import font awesome icon component */
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
@@ -86,6 +91,10 @@ app.component("ClearButton", ClearButtton)
 app.component('vss', select2)
 app.component("Popper", Popper)
 app.component("Pagination", Pagination)
+
+app.component('tabs', Tabs);
+app.component('tab', Tab);
+app.component("DepartmentReport", DepartmentReport)
 
 
 function downloadExcel() {
@@ -189,6 +198,37 @@ app.mixin({
             this.authStore.setToken(null);
             this.$router.push('/login')
         },
+
+        setPriority(event, ticket){
+               
+          var vm = this;
+          vm.$toast.info("Setting Priority")
+          var data = new FormData();
+          var priority = event.target.value;
+          data.append("priority", priority)
+          data.append("id", ticket._id)
+          axios.post(vm.globalUrl + 'setPriority', data).then((result)=>{
+             vm.priority = result.data
+             vm.$toast.clear()
+             vm.$toast.success("Priority Set")
+          }).catch((error)=>vm.$toast.warning(error))
+    },
+
+
+    setTicketType(event, ticket){
+      var vm = this;
+      vm.$toast.info("Setting Ticket Type")
+      var data = new FormData();
+      var type = event.target.value;
+      data.append("ticketType", type)
+      data.append("id", ticket._id)
+      axios.post(vm.globalUrl + 'setTicketType', data).then((result)=>{
+         vm.ticketType = result.data
+         vm.$toast.clear()
+         vm.$toast.success("Ticket Type Set")
+      }).catch((error)=>vm.$toast.warning(error))
+    },
+
 
         loadCurrentRequests(notification){
             console.log("from inside loadCurrentRequests")

@@ -370,19 +370,19 @@ var mixin = {
             data.append('ticket', JSON.stringify(ticket))
             data.append('approver', JSON.stringify(approver))
 
-            axios.post(vm.globalUrl + 'reassign', data).then((result)=>{
-                if(result.data == true){
+                axios.post(vm.globalUrl + 'reassign', data).then((result)=>{
+                    if(result.data == true){
+                        vm.$toast.clear()
+                        vm.$toast.success('Done')
+                        this.$router.push('/ticketing/myTickets')
+                    }else{
+                        vm.$toast.clear()
+                        vm.$toast.warning(result.data)
+                    }
+                }).catch((error)=>{
                     vm.$toast.clear()
-                    vm.$toast.success('Done')
-                    this.$router.push('/ticketing/myTickets')
-                }else{
-                    vm.$toast.clear()
-                    vm.$toast.warning(result.data)
-                }
-            }).catch((error)=>{
-                vm.$toast.clear()
-                vm.$toast.warning(error)
-            })
+                    vm.$toast.warning(error)
+                })
         },
 
 

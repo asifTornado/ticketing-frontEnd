@@ -80,30 +80,40 @@
 <template v-if="userType == 'admin'">
         <div @click="clickedTab($event, 'item1', '/ticketing/newTicket')" :class="{selectedTab: selectedItem == 'item1', unselectedTab:selectedItem != 'item1'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
          <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>  
-         <font-awesome-icon icon="fa-solid fa-ticket" size="2x" class=" hover:cursor-pointer"/>
+         <font-awesome-icon icon="fa-solid fa-ticket" size="x" class=" hover:cursor-pointer"/>
     </div>
         <div @click="clickedTab($event, 'item2', '/ticketing/myTickets')" :class="{selectedTab: selectedItem == 'item2', unselectedTab:selectedItem != 'item2'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
          <div class="opacity-0 group-hover:opacity-100 absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999">My Tickets</div> 
-         <font-awesome-icon icon="fa-solid fa-clipboard-list" size="2x" class=" hover:cursor-pointer"/>
+         <font-awesome-icon icon="fa-solid fa-clipboard-list" size="x" class=" hover:cursor-pointer"/>
     </div>
     <div @click="clickedTab($event, 'item3', '/ticketing/systemAdmin/manage')" :class="{selectedTab: selectedItem == 'item3', unselectedTab:selectedItem != 'item3'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
       <div class="opacity-0 group-hover:opacity-100 absolute right-[-112px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999">Manage Tickets</div>  
-      <font-awesome-icon icon="fa-solid fa-people-roof" size="2x" class=" hover:cursor-pointer"/> 
+      <font-awesome-icon icon="fa-solid fa-people-roof" size="x" class=" hover:cursor-pointer"/> 
      
     </div>
     <div @click="clickedTab($event, 'item4', '/ticketing/users')" :class="{selectedTab: selectedItem == 'item4', unselectedTab:selectedItem != 'item4'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
       <div class="opacity-0 group-hover:opacity-100 absolute right-[-105px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999">Manage Users</div>  
-      <font-awesome-icon icon="fa-solid fa-user" size="2x" class=" hover:cursor-pointer"/>
+      <font-awesome-icon icon="fa-solid fa-user" size="x" class=" hover:cursor-pointer"/>
     </div>
     <div @click="clickedTab($event, 'item5', '/ticketing/teams')" :class="{selectedTab: selectedItem == 'item5', unselectedTab:selectedItem != 'item5'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
       <div class="opacity-0 group-hover:opacity-100 absolute right-[-120px] top-[12px] p-3 bg-gray-600 text-white">Manage Services</div>   
-      <font-awesome-icon icon="fa-solid fa-user-group" size="2x" class=" hover:cursor-pointer"/>
+      <font-awesome-icon icon="fa-solid fa-user-group" size="x" class=" hover:cursor-pointer"/>
     </div>
 
     <div @click="clickedTab($event, 'item6', '/ticketing/locations')" :class="{selectedTab: selectedItem == 'item6', unselectedTab:selectedItem != 'item6'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
       <div class="opacity-0 group-hover:opacity-100 absolute right-[-128px] top-[12px] p-3 bg-gray-600 text-white">Manage Locations</div>   
-      <font-awesome-icon icon="fa-solid fa-map" size="2x" class=" hover:cursor-pointer"/>
+      <font-awesome-icon icon="fa-solid fa-map" size="x" class=" hover:cursor-pointer"/>
     </div>
+
+    <div @click="clickedTab($event, 'item7', '/ticketing/power/analytics')" :class="{selectedTab: selectedItem == 'item7', unselectedTab:selectedItem != 'item7'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+      <div  class="opacity-0  group-hover:opacity-100 absolute right-[-75px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999">Analytics</div>  
+      <font-awesome-icon icon="fa-solid fa-chart-bar" size="x" class=" hover:cursor-pointer"/>
+ </div>
+
+ <div @click="clickedTab($event, 'item8', '/ticketing/power/report')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+  <div  class="opacity-0  group-hover:opacity-100 absolute right-[-75px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999">Analytics</div>  
+  <font-awesome-icon icon="fa-solid fa-file-contract" size="x" class=" hover:cursor-pointer"/>
+</div>
 </template>
 
 
@@ -123,7 +133,8 @@
 </template>
 
 
-<div @click="this.mainStore.toggleSidePanel()" class="unselectedTab" v-if="this.mainStore.getSidePanelCheck == true">
+<template v-if="this.authStore.getUser.userType != 'admin'">
+  <div @click="this.mainStore.toggleSidePanel()" class="unselectedTab" v-if="this.mainStore.getSidePanelCheck == true">
   <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>  
   <font-awesome-icon icon="fa-solid fa-angles-left" size="2x" class=" hover:cursor-pointer"/>
 </div>
@@ -131,6 +142,17 @@
   <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>  
   <font-awesome-icon icon="fa-solid fa-angles-right" size="2x" class=" hover:cursor-pointer"/>
 </div>
+</template>
+<template v-else>
+  <div @click="this.mainStore.toggleSidePanel()" class="unselectedTab" v-if="this.mainStore.getSidePanelCheck == true">
+  <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>  
+  <font-awesome-icon icon="fa-solid fa-angles-left" size="x" class=" hover:cursor-pointer"/>
+</div>
+<div @click="this.mainStore.toggleSidePanel()" class="unselectedTab" v-if="this.mainStore.getSidePanelCheck == false">
+  <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>  
+  <font-awesome-icon icon="fa-solid fa-angles-right" size="x" class=" hover:cursor-pointer"/>
+</div>
+</template>
 </div>
 
 <!-- <div>

@@ -104,7 +104,7 @@
              </tr>
          </thead>
          <tbody>
-             <tr @click="showDetails(ticket._id)" :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in this.mainStore.getFilteredTickets" :key="ticketCounter">
+             <tr @click="showDetails(ticket._id)" :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
                  <td scope="row" class="cursor-pointer table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                      {{ ticket.number }}
                  </td>
@@ -133,7 +133,11 @@
           
          </tbody>
      </table>
- </div></div>
+ </div>
+
+ <Pagination @page-Changed="handlePageChanged" :items="this.mainStore.getFilteredTickets.length" :itemsPerPage="itemsPerPage" ref="paginator"/>
+
+</div>
   
  
  
@@ -168,7 +172,9 @@
                 unassigned:[],
                 accepted:[],
                 filteredTickets:[],
-                sort:[ "emergency", "high", "medium", "normal",]
+                sort:[ "emergency", "high", "medium", "normal",],
+                currentPage:1,
+                itemsPerPage:2
              }
          },
 
@@ -179,45 +185,27 @@
              tickets.sort(vm.comparator)
              console.log("these are the sorted Tickets")
              console.log(tickets)
-             return tickets
+             var start = (vm.currentPage - 1) * vm.itemsPerPage
+             var end = start + vm.itemsPerPage
+             return tickets.slice(start, end)
             }
 
         },
  
  
          created(){
-             this.$toast.info("Loading Data....")
-             var vm = this;
-             var token = this.authStore.getToken
-             var user = this.authStore.getUser
-             var data = new FormData();
-             data.append("token", token);
-             data.append("user", JSON.stringify(user));
-             axios.post(vm.globalUrl + 'getTickets', data).then((result)=>{
-                vm.tickets = result.data
-                vm.filteredTickets = vm.tickets
-                vm.mainStore.setTickets(vm.tickets);
-                vm.mainStore.setFilteredTickets(vm.filteredTickets)
-              
-                vm.unassigned = vm.tickets.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
-                vm.assigned = vm.tickets.filter((ticket)=>ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.accepted == false)
-                vm.approval = vm.tickets.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
-                vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress ==user.mailAddress);
-                vm.info = vm.tickets.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
-                vm.$toast.clear()
-                vm.$toast.success("Data Loaded Successfully")
-             }).catch((error)=>{
-                 vm.$toast.clear()
-                 console.log("this is the error")
-                 vm.$toast.warning(error)
-             })
+          this.loadTickets()
          },
  
     
          
          methods:{
 
-            
+            handlePageChanged(page){
+                this.currentPage = page;
+                
+             console.log("handlePageChanged called")
+            },
             
 
             comparator(a, b){
@@ -260,33 +248,41 @@
  
                  var vm = this;
                  var store = this.mainStore
+                 var paginate = this.$refs.paginator.onClickHandler
                  
                  switch(type){
                      case "unassigned":
+                         paginate(1);
                          store.setFilteredTickets( vm.unassigned)
                          store.setInitialTickets(vm.unassigned) 
                          break;
                      case "assigned":
+                         paginate(1);
                          store.setFilteredTickets(vm.assigned)
                          store.setInitialTickets(vm.assigned)  
                          break;
                      case "accepted":
+                     paginate(1);
                          store.setFilteredTickets(vm.accepted)
                          store.setInitialTickets(vm.accepted)  
                          break;
                      case "approval":
+                     paginate(1);
                          store.setFilteredTickets(vm.approval)
                          store.setInitialTickets(vm.approval)  
                          break;
                      case "info":
+                     paginate(1);
                          store.setFilteredTickets( vm.info)
                          store.setInitialTickets(vm.info) 
                          break;
                      case "close":
+                     paginate(1);
                          store.setFilteredTickets(vm.myCloseRequests)
                          store.setInitialTickets(vm.myCloseRequests)  
                          break;
                      case "all":
+                     paginate(1);
                          store.setFilteredTickets( vm.tickets)
                          store.setInitialTickets(vm.tickets) 
                          break;
@@ -300,6 +296,37 @@
             
                 this.$router.push(componentUrl);
                  },
+
+
+                 loadTickets(){
+                    this.$toast.info("Loading Data....")
+             var vm = this;
+             var token = this.authStore.getToken
+             var user = this.authStore.getUser
+             var data = new FormData();
+             data.append("token", token);
+             data.append("user", JSON.stringify(user));
+             axios.post(vm.globalUrl + 'getTickets', data).then((result)=>{
+                vm.tickets = result.data
+                vm.filteredTickets = vm.tickets
+                this.$refs.paginator.onClickHandler(1)
+                vm.mainStore.setTickets(vm.tickets);
+                vm.mainStore.setFilteredTickets(vm.filteredTickets)
+          
+              
+                vm.unassigned = vm.tickets.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
+                vm.assigned = vm.tickets.filter((ticket)=>ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.accepted == false)
+                vm.approval = vm.tickets.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
+                vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress ==user.mailAddress);
+                vm.info = vm.tickets.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
+                vm.$toast.clear()
+                vm.$toast.success("Data Loaded Successfully")
+             }).catch((error)=>{
+                 vm.$toast.clear()
+                 console.log("this is the error")
+                 vm.$toast.warning(error)
+             })
+                 }
          }
      
      

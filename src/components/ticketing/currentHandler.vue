@@ -822,17 +822,30 @@
 
    
 
-       <div class="w-2/6 h-[92vh] pt-2  text-center bg-blue overflow-y-scroll overflow-x-clip">
-          <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="ticket.currentHandler && ticket.ticketingHead.mailAddress == ticket.currentHandler.mailAddress">
+       <div class="w-2/6 h-[92vh] pt-2 relative  text-center bg-blue overflow-y-scroll overflow-x-clip">
+         <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="ticket.ticketingHead.mailAddress == user.mailAddress ">
             
-            <span class="font-bold">Set Ticket Priority:</span>
-
+          <div>  <span class="font-bold">Set Ticket Priority:</span>
+      
             <select class="ml-4 border border-solid border-black p-1" v-model="priority" @change="setPriority">
-               <option value="normal">Normal</option>
-               <option value="medium">Medium</option>
-               <option value="high">High</option>
-               <option value="emergency">Emergency</option>
+               <option value="Priority 1">Priority 1</option>
+               <option value="Priority 2">Priority 2</option>
+               <option value="Priority 3">Priority 3</option>
+               <option value="Priority 4">Priority 4</option>
             </select>
+         </div>
+
+
+         <div>  <span class="font-bold">Set Ticket Type:</span>
+      
+            <select class="ml-4 border border-solid border-black p-1" v-model="priority" @change="setTicketType">
+               <option value="Incident">Incident</option>
+               <option value="Problem">Problem</option>
+    
+            </select>
+         </div>
+
+
           </div>
          <ActionStatus :ticket="ticket"  />
          <div class="flex flex-row items-end w-full flex-wrap" >
@@ -1110,7 +1123,8 @@ import SocketService from './services/socketService';
            commentFilesCheck:false,
            mentionCheck:false,
            mentions:['',],
-           mentionMessage:''
+           mentionMessage:'',
+           ticketType:''
        
         
        }
@@ -1131,6 +1145,7 @@ import SocketService from './services/socketService';
           this.getNotes()
           this.user = this.authStore.getUser
           this.priority = this.ticket.priority
+          this.ticketType = this.ticket.ticketType
         
          //  SocketService.setupSocketConnection()
       },
@@ -1189,19 +1204,7 @@ import SocketService from './services/socketService';
         },
 
 
-         setPriority(){
-               
-               var vm = this;
-               vm.$toast.info("Setting Priority")
-               var data = new FormData();
-               data.append("priority", vm.priority)
-               data.append("id", this.ticket._id)
-               axios.post(vm.globalUrl + 'setPriority', data).then((result)=>{
-                  vm.priority = result.data
-                  vm.$toast.clear()
-                  vm.$toast.success("Priority Set")
-               }).catch((error)=>vm.$toast.warning(error))
-         },
+   
 
          submitMessage() {
     const CHAT_ROOM = this.ticket._id;

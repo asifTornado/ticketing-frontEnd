@@ -226,7 +226,7 @@ export default{
             ticket:{
                 department:'',
                 problemDetails:'',
-                priority:'normal',
+                // priority:'normal',
                 approvalRequired:false,
                 raisedFor:'',
                 remarks:'',
@@ -358,10 +358,6 @@ export default{
                 return
              }
 
-             if(this.ticket.priority == null || this.ticket.priority == ""){
-                this.$toast.warning("Please select a priority and then try again")
-                return
-             }
 
 
             this.ticket.supervisor = this.teams.filter((item)=> item.name == vm.team.name).map((item)=>item.head)[0]
@@ -408,9 +404,9 @@ export default{
 
             console.log("this is the has service");
             console.log(ticketData.hasService)
-            if(ticketData.priority == '' || ticketData.priority == ""){
-                ticketData.priority = "normal"
-            }
+            // if(ticketData.priority == '' || ticketData.priority == ""){
+            //     ticketData.priority = "normal"
+            // }
             
 
              data.append('ticket', JSON.stringify(ticketData))

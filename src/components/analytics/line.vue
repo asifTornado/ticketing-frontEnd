@@ -187,7 +187,7 @@
             data.append("token", token);
 
 
-         if(user.userType == "power"){
+         if(user.userType == "power"  || user.userType == "admin"){
 
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 

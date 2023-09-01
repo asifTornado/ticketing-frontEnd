@@ -1,5 +1,42 @@
 <template>
 
+   <div style="z-index:1233333333333333333333" class=" w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 border border-solid border-black" v-if="reassignTicketCheck">
+      <div class="flex flex-col w-full h-full bg-white" >
+                
+         <div class="flex flex-row w-full h-full mt-2 mb-2 bg-white">
+            <table>
+              <thead class="mb-10">
+                  <th class="pb-4">User</th>
+                  <th class="pb-4">Email</th>
+                  <th class="pb-4">Currently Assigned</th>
+                  <th class="pb-4"></th>
+              </thead>
+              <tbody>
+                  <tr v-for="(user, userCounter) in support" :key="userCounter">
+                    <td class="text-start pl-10 pb-5">{{user.user.empName}}</td>
+                    <td class="text-start pl-10 pb-5">{{user.user.mailAddress}}</td>
+                    <td class="text-start pl-10 pb-5">{{user.numbers}}</td>
+                    <td class="text-start pl-10 pb-5" ><input type="radio" :value="user.user.empName" name="assignCheck" @change="handleApproverChange2"></td>
+                  </tr>
+              </tbody>
+            </table>
+         </div>
+         <div class="flex flex-row w-full h-full">
+                 <div class="w-1/6 text-center font-bold" >
+                                     Comment: 
+                                 </div>
+                                 <div class="w-5/6">
+                                       <textarea  class="border-2 border-solid border-slate-300 w-full p-2" v-model="comment"></textarea>
+                                 </div>
+          </div>
+    </div>
+   
+    <div class="flex flex-row w-full h-full justify-end " >
+      <button  class="bg-blue-500  text-white font-bold mr-2  mt-10 p-2 border border-solid    rounded-sm" @click="Reassign">Proceed</button> 
+      <button  class="bg-slate-300  text-black  border border-solid b  font-bold mr-2  mt-10 p-2 rounded-sm" @click="reassignTicketToggle">Cancel</button>
+   </div>
+   </div>
+
    
 <div style="z-index:1233333333333333333333" class=" w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 border border-solid border-black" v-if="assignTicketCheck">
    <div class="flex flex-col w-full h-full bg-white" >
@@ -259,6 +296,16 @@
         {{ priority }}
    </div>
  </div>
+
+ <div class="flex flex-row w-11/12 mt-2">
+   <div class="w-2/4">
+        Type:
+   </div>
+ 
+   <div class="w-2/4 text-right">
+        {{ ticketType }}
+   </div>
+ </div>
  
  
  
@@ -488,7 +535,7 @@
                   </div>
                 
                   <div class="w-2/4 text-lg  text-black text-right">
-                     {{ticket.currentHandler.empName}} 
+                     {{currentHandler.empName}} 
                        
                   </div>
                 </div>
@@ -500,7 +547,7 @@
                   </div>
                 
                   <div class="w-2/4 text-right">
-                        <span v-if="ticket.currentHandler.mailAddress">{{ ticket.currentHandler.mailAddress }}</span><span v-else>Not Available</span>
+                        <span v-if="ticket.currentHandler.mailAddress">{{ currentHandler.mailAddress }}</span><span v-else>Not Available</span>
                   </div>
                 </div>
                 
@@ -512,7 +559,7 @@
                   </div>
                 
                   <div class="w-2/4 text-right">
-                     <span v-if="ticket.currentHandler.phone">{{ ticket.currentHandler.phone }}</span><span v-else>Not Available</span>
+                     <span v-if="ticket.currentHandler.phone">{{ currentHandler.phone }}</span><span v-else>Not Available</span>
                   </div>
                 </div>
                 
@@ -523,7 +570,7 @@
                   </div>
                 
                   <div class="w-2/4 text-right">
-                     <span v-if="ticket.currentHandler.extension">{{ ticket.currentHandler.extension }}</span><span v-else>Not Available</span>
+                     <span v-if="ticket.currentHandler.extension">{{ currentHandler.extension }}</span><span v-else>Not Available</span>
                   </div>
                 </div>
                 
@@ -533,7 +580,7 @@
                   </div>
                 
                   <div class="w-2/4 text-right">
-                     <span v-if="ticket.currentHandler.location">{{ ticket.currentHandler.location }}</span><span v-else>Not Available</span>
+                     <span v-if="ticket.currentHandler.location">{{ currentHandler.location }}</span><span v-else>Not Available</span>
                   </div>
                 </div>
             </template>
@@ -966,11 +1013,38 @@
 </div>
 </div>
 
-<div class="flex flex-row  w-full justify-end h-auto ">     
+<div class="flex flex-col  w-full justify-end h-auto ">     
+   <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="ticket.ticketingHead.mailAddress == user.mailAddress ">
+            
+      <div>  <span class="font-bold">Priority:</span>
+  
+        <select class="ml-2 border border-solid border-black p-1" v-model="priority" @change="setPriority($event, ticket)">
+           <option value="Priority 1">Priority 1</option>
+           <option value="Priority 2">Priority 2</option>
+           <option value="Priority 3">Priority 3</option>
+           <option value="Priority 4">Priority 4</option>
+        </select>
+     </div>
+
+
+     <div class="ml-10">  <span class="font-bold">Type:</span>
+  
+        <select class="ml-2 border border-solid border-black p-1" v-model="ticketType" @change="setTicketType($event, ticket)">
+           <option value="Incident">Incident</option>
+           <option value="Problem">Problem</option>
+
+        </select>
+     </div>
+
+
+      </div>
+  <div class="flex flex-row justify-end"> 
+   <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="this.authStore.getUser.empName == ticket.ticketingHead.empName && ticket.assignedTo != null" @click="unassign($event, ticket)">Unassign</button>
+   <button  class=" bg-fuchsia-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" @click="reassignTicketToggle"  v-if="this.authStore.getUser.empName == ticket.ticketingHead.empName && ticket.assignedTo != null">Reassign</button>
    <button class="bg-blue-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle" v-if="ticket.assignedTo == null && user.mailAddress == ticket.ticketingHead.mailAddress">Assign </button>
    <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle" v-if="ticket.assignedTo == null && ticket.users.includes(user.mailAddress)">Assign To Self</button>
     <button class="bg-amber-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showDetails">Show Details</button>
-    <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        
+    <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        </div>
          
    </div>
    
@@ -1251,6 +1325,7 @@
            files:[],
            additionalInfo:'',
            approver:null,
+           priority:'',
         
            socket:null,
            showConversationCheck:false,
@@ -1270,8 +1345,11 @@
            mentionMessage:'',
            assignSelfCheck:false,
            assignTicketCheck:false,
+           reassignTicketCheck:false,
            support:[],
-           tickets:[]
+           tickets:[],
+           ticketType:'',
+           currentHandler:null
     
        
         
@@ -1289,6 +1367,9 @@
            this.getSupport();
           this.getApprovers();
           this.getNotes();
+          this.priority = this.ticket.priority.priority
+          this.ticketType = this.ticket.ticketType
+          this.currentHandler = this.ticket.currentHandler
    
           this.userForCheck = this.authStore.getUser
       },
@@ -1315,6 +1396,20 @@
       },
 
       methods:{
+
+         setPriority(){
+               
+               var vm = this;
+               vm.$toast.info("Setting Priority")
+               var data = new FormData();
+               data.append("priority", vm.priority)
+               data.append("id", this.ticket._id)
+               axios.post(vm.globalUrl + 'setPriority', data).then((result)=>{
+                  vm.priority = result.data.priority
+                  vm.$toast.clear()
+                  vm.$toast.success("Priority Set")
+               }).catch((error)=>vm.$toast.warning(error))
+         },
          getTickets(){
            var vm = this;
            var user = this.authStore.getUser;
@@ -1342,13 +1437,58 @@
                this.assignSelfCheck = false
              }
          },
+
+         reassignTicketToggle(){
+            if(this.reassignTicketCheck == false){
+               this.reassignTicketCheck = true
+             }else if(this.reassignTicketCheck == true){
+               this.reassignTicketCheck = false
+             }
+         },
+
+         Reassign(){
+          
+          var vm = this;
+          
+          var user = this.authStore.getUser
+          var token = this.authStore.getToken
+          var comment = vm.comment
+ 
+
+          var data = new FormData()
+          var ticket = vm.ticket;
+       
+          data.append('token', token)
+          data.append('user', JSON.stringify(user))
+          data.append('comment', comment)
+          data.append('ticket', JSON.stringify(ticket))
+          data.append('approver', JSON.stringify(vm.approver))
+
+              axios.post(vm.globalUrl + 'reassign', data).then((result)=>{
+                  if(result.data == true){
+                      vm.$toast.clear()
+                      vm.$toast.success('Done')
+                      vm.currentHandler = vm.approver
+                      location.reload()
+        
+                  }else{
+                      vm.$toast.clear()
+                      vm.$toast.warning(result.data)
+                  }
+              }).catch((error)=>{
+                  vm.$toast.clear()
+                  vm.$toast.warning(error)
+              })
+      },
+
+
          assignTicket(){
             console.log("from assign ticket");
             var vm = this;
             this.$toast.info("Assigning Ticket...")
             var user = this.authStore.getUser
             var token = this.authStore.getToken
-            var comment = comment
+            var comment = vm.comment
    
 
             var data = new FormData()
@@ -1366,7 +1506,9 @@
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Done')
-                    this.$router.push('/ticketing/myTickets')
+                    vm.currentHandler = vm.approver
+                    location.reload()
+                   
                 }else{
                     vm.$toast.clear()
                     vm.$toast.warning(result.data)
@@ -1724,6 +1866,30 @@ this.$refs.commentBox.scrollTo({
             console.log("rejecting request")
             return "Ticket Unassigned"
          }
+      },
+
+      unassign(event, ticket){
+         var vm = this;
+         vm.$toast.info("Unassigning Ticketing Please Wait....")
+         var prevAssignee = JSON.stringify(ticket.assignedTo)
+         var user = vm.authStore.getUser
+         var ticket = JSON.stringify(ticket)
+         var token = JSON.stringify(vm.authStore.getToken)
+         
+         var data = new FormData();
+         data.append("prevAssignee", prevAssignee)
+         data.append("user", JSON.stringify(user))
+         data.append("ticket", ticket)
+         data.append("token", token)
+         data.append("comment", "Not Available")
+      
+
+         axios.post(vm.globalUrl + "unassign", data).then((result)=>{
+            console.log(result)
+            location.reload()
+         }).catch((error)=>vm.$toast.warning(error))
+
+         
       },
 
 

@@ -68,6 +68,8 @@ export default{
       this.getUsers()
     },
 
+    props:["paginator"],
+
 
     methods:{
         toggleFilter(){
@@ -97,6 +99,7 @@ export default{
 
            if(vm.filters.length < 1){
             vm.mainStore.setFilteredTickets(tickets)
+            vm.paginator.onClickHandler(1)
             return
            }
     
@@ -135,6 +138,7 @@ export default{
           
 
             vm.mainStore.setFilteredTickets(filteredTickets)
+            vm.paginator.onClickHandler(1)
 
             
            },

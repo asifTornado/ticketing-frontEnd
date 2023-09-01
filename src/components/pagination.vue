@@ -2,7 +2,7 @@
 <div class="flex flex-row mt-3">    
     <vue-awesome-paginate
     :total-items="items"
-    :items-per-page="2"
+    :items-per-page="itemsPerPage"
     :max-pages-shown="5"
     v-model="currentPage"
     :on-click="onClickHandler"
@@ -26,7 +26,7 @@ data(){
     }
 },
 
-props:["items"],
+props:["items", "itemsPerPage"],
 
 methods:{
     onClickHandler(page){

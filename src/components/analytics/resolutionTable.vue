@@ -95,7 +95,7 @@
      
 	 data.append("token", token);
   
-	 if(userType == "power"){
+	 if(userType == "power" || userType == "admin"){
 		axios.post(vm.globalUrl + "getAllTickets", data).then((result)=>{
 	
 	      vm.tickets = result.data;

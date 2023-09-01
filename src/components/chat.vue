@@ -33,7 +33,7 @@
     
     Your browser does not support the audio element.
   </audio>
-   <div class="fixed bottom-0 left-[455px] h-auto w-auto  border border-solid border-black bg-white" style="z-index: 90000;" >
+   <div class="absolute bottom-0 h-auto w-full   bg-white" style="z-index: 90000;" >
     <div v-if="chatFilesCheck" style="z-index:999999" class="border border-solid border-black w-[350px] h-[300px] absolute bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
   <div> <div class="p-2 w-full  justify-end  flex flex-row hover:cursor-pointer" @click="chatFilesCheck = false"><font-awesome-icon icon="fa-solid fa-multiply" size="2x"/></div>
    <div class="w-full h-[120px] overflow-y-scroll relative p-5" >
@@ -59,11 +59,11 @@
       <div class="mr-10 hover:cursor-pointer" @click="sendChatFiles"><font-awesome-icon icon="fa-regular fa-paper-plane" size="lg"/></div>
    </div></div>
 </div>
-    <div class="flex flex-row  justify-between h-12 w-[408px] border-b-2 p-3 border-solid border-black text-white  bg-blue-400"  @click="toggleChatBox">
+    <div class="flex flex-row  justify-between h-12 w-full  p-3  text-white  bg-blue-400"  @click="toggleChatBox">
       <label for="">Chat Box</label>
        <font-awesome-icon icon="fa-solid fa-minus" size="lg" class="hover:cursor-pointer"  ref="toggleIcon"/>
    </div>
-<div class="flex flex-col h-[400px] w-[408px] bg-white " style="z-index:9999" v-if="chatBoxCheck == true">
+<div class="flex flex-col h-[400px] w-full bg-white " style="z-index:9999" v-if="chatBoxCheck == true">
           
   <div class="flex flex-col  h-full w-full p-3 overflow-y-scroll " id="messageArea" ref="messageArea">
      <div class="flex flex-row w-full "  v-for="(message, messageCounter) in messages"  :key="messageCounter">

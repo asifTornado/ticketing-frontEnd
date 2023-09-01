@@ -20,6 +20,14 @@ const router = createRouter({
           
         },
 
+        {
+          path: 'power/report',
+          name:'powerReport',
+          component: () => import('../views/ticketing/report.vue')
+          
+        },
+
+
 
         {
           path: 'show-user',

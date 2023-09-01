@@ -12,19 +12,34 @@
 
       
         </div>
-    <div>    <span class="mr-2 text-black font-bold text-lg">Zone</span>
+    <div>    <span class="mr-2 text-black font-bold text-md">Zone</span>
         <select v-model="location" class="border border-solid border-black p-2" @change="filterLocation($event)">
           <option v-for="(location, locationCounter) in locations" :key="locationCounter" :value="location.name">{{location.name}}</option>
           <option value="all" selected>All</option>
-        </select></div>
+        </select>
+      
+      
+        <span class="mr-2 text-black font-bold text-md ml-2 ">Duration</span>
+        <select class="border border-solid border-black p-2 mr-1" @change="filterDuration($event)">
+          <option value="86400" selected>Last 24 Hours</option>
+          <option value="172800">Last Two Days</option>
+          <option value="604800">This Week</option>
+          <option value="2592000">Last Month</option>
+          <option value="12960000">Last Five Months</option>
+          <option value="31104000">This Year</option>
+          <option value="all">All Until Now</option>
+          
+        </select>
+      
+      </div>
 
 
         
-		 <div> <label class="mr-5">Ticket Status</label>
-      <button class="mr-5 bg-slate-300 p-2 rounded-md" @click="filterDate(event, unassignedLabels, unassignedData, 'Current Unassigned Tickets', 'lime', 'hours', 'unassigned')">Unassigned</button>
-				  <button class="mr-5 bg-slate-300 p-2 rounded-md" @click="filterDate(event, openLabels, openData, 'Current Open Tickets', 'dodgerblue', 'minutes', 'open')">Open</button>
-				  <button class="mr-5 bg-slate-300 p-2 rounded-md" @click="filterDate(event, assignedLabels, assignedData, 'Current Assigned Tickets', 'lime', 'hours', 'assigned')">Assigned</button>
-				  <button class="mr-5 bg-slate-300 p-2 rounded-md" @click="filterDate(event, closedLabels, closedData, 'Closed Tickets', 'red', 'days', 'closed')">Closed</button></div>
+		 <div> <label class="mr-2">Ticket Status</label>
+      <button class="mr-1 bg-slate-300 p-2 rounded-md"     @click="filterDate(event, unassignedLabels, unassignedData, 'Current Unassigned Tickets', 'lime', 'hours', 'unassigned')">Unassigned</button>
+				  <button class="mr-1 bg-slate-300 p-2 rounded-md" @click="filterDate(event, openLabels, openData, 'Current Open Tickets', 'dodgerblue', 'minutes', 'open')">Open</button>
+				  <button class="mr-1 bg-slate-300 p-2 rounded-md" @click="filterDate(event, assignedLabels, assignedData, 'Current Assigned Tickets', 'lime', 'hours', 'assigned')">Assigned</button>
+				  <button class="mr-1 bg-slate-300 p-2 rounded-md" @click="filterDate(event, closedLabels, closedData, 'Closed Tickets', 'red', 'days', 'closed')">Closed</button></div>
 				 
    </div>
 	</div>
@@ -63,6 +78,7 @@
   data() {
     
 	return {
+    currentLocation:'all',
     currentType:'',
     closed:[],
     open:[],
@@ -70,44 +86,42 @@
     unassigned:[],
     current:[],
     location:'all',
-     locations:[],
-      teams:[],
-      all:"All Open Tickets: 22",
-      openDepartments:0,
-      closedDepartments:0,
-      assignedDepartments:0,
+    locations:[],
+    teams:[],
+    all:"All Open Tickets: 22",
+    openDepartments:0,
+    closedDepartments:0,
+    assignedDepartments:0,
 	  tickets:[],
-      filteredTickets:[],
+    filteredTickets:[],
 	  minutes:[],
 	  hours:[],
 	  days:[],
-      closedLabels:[],
-      closedData:[],
-      openLabels:[],
-      openData:[],
-      assignedLabels:[],
-      assignedData:[],
-      unassignedLabels:[],
-      unassignedData:[],
+    closedLabels:[],
+    closedData:[],
+    openLabels:[],
+    openData:[],
+    assignedLabels:[],
+    assignedData:[],
+    unassignedLabels:[],
+    unassignedData:[],
 	  departments:[],
     unassignedDepartments:[],
 	  data:{
-	labels: [
-	  
-	],
-	datasets: [
-	  {
-		label: '',
-		backgroundColor: 'dodgerblue',
-		data: []
-	  }
-	]
-  },
+	  labels: [] ,
+	  datasets: [
+	     {
+		    label: '',
+		    backgroundColor: 'dodgerblue',
+		    data: []
+	     }
+ 	           ]
+     },
   
   
-  options:{
-	responsive: true,
-	maintainAspectRatio: false
+   options:{
+	    responsive: true,
+	    maintainAspectRatio: false
   }
   
   
@@ -153,7 +167,7 @@
    data.append("token", token);
   
 
-   if(userType == "power"){
+   if(userType == "power"  || userType == "admin"){
 
     axios.post(vm.globalUrl + "getAllTickets", data).then((result)=>{
 	  vm.tickets = result.data;
@@ -331,8 +345,10 @@
     filterLocation(event){
          var vm = this;
          var location = event.target.value
+         vm.currentLocation = location;
          if(location == 'all'){
           var tickets = vm.current
+          
 
           var departments = tickets.map((ticket)=>{
             if(ticket.hasService){
@@ -407,17 +423,17 @@ data: data
 
         if(type == 'open'){
           vm.current = vm.open
-          vm.currentType = 'All Open Tickets'
+          vm.currentType = 'Open Tickets'
           
         }else if(type == 'closed'){
           vm.current = vm.closed
-          vm.currentType = 'All Closed Tickets'
+          vm.currentType = 'Closed Tickets'
         }else if(type == 'unassigned'){
           vm.current = vm.unassigned
-          vm.currentType = 'All Unassigned Tickets'
+          vm.currentType = 'Unassigned Tickets'
         }else if(type == 'assigned'){
           vm.current = vm.assigned
-          vm.currentType = 'All Assigned Tickets'
+          vm.currentType = 'Assigned Tickets'
         }
 
         var all = "";
@@ -437,10 +453,39 @@ data: data
         }
 
         vm.all = all;
+
+        var newCurrent;
+
+        if(vm.currentLocation  == "all"){
+          newCurrent = vm.current
+        }else{
+          newCurrent = vm.current.filter((ticket)=>ticket.location == vm.currentLocation)
+        }
+
+        var departments = newCurrent.map((ticket)=>{
+   if(ticket.hasService){
+     return ticket.serviceType
+   }else{
+     return ticket.department
+   }});
+
+        var unique = _.countBy(departments);
+
+        
+   var labels = [];
+   var data = [];
+
+   for(var x in unique){
+    labels.push(x);
+    data.push(unique[x])
+ }
+
+
+
 	   
         vm.data = {...vm.data, labels:labels,   datasets: [
 	  {
-		label: label,
+		label: `${vm.currentType} - ${vm.currentLocation}`,
 		backgroundColor: 'dodgerBlue',
 		data: data
 	  }
@@ -472,7 +517,68 @@ data: data
     axios.get(vm.globalUrl + "getLocations").then((result)=>{
       vm.locations = result.data
     }).catch((error)=>vm.$toast.warning(error))
-  }
+  },
+
+
+
+
+  filterDuration(event){
+
+var vm = this;
+var duration;
+if(event.target.value == "all"){
+  duration = "all"
+}else{
+  duration = parseInt(event.target.value * 1000, 10);
+}
+
+var tickets;
+if(duration == 'all'){
+  tickets = vm.tickets
+}else{
+  tickets = vm.tickets.filter((ticket) => {
+         var currentDate = new Date();
+         var ticketDate = new Date(ticket.requestDate);
+
+         var diff = currentDate - ticketDate;
+
+         if(diff < duration){
+          return true
+         }
+
+
+
+  })
+}
+
+
+vm.departments = tickets.map((ticket)=>{
+             if(ticket.hasService){
+              return ticket.serviceType
+             }else{
+              return ticket.department
+             }
+     })
+     vm.departmentCounts = _.countBy(vm.departments);
+     var labels = [];
+
+     var data = [];
+     for(var x in this.departmentCounts){
+           labels.push(x)
+           data.push(vm.departmentCounts[x])
+     }
+     console.log(labels);
+     console.log(data)
+     vm.backgroundColor = this.generateRandomColorsList(labels.length)
+     vm.labels = labels;
+     vm.data = data;
+     console.log(this.labels)
+
+
+
+
+
+}
   },
   
   //method to get the time difference

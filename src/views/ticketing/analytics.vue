@@ -1,9 +1,9 @@
 <template>
  
-  <div class="flex flex-row justify-center items-start pt-10 ">
+  <div class="flex flex-row justify-center items-start h-[92vh] w-[100vw] ">
 
 
-   <div class="flex flex-row justify-center items-center relative ml-2" style="z-index: 34;">
+   <div class="flex flex-row justify-center items-center relative  " style="z-index: 34;">
 
     <component v-bind:is="currentComponent"></component>
 

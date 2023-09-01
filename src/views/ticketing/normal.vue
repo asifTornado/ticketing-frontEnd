@@ -129,7 +129,7 @@
                 {{ ticket.number }}
             </td>
             <td @click="showDetails(ticket._id)"  scope="row" class=" table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {{ ticket.priority }}
+                {{ ticket.priority.priority }}
             </td>
             <td @click="showDetails(ticket._id)"  class=" table-row2 px-6 py-4">
                 {{ ticket.requestDate }}
@@ -215,7 +215,7 @@
             var data = new FormData();
             data.append("token", token);
             data.append("user", JSON.stringify(user));
-            axios.post(vm.globalUrl + 'getTickets', data).then((result)=>{
+            axios.post(vm.globalUrl + 'getTickets2', data).then((result)=>{
                 console.log("these are the tickets")
                 console.log(result.data)
                vm.tickets = result.data.filter((ticket)=>ticket.raisedBy.mailAddress == user.mailAddress)
@@ -453,6 +453,7 @@ showProblemDetails(event){
 
  #sidePanel{
     background-color: rgb(230, 230, 230);
+    padding:4px
  }
  
 
@@ -463,4 +464,4 @@ showProblemDetails(event){
  
 
 
-    </style>
+    </style>`

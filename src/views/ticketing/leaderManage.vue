@@ -1,6 +1,6 @@
 <template>
     
-    <FilterDrawer/>
+    <FilterDrawer :paginator="this.$refs.paginator"/>
     
     <div class="fixed w-[300px] h-[200px] overflow-y-scroll p-3 flex-col bg-yellow-100" id="tooltip" ref="tooltip" style="display:none">
          <div class="flex flex-row items-end w-full justify-end hover:cursor-pointer sticky top-0 " @click="hideProblemDetails" > <div class="flex flex-col justify-center" style="border-radius: 200%; width:20px; height:20px; background-color: black; padding: 2px;"> <font-awesome-icon icon="fa-solid fa-xmark" class="text-white"/></div></div>
@@ -114,6 +114,10 @@
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Ticket No.
                 </th>
+
+                <th scope="col" class="table-header2 px-6 py-3 ">
+                    Ticket Type
+                </th>
                 
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Req. Date
@@ -143,43 +147,58 @@
         </thead>
         <tbody>
             <tr  :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
-                <td @click="showDetails(ticket._id)"  scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td @click="showDetails(ticket._id)"  scope="row" class="table-row2  font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {{ ticket.number }}
                 </td>
-                <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
+                <td  class="table-row2 ">
+                    <select name="" id="" class="p-1 border border-solid border-black" @change="setTicketType($event, ticket)">
+                        <option :value="ticket.ticketType" selected>{{ticket.ticketType}}</option>
+                        <option v-if="ticket.ticketType == 'Problem'" value="Incident">Incident</option>
+                        <option v-else value="Problem">Problem</option>
+                    </select>
+                </td>
+                <td @click="showDetails(ticket._id)" class="table-row2 px-6 ">
                     {{ ticket.requestDate }}
                 </td>
-                <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
-                    {{ticket.priority}}
+                <td  class="table-row2 px-6 ">
+                    <select name="" id="" class="p-1 border border-solid border-black" @change="setPriority($event, ticket)">
+                        <option :value="ticket.priority.priority" selected>{{ticket.priority.priority}}</option>
+                        
+                        <option value="Priority 1">Priority 1</option>
+                        <option value="Priority 2">Priority 2</option>
+                        <option value="Priority 3">Priority 3</option>
+                        <option value="Priority 4">Priority 4</option>
+                       
+                    </select>
                 </td>
 
-                <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
+                <td @click="showDetails(ticket._id)" class="table-row2 px-6 ">
                     {{ticket.status}}
                 </td>
-                <td @click="showProblemDetails($event)"  class="table-row2 py-3 text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
+                <td @click="showProblemDetails($event)"  class="table-row2  text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
                  <div class="flex flex-row justify-center items-center">
                     <font-awesome-icon icon="fa-solid fa-up-right-from-square" class="mr-4 text-xs text-red"/>
                     {{ticket.problemDetails}}</div>
                 </td>
-                <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
+                <td @click="showDetails(ticket._id)" class="table-row2 ">
                    {{ticket.raisedBy.empName}}
                 </td>
-                <td  class="table-row2 px-6 py-4">
-                    <template v-if="ticket.assignedTo">
-                        <select name="" id="" @change="assignTicket($event, ticket)">
+                <td  class="table-row2 ">
+                    <template v-if="ticket.assignedTo && this.authStore.getUser.empName == ticket.ticketingHead.empName">
+                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black">
                             <option :value="ticket.assignedTo.empName" selected>{{ticket.assignedTo.empName}}</option>
                             <option value="Unassigned" >Unassigned</option>
                             <option v-for="(user, userCounter) in support" :key="userCounter" :value="user.empName">{{user.empName}}</option>
                         </select>
                     </template> 
                     <template v-else>
-                        <select name="" id="" @change="assignTicket($event, ticket)" >
+                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black" >
                             <option value="Unassigned" selected>Unassigned</option>
                             <option v-for="(user, userCounter) in support" :key="userCounter" :value="user.empName">{{user.empName}}</option>
                         </select>
                     </template> 
                  </td>
-                <td @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
+                <td @click="showDetails(ticket._id)" class="table-row2 ">
                    <template v-if="ticket.currentHandler">{{ ticket.currentHandler.empName }}</template> 
                 </td>
             </tr>
@@ -190,7 +209,7 @@
     </table>
 </div>
 
-<Pagination @page-Changed="handlePageChanged" :items="this.mainStore.getFilteredTickets.length" ref="paginator"/>
+<Pagination @page-Changed="handlePageChanged" :items="this.mainStore.getFilteredTickets.length" ref="paginator" :itemsPerPage="itemsPerPage"/>
 
 
 </div>
@@ -370,6 +389,7 @@
         },
 
         loadTickets(){
+            
             this.getSupport();
             this.$toast.info("Loading Data....")
             var vm = this;
@@ -598,7 +618,7 @@
     axios.post(vm.globalUrl + "getSupportFromHead", data).then((result)=>{
         vm.support = result.data
 
-    }).catch((error)=>vm.$toast.error(error))
+    }).catch((error)=>console.log(error))
 
 
   }
@@ -634,7 +654,8 @@
 }
 
 .table-row2{
-    font-size:15px
+    font-size:12px;
+    font-weight: 400;
 }
 
 
@@ -692,6 +713,7 @@
 
  #sidePanel{
     background-color: rgb(230, 230, 230);
+    padding:4px
  }
  
 

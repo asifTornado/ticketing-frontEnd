@@ -8,7 +8,7 @@
     <div class=" flex flex-row   text-lg  h-full w-full  bg-[rgb(248,248,248)]  " id="app"  >
  
  
-     <div class="flex flex-col h-screen customborder  bg-white w-1/6      py-10" id="sidePanel" v-if="this.mainStore.getSidePanelCheck == true" >
+     <div class="flex flex-col h-screen customborder  bg-white w-1/6     py-10" id="sidePanel" v-if="this.mainStore.getSidePanelCheck == true" >
  
          <div @click="filter($event, 'all')"  :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
                <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
@@ -133,12 +133,12 @@
          <tbody>
              <tr  :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
                  
-                <th  @click="showDetails(ticket._id)" scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td  @click="showDetails(ticket._id)" scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                      {{ ticket.number }}
-                 </th>
-                 <th  @click="showDetails(ticket._id)" scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                     {{ ticket.priority }}
-                 </th>
+                 </td>
+                 <td  @click="showDetails(ticket._id)" scope="row" class="table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                     {{ ticket.priority.priority }}
+                 </td>
                  <td  @click="showDetails(ticket._id)" class="table-row2 px-6 py-4">
                      {{ ticket.requestDate }}
                  </td>
@@ -406,7 +406,7 @@
  }
  
  .table-row2{
-     font-size:15px
+     font-size:12px
  }
 
 
@@ -466,6 +466,28 @@
    padding-left:20px;
    padding-right:20px;
 
+ }
+
+
+ 
+ table th{
+    border-bottom:1px solid gray;
+    background-color: lightgray;
+ }
+
+ table td {
+    border-bottom: 1px solid gray;
+ }
+
+ #sidePanel{
+    background-color: rgb(230, 230, 230);
+    padding:4px
+ }
+ 
+
+ #sidePanel div{
+   background-color: white;
+   margin-bottom: 5px;
  }
  
  

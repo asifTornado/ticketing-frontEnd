@@ -4,7 +4,22 @@
         <select v-model="location" class="border border-solid border-black p-2" @change="filterLocation($event)">
           <option v-for="(location, locationCounter) in locations" :key="locationCounter" :value="location.name">{{location.name}}</option>
           <option value="all" selected >All</option>
-        </select></div>
+        </select>
+
+        <span class="mr-2 text-black font-bold text-lg ml-10">Duration</span>
+        <select class="border border-solid border-black p-2" @change="filterDuration($event)">
+          <option value="86400" selected>Last 24 Hours</option>
+          <option value="172800">Last Two Days</option>
+          <option value="604800">This Week</option>
+          <option value="2592000">Last Month</option>
+          <option value="12960000">Last Five Months</option>
+          <option value="31104000">This Year</option>
+          <option value="all">All Until Now</option>
+          
+        </select>
+      
+      
+      </div>
 <div style="height:400px; width:1000px" class="flex text-center  flex-row justify-center items-center"><Pie :data="{labels, datasets}" :options="options" :plugins="['zoomPlugin']" /></div>
 
 
@@ -136,7 +151,7 @@ export default {
          data.append("token", token);
 
        
-      if(user.userType == "power"){
+      if(user.userType == "power" || userType == "admin"){
         axios.post(vm.globalUrl + "getAllTickets", data).then((result)=>{
              vm.tickets = result.data;
              vm.filteredTickets = vm.tickets;
@@ -270,6 +285,64 @@ filterLocation(event){
        vm.labels = labels;
        vm.data = data;
        console.log(this.labels)
+
+},
+
+filterDuration(event){
+
+  var vm = this;
+  var duration;
+  if(event.target.value == "all"){
+    duration = "all"
+  }else{
+    duration = parseInt(event.target.value * 1000, 10);
+  }
+ 
+  var tickets;
+  if(duration == 'all'){
+    tickets = vm.tickets
+  }else{
+    tickets = vm.tickets.filter((ticket) => {
+           var currentDate = new Date();
+           var ticketDate = new Date(ticket.requestDate);
+
+           var diff = currentDate - ticketDate;
+
+           if(diff < duration){
+            return true
+           }
+
+
+
+    })
+  }
+
+
+  vm.departments = tickets.map((ticket)=>{
+               if(ticket.hasService){
+                return ticket.serviceType
+               }else{
+                return ticket.department
+               }
+       })
+       vm.departmentCounts = _.countBy(vm.departments);
+       var labels = [];
+  
+       var data = [];
+       for(var x in this.departmentCounts){
+             labels.push(x)
+             data.push(vm.departmentCounts[x])
+       }
+       console.log(labels);
+       console.log(data)
+       vm.backgroundColor = this.generateRandomColorsList(labels.length)
+       vm.labels = labels;
+       vm.data = data;
+       console.log(this.labels)
+
+
+
+
 
 }
      }
