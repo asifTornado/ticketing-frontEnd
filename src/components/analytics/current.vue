@@ -1,5 +1,58 @@
 <template>
+<!-- Filter Drop down -->
+
+
+
 	<div style="height:450px; width:1000px"   class="relative shadow-md shadow-black p-4   bg-white">
+    
+<div v-if="filterCheck" class="fixed flex flex-col justify-center items-center top-[100px] left-[500px] w-auto h-auto p-4 bg-white border border-solid border-black">
+<div class="flex flex-row justify-center w-full items-center text-3xl font-bold">Filter</div>
+<div class="flex flex-col w-full p-3 justify-center items-center">
+<div class="flex flex-row w-full">
+  <span class=" text-black font-bold text-md w-1/3">Zone</span>
+        <select v-model="zone" class="border border-solid border-black p-2 w-2/3" >
+          <option v-for="(location, locationCounter) in locations" :key="locationCounter" :value="location.name">{{location.name}}</option>
+          <option value="all" selected>All</option>
+        </select>
+</div>
+
+<div class="flex flex-row w-full mt-3">
+  <span class=" text-black font-bold text-md  w-1/3 ">Duration</span>
+        <select class="border border-solid border-black p-2  w-2/3" v-model="duration">
+          <option :value="JSON.stringify({duration:86400, name:'Last 24 Hours'})" selected>Last 24 Hours</option>
+          <option :value="JSON.stringify({duration:172800, name:'Last Two Days'})">Last Two Days</option>
+          <option :value="JSON.stringify({duration:604800, name:'This Week'})">This Week</option>
+          <option :value="JSON.stringify({duration:2592000, name:'Last Month'})">Last Month</option>
+          <option :value="JSON.stringify({duration:12960000, name:'Last Five Months'})">Last Five Months</option>
+          <option :value="JSON.stringify({duration:31104000, name:'This Year'})">This Year</option>
+          <option :value="JSON.stringify({duration:'all', name:'All Until Now'})">All Until Now</option>
+          
+        </select>
+</div>
+
+
+
+<div class="flex flex-row w-full mt-3">
+  <span class=" text-black font-bold text-md  w-1/3">Ticket Status</span>
+        <select class="border border-solid border-black p-2  w-2/3" v-model="status">
+          <option value="unassigned" selected>Unassigned</option>
+          <option value="assigned">Assigned</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+      
+          
+        </select>
+</div>
+
+
+<div class="flex flex-row w-full justify-end items-center mt-4">
+  <div class="bg-blue-400 p-3 font-bold text-white hover:cursor-pointer" @click="filter">Apply Filter</div>
+  <div class="bg-red-400 p-3 ml-3 font-bold text-white hover:cursor-pointer" @click="filterCheck = false">Cancel</div>
+</div>
+</div>
+
+
+</div>
 	
 	<div class="flex flex-row items-center ">
   
@@ -12,34 +65,35 @@
 
       
         </div>
-    <div>    <span class="mr-2 text-black font-bold text-md">Zone</span>
-        <select v-model="location" class="border border-solid border-black p-2" @change="filterLocation($event)">
-          <option v-for="(location, locationCounter) in locations" :key="locationCounter" :value="location.name">{{location.name}}</option>
-          <option value="all" selected>All</option>
-        </select>
+    <div>    
       
       
-        <span class="mr-2 text-black font-bold text-md ml-2 ">Duration</span>
-        <select class="border border-solid border-black p-2 mr-1" @change="filterDuration($event)">
-          <option value="86400" selected>Last 24 Hours</option>
-          <option value="172800">Last Two Days</option>
-          <option value="604800">This Week</option>
-          <option value="2592000">Last Month</option>
-          <option value="12960000">Last Five Months</option>
-          <option value="31104000">This Year</option>
-          <option value="all">All Until Now</option>
-          
-        </select>
+      
       
       </div>
 
 
         
-		 <div> <label class="mr-2">Ticket Status</label>
-      <button class="mr-1 bg-slate-300 p-2 rounded-md"     @click="filterDate(event, unassignedLabels, unassignedData, 'Current Unassigned Tickets', 'lime', 'hours', 'unassigned')">Unassigned</button>
+		 <div class="flex flex-row justify-center items-center">
+    <div class="mr-10 ">  <label class="mr-1 font-bold text-lg">Zone:</label>
+          <label class="mr-5 text-lg">{{ location }}</label>
+
+          <label class="mr-1 text-lg font-bold">Status:</label>
+          <label class="mr-5 text-lg">{{ status }}</label>
+
+
+          
+          <label class="mr-1 text-lg font-bold">Duration:</label>
+          <label class="mr-5 text-lg">{{ JSON.parse(duration).name }}</label></div>
+      <div class="bg-white border-solid border-black border p-2 hover:cursor-pointer" @click="filterCheck = !filterCheck"> <font-awesome-icon class="mr-2" icon="fa-solid fa-filter" size="lg"/></div>
+      
+      <!-- <label class="mr-2">Ticket Status</label> -->
+      <!-- <button class="mr-1 bg-slate-300 p-2 rounded-md"     @click="filterDate(event, unassignedLabels, unassignedData, 'Current Unassigned Tickets', 'lime', 'hours', 'unassigned')">Unassigned</button>
 				  <button class="mr-1 bg-slate-300 p-2 rounded-md" @click="filterDate(event, openLabels, openData, 'Current Open Tickets', 'dodgerblue', 'minutes', 'open')">Open</button>
 				  <button class="mr-1 bg-slate-300 p-2 rounded-md" @click="filterDate(event, assignedLabels, assignedData, 'Current Assigned Tickets', 'lime', 'hours', 'assigned')">Assigned</button>
-				  <button class="mr-1 bg-slate-300 p-2 rounded-md" @click="filterDate(event, closedLabels, closedData, 'Closed Tickets', 'red', 'days', 'closed')">Closed</button></div>
+				  <button class="mr-1 bg-slate-300 p-2 rounded-md" @click="filterDate(event, closedLabels, closedData, 'Closed Tickets', 'red', 'days', 'closed')">Closed</button> -->
+        
+        </div>
 				 
    </div>
 	</div>
@@ -78,6 +132,11 @@
   data() {
     
 	return {
+    zone:"all",
+    duration:"",
+    status:"unassigned",
+
+    filterCheck:false,
     currentLocation:'all',
     currentType:'',
     closed:[],
@@ -157,6 +216,8 @@
   //start of created
   
   created(){
+    var jsonData = {name:'all', duration:"All Untill Now"}
+    this.duration = JSON.stringify(jsonData)
     this.getLocations()
 	 var vm = this;
 	 var token = this.authStore.getToken;
@@ -210,42 +271,42 @@
 	  getData(tickets){
 		 var vm = this;
 		  //get the number for each departments 
-          var closed = tickets.filter((ticket)=>ticket.status == "Closed Ticket");
-          var open = tickets.filter((ticket)=>ticket.status == "Open (Seeking Information...)" || ticket.status == "Open (Information Sent)" || ticket.status == "Open");
-		      var assigned = tickets.filter((ticket)=>ticket.status == "Assigned / Pending")
+          // var closed = tickets.filter((ticket)=>ticket.status == "Closed Ticket");
+          // var open = tickets.filter((ticket)=>ticket.status == "Open (Seeking Information...)" || ticket.status == "Open (Information Sent)" || ticket.status == "Open");
+		      // var assigned = tickets.filter((ticket)=>ticket.status == "Assigned / Pending")
           var unassigned = tickets.filter((ticket) => tickets.status == "Ticket Submitted - Seeking Department Head's Approval" || ticket.status == "Ticket Submitted" || ticket.status == "Ticket Submitted - Department Head's Approval Given" || ticket.status == "Ticket Submitted - Seeking Additional Approval" || ticket.status == "Ticket Submitted - Additional Approval Given")
            
-          vm.closed = closed;
-          vm.open = open;
-          vm.assigned = assigned;
+          // vm.closed = closed;
+          // vm.open = open;
+          // vm.assigned = assigned;
           vm.unassigned = unassigned;
 
-          console.log("count of all the tickets")
-          console.log(`closed:${closed.length}  open:${open.length}  assigned:${assigned.length}`)
+          // console.log("count of all the tickets")
+          // console.log(`closed:${closed.length}  open:${open.length}  assigned:${assigned.length}`)
           
-          var closedDepartments = closed.map((ticket)=>{
-            if(ticket.hasService){
-              return ticket.serviceType
-            }else{
-              return ticket.department
-            }});
+          // var closedDepartments = closed.map((ticket)=>{
+          //   if(ticket.hasService){
+          //     return ticket.serviceType
+          //   }else{
+          //     return ticket.department
+          //   }});
           
-            var openDepartments = open.map((ticket)=>{
-              if(ticket.hasService){
-                return ticket.serviceType
-              }else{
-                return ticket.department
-              }
-            });
+          //   var openDepartments = open.map((ticket)=>{
+          //     if(ticket.hasService){
+          //       return ticket.serviceType
+          //     }else{
+          //       return ticket.department
+          //     }
+          //   });
 
 
-          var assignedDepartments = assigned.map((ticket)=>{
-            if(ticket.hasService){
-              return ticket.serviceType
-            }else{
-              return ticket.department
-            }
-          });
+          // var assignedDepartments = assigned.map((ticket)=>{
+          //   if(ticket.hasService){
+          //     return ticket.serviceType
+          //   }else{
+          //     return ticket.department
+          //   }
+          // });
 
           var unassignedDepartments = unassigned.map((ticket)=>{
             if(ticket.hasService){
@@ -255,9 +316,9 @@
             }
           })
             
-          var closedUnique = _.countBy(closedDepartments);
-          var openUnique = _.countBy(openDepartments);
-          var assignedUnique = _.countBy(assignedDepartments);
+          // var closedUnique = _.countBy(closedDepartments);
+          // var openUnique = _.countBy(openDepartments);
+          // var assignedUnique = _.countBy(assignedDepartments);
           var unassignedUnique = _.countBy(unassignedDepartments)
 
 
@@ -265,56 +326,56 @@
           
 		   
 		  //map the departments to have a companion time variable
-		      var closedlabels = []
-          var closeddata = []
-          var openlabels = []
-          var opendata = []
-          var assignedlabels = []
-          var assigneddata = []
+		      // var closedlabels = []
+          // var closeddata = []
+          // var openlabels = []
+          // var opendata = []
+          // var assignedlabels = []
+          // var assigneddata = []
           var unassignedData = []
           var unassignedLabels = []
 
-          console.log("this is closedUnique")
-          console.log(closedUnique)
+          // console.log("this is closedUnique")
+          // console.log(closedUnique)
 
 
-          for(var x in closedUnique){
-             closedlabels.push(x);
-             closeddata.push(closedUnique[x])
-          }
+          // for(var x in closedUnique){
+          //    closedlabels.push(x);
+          //    closeddata.push(closedUnique[x])
+          // }
 
 
-          for(var x in openUnique){
-             openlabels.push(x);
-             opendata.push(openUnique[x])
-          }
+          // for(var x in openUnique){
+          //    openlabels.push(x);
+          //    opendata.push(openUnique[x])
+          // }
 
 
           
-          for(var x in assignedUnique){
-             assignedlabels.push(x);
-             assigneddata.push(assignedUnique[x])
-          }
+          // for(var x in assignedUnique){
+          //    assignedlabels.push(x);
+          //    assigneddata.push(assignedUnique[x])
+          // }
 
           for(var x in unassignedUnique){
              unassignedLabels.push(x);
              unassignedData.push(unassignedUnique[x])
           }
 
-          vm.closedLabels = closedlabels;
-          vm.closedData = closeddata;
-          vm.openLabels = openlabels;
-          vm.openData = opendata;
-          vm.assignedLabels = assignedlabels;
-          vm.assignedData = assigneddata;
+          // vm.closedLabels = closedlabels;
+          // vm.closedData = closeddata;
+          // vm.openLabels = openlabels;
+          // vm.openData = opendata;
+          // vm.assignedLabels = assignedlabels;
+          // vm.assignedData = assigneddata;
           vm.unassignedLabels = unassignedLabels;
           vm.unassignedData = unassignedData;
-          vm.openDepartments = openDepartments;
-          vm.closedDepartments = closedDepartments;
-          vm.assignedDepartments = assignedDepartments;
+          // vm.openDepartments = openDepartments;
+          // vm.closedDepartments = closedDepartments;
+          // vm.assignedDepartments = assignedDepartments;
           vm.unassignedDepartments = unassignedDepartments;
           
-          vm.all = `All Unassigned Tickets: ${unassignedDepartments.length}`
+          // vm.all = `All Unassigned Tickets: ${unassignedDepartments.length}`
           
           vm.current = vm.unassigned
           vm.currentType = "All Unassigned Tickets"
@@ -522,58 +583,82 @@ data: data
 
 
 
-  filterDuration(event){
-
-var vm = this;
-var duration;
-if(event.target.value == "all"){
-  duration = "all"
-}else{
-  duration = parseInt(event.target.value * 1000, 10);
-}
-
-var tickets;
-if(duration == 'all'){
-  tickets = vm.tickets
-}else{
-  tickets = vm.tickets.filter((ticket) => {
-         var currentDate = new Date();
-         var ticketDate = new Date(ticket.requestDate);
-
-         var diff = currentDate - ticketDate;
-
-         if(diff < duration){
-          return true
-         }
+  
 
 
-
-  })
-}
+filter(){
 
 
-vm.departments = tickets.map((ticket)=>{
-             if(ticket.hasService){
-              return ticket.serviceType
-             }else{
-              return ticket.department
-             }
-     })
-     vm.departmentCounts = _.countBy(vm.departments);
-     var labels = [];
+  var vm = this;
 
-     var data = [];
-     for(var x in this.departmentCounts){
-           labels.push(x)
-           data.push(vm.departmentCounts[x])
-     }
-     console.log(labels);
-     console.log(data)
-     vm.backgroundColor = this.generateRandomColorsList(labels.length)
-     vm.labels = labels;
-     vm.data = data;
-     console.log(this.labels)
+  var duration = JSON.parse(vm.duration)
+  console.log("this is the first duration")
+  console.log(duration)
 
+  vm.filterCheck = !vm.filterCheck
+  var tickets = vm.tickets;
+
+  var currentTickets;
+
+  if(vm.location == "all"){
+    currentTickets = tickets 
+  }else{
+    currentTickets = tickets.filter(ticket=>ticket.location == vm.location)
+  }
+
+  if(vm.status == "unassigned"){
+    currentTickets = currentTickets.filter((ticket)=> tickets.status == "Ticket Submitted - Seeking Department Head's Approval" || ticket.status == "Ticket Submitted" || ticket.status == "Ticket Submitted - Department Head's Approval Given" || ticket.status == "Ticket Submitted - Seeking Additional Approval" || ticket.status == "Ticket Submitted - Additional Approval Given" )
+  }else if(vm.status == "assigned"){
+    currentTickets = currentTickets.filter((ticket)=>ticket.status == "Assigned / Pending")
+  }else if(vm.status == "closed"){
+    currentTickets = currentTickets.filter((ticket)=>ticket.status == "Closed Ticket")
+  }
+
+  if(duration.duration != "all"){
+    currentTickets = currentTickets.filter((ticket) => {
+      var currentDate = new Date();
+      var ticketDate = new Date(ticket.requestDate)
+       console.log("this is the duration")
+       console.log(duration.duration)
+      var durationInMilli = duration.duration * 1000
+
+      var diff = currentDate - ticketDate
+
+      if(diff < durationInMilli){
+        return true
+
+      }
+    })
+  }
+
+
+  var departments = currentTickets.map((ticket)=>{
+   if(ticket.hasService){
+     return ticket.serviceType
+   }else{
+     return ticket.department
+   }});
+
+ 
+   var unique = _.countBy(departments)
+
+   var labels = [];
+   var data = [];
+
+   for(var x in unique){
+    labels.push(x);
+    data.push(unique[x])
+ }
+
+ var label = `Status:${vm.status}  Zone:${vm.zone}  Duration:${duration.name}`
+
+ vm.data = {...vm.data, labels:labels,   datasets: [
+	  {
+		label: label,
+		backgroundColor: 'dodgerBlue',
+		data: data
+	  }
+	]}
 
 
 

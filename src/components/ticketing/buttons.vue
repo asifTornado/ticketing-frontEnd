@@ -15,7 +15,7 @@
        
             <button  class="bg-green-500 w-auto text-white font-bold mr-2   shadow-sm shadow-black   mt-2 p-2 rounded-sm "  @click="$emit('call', 'Ticket Assigned')">Assign</button> 
             <button  class="bg-blue-500 w-auto text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Information')">Ask For Info</button>
-            <button  class="bg-lime-500 w-auto text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Ticket Accept')">Accept</button> 
+            <!-- <button  class="bg-lime-500 w-auto text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Ticket Accept')">Accept</button>  -->
             <button  class="bg-red-500  w-auto text-white    shadow-sm shadow-black  font-bold mr-2  mt-2 p-2 rounded-sm" @click="$emit('call', 'reject')">Reject</button>
             <button  class="bg-fuchsia-500 w-auto text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Approval')">Acquire Approval</button>
 
@@ -60,7 +60,7 @@
         <button  class=" bg-emerald-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Approval')">Acquire Approval </button>
         <button  class=" bg-blue-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Information')">Acquire Information</button>
         <button  class=" bg-fuchsia-500 text-white font-bold mr-2 mt-2 p-2 rounded-sm shadow-sm shadow-black" @click="$emit('call', 'Reassign')">Reassign</button>
-        <button  class=" bg-lime-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Ticket Accept')">Accept</button> 
+        <button  class="bg-green-500 text-white font-bold mr-2 mt-2 p-2 rounded-sm shadow-sm shadow-black" @click="$emit('call', 'Close Request')">Close Request</button> 
         <button  class=" bg-red-500  text-white    shadow-sm shadow-black  font-bold mr-2  mt-2 p-2 rounded-sm" @click="$emit('call', 'reject')">Reject</button>
 
     </template>
@@ -69,7 +69,7 @@
         <button  class=" bg-emerald-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Approval')">Acquire Approval </button>
         <button  class=" bg-blue-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Information')">Acquire Information</button>
         <button  class=" bg-fuchsia-500 text-white font-bold mr-2 mt-2 p-2 rounded-sm shadow-sm shadow-black" @click="$emit('call', 'Reassign')">Reassign</button>
-        <button  class=" bg-lime-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Ticket Accept')">Accept</button> 
+        <button  class="bg-green-500 text-white font-bold mr-2 mt-2 p-2 rounded-sm shadow-sm shadow-black" @click="$emit('call', 'Close Request')">Close Request</button> 
         <button  class=" bg-red-500  text-white    shadow-sm shadow-black  font-bold mr-2  mt-2 p-2 rounded-sm" @click="$emit('call', 'reject')">Reject</button>
 
     </template>
@@ -101,7 +101,7 @@
         <button  class=" bg-emerald-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Approval')">Acquire Approval </button>
         <button  class="bg-green-500 text-white font-bold mr-2  drop-shadow-2xl shadow-sm shadow-black   mt-2 p-2 rounded-sm" @click="$emit('call', 'Ticket Assigned')">Assign</button> 
             <button  class="bg-blue-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Information')">Ask For Info</button>
-            <button  class="bg-lime-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Ticket Accept')">Accept</button> 
+            <button  class="bg-green-500 text-white font-bold mr-2 mt-2 p-2 rounded-sm shadow-sm shadow-black" @click="$emit('call', 'Close Request')">Close Request</button> 
             <button  class="bg-red-500  text-white    shadow-sm shadow-black  font-bold mr-2  mt-2 p-2 rounded-sm" @click="$emit('call', 'reject')">Reject</button>
 
        </template>
@@ -110,7 +110,7 @@
         <button  class=" bg-emerald-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Approval')">Acquire Approval </button>
         <button  class=" bg-blue-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Asking For Information')">Ask For Info</button>
         <button  class=" bg-fuchsia-500 text-white font-bold mr-2 mt-2 p-2 rounded-sm shadow-sm shadow-black" @click="$emit('call', 'Reassign')">Reassign</button>
-        <button  class=" bg-lime-500 text-white font-bold mr-2 shadow-sm shadow-black  mt-2 p-2 rounded-sm" @click="$emit('call', 'Ticket Accept')">Accept</button> 
+        <button  class="bg-green-500 text-white font-bold mr-2 mt-2 p-2 rounded-sm shadow-sm shadow-black" @click="$emit('call', 'Close Request')">Close Request</button> 
         <button  class=" bg-red-500  text-white    shadow-sm shadow-black  font-bold mr-2  mt-2 p-2 rounded-sm" @click="$emit('call', 'reject')">Reject</button>
           </template>
 

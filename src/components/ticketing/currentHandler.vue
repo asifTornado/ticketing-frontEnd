@@ -162,7 +162,7 @@
       </div>
     
       <div class="w-2/4 text-right">
-           {{ priority }}
+           {{ priority.priority }}
       </div>
     </div>
     
@@ -856,7 +856,6 @@
          <Chat  :ticketId="ticket._id" :user="ticket.raisedBy.empName"   />
 
        </div>
-
 
 
 

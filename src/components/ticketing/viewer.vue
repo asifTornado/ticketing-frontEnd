@@ -1039,10 +1039,10 @@
 
       </div>
   <div class="flex flex-row justify-end"> 
-   <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="this.authStore.getUser.empName == ticket.ticketingHead.empName && ticket.assignedTo != null" @click="unassign($event, ticket)">Unassign</button>
-   <button  class=" bg-fuchsia-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" @click="reassignTicketToggle"  v-if="this.authStore.getUser.empName == ticket.ticketingHead.empName && ticket.assignedTo != null">Reassign</button>
-   <button class="bg-blue-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle" v-if="ticket.assignedTo == null && user.mailAddress == ticket.ticketingHead.mailAddress">Assign </button>
-   <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle" v-if="ticket.assignedTo == null && ticket.users.includes(user.mailAddress)">Assign To Self</button>
+   <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="(this.authStore.getUser.empName == ticket.ticketingHead.empName || this.authStore.getUser.userType == 'admin') && ticket.assignedTo != null" @click="unassign($event, ticket)">Unassign</button>
+   <button  class=" bg-fuchsia-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" @click="reassignTicketToggle"  v-if="(this.authStore.getUser.empName == ticket.ticketingHead.empName|| this.authStore.getUser.userType == 'admin') && ticket.assignedTo != null">Reassign</button>
+   <button class="bg-blue-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle" v-if="ticket.assignedTo == null && (user.mailAddress == ticket.ticketingHead.mailAddress || this.authStore.getUser.userType == 'admin')">Assign </button>
+   <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle" v-if="ticket.assignedTo == null && (ticket.users.includes(user.mailAddress) || this.authStore.getUser.userType == 'admin')">Assign To Self</button>
     <button class="bg-amber-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showDetails">Show Details</button>
     <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        </div>
          

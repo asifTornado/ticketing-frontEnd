@@ -25,7 +25,7 @@
     
     </div>
       
-        <CurrentHandler :ticket="ticket" :handlerType="ticket.currentHandlerType" v-if="user && ticket && ticket.currentHandler && (user.mailAddress == ticket.currentHandler.mailAddress || user.userType == 'admin') "/>
+        <CurrentHandler :ticket="ticket" :handlerType="ticket.currentHandlerType" v-if="user && ticket && ticket.currentHandler && (user.mailAddress == ticket.currentHandler.mailAddress ) "/>
         <Viewer :ticket="ticket" :handlerType="ticket.currentHandlerType" v-else-if="ticket && user" class="bg-white" />  
 </div>
 

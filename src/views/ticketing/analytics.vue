@@ -19,6 +19,8 @@
    <button class="text-black border-2 border-solid border-black font-bold p-3 mb-2 w-52  rounded-sm  hover:bg-blue-500 hover:text-white" @click="switchComponent($event, 'Resolution')">Ticket Resolution Time</button>
    <button class="text-black border-2 border-solid border-black font-bold p-3 mb-2 w-52  rounded-sm  hover:bg-blue-500 hover:text-white" @click="switchComponent($event, 'Acceptance')">Ticket Acceptance Time</button>
    <button class="text-black border-2 border-solid border-black font-bold p-3 mb-2 w-52  rounded-sm  hover:bg-blue-500 hover:text-white" @click="switchComponent($event, 'First')">Ticket Response Time</button>
+   <button class="text-black border-2 border-solid border-black font-bold p-3 mb-2 w-52  rounded-sm  hover:bg-blue-500 hover:text-white" @click="switchComponent($event, 'ResponseSLA')">Response SLA Breaches</button>
+   <button class="text-black border-2 border-solid border-black font-bold p-3 mb-2 w-52  rounded-sm  hover:bg-blue-500 hover:text-white" @click="switchComponent($event, 'ResolutionSLA')">Resolution SLA Breaches</button>
 
  </div>
 
@@ -39,6 +41,8 @@
    import Resolution from "../../components/analytics/resolutionTable.vue"
    import Current from "../../components/analytics/current.vue"
    import Total from "../../components/analytics/total.vue"
+   import ResponseSLA from "../../components/analytics/responseSLA.vue"
+   import ResolutionSLA from "../../components/analytics/resolutionSLA.vue"
    
 
 
@@ -49,7 +53,7 @@
         currentComponent:"Line"
       }
     },
-    components:{Line, Acceptance, First, Resolution, Current, Total},
+    components:{Line, Acceptance, First, Resolution, Current, Total, ResponseSLA, ResolutionSLA},
 
     methods:{
       switchComponent(event, Line){
