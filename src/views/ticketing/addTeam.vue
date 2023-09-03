@@ -16,13 +16,35 @@
 
     <div id="body" class="h-24 w-full flex flex-col"  v-if="!hasServices">
 
-        <div class="flex flex-row items-center justify-start mt-10 ml-10">
-            <label for="" class="mr-10 text-lg">Select Team Leader</label>
-           <div class="w-1/4 "> <vss :options="leadersList" :searchable="true" v-model="leader"  /></div>
+        <div class="flex flex-row items-start justify-start w-full mt-10 ml-10">
+         <div class="flex flex-col w-1/2">   <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
+           <div class="w-1/4 flex flex-col " v-for="(leader, leaderCounter) in leaders" :ley="leaderCounter">
+           
+        <div class="flex flex-row w-full">   
+            <select  v-model="leaders[leaderCounter]" >
+            <option v-for="(leaderList, LeaderListCounter) in leadersList" :key="leaderListCounter" :value="leaderList">{{leaderList}}</option>
+           </select>
+           <font-awesome-icon icon="fa-solid fa-plus" @click="addLeader(event, leaderCounter)"/>
+           <font-awesome-icon icon="fa-solid fa-minus" @click="removeLeader(event, leaderCounter)"/>
+        </div>
+           </div>
+</div>
 
+<div class="flex flex-col w-1/2">
+<label>Create Problem Types</label>
 
+<div class="w-1/4 flex flex-col " v-for="(problem, problemCounter) in problemTypes" :ley="problemTypes">
+           
+    <div class="flex flex-row w-full">   
+       <input type="text" name="" id="" v-model="problemTypes[problemCounter]">
+       <font-awesome-icon icon="fa-solid fa-plus" @click="addProblemType(event, problemCounter)"/>
+       <font-awesome-icon icon="fa-solid fa-minus" @click="removeProblemType(event, problemCounter)"/>
+    </div>
+       </div>
+</div>
+<!-- 
            <label for="" class="mr-10 ml-20 text-lg">Select Department Head</label>
-           <div class="w-1/4"> <vss :options="powerList" :searchable="true" v-model="head"  /></div>
+           <div class="w-1/4"> <vss :options="powerList" :searchable="true" v-model="head"  /></div> -->
 
         
     </div>
@@ -228,12 +250,14 @@ export default{
             leadersList:[],
             subordinatesList:[],
             head:null,
+            leaders:['',],
            
             serviceLeadersList:[],
             serviceSubordinatesUserList:[],
             serviceDetailList:[],
             details:[],
-            powerList:[]
+            powerList:[],
+            problemTypes:['']
         }
     },
 
@@ -314,24 +338,37 @@ export default{
                     return {user:user[0], rank:sub.rank}
                 })
                 
-                if(vm.leader == null || vm.leader == undefined){
-                    vm.$toast.warning("Please select a team leader first")
+                if(vm.leaders == null || vm.leaders == undefined ){
+                    vm.$toast.warning("Please select a team leader")
                     return
                 }
 
-                if(vm.head == null || vm.head == undefined){
-                    vm.$toast.warning("please select a depeartment head first")
-                    return
+                if(vm.leaders.includes("")){
+                    vm.$toast.warning("Please fill up all the leader boxes ")
                 }
 
-                vm.leader = vm.users.filter((user)=>user.mailAddress == vm.leader)[0]
+                // if(vm.head == null || vm.head == undefined){
+                //     vm.$toast.warning("please select a depeartment head first")
+                //     return
+                // }
+
+                vm.leaders = vm.leaders.map((leader)=>{
+                    var leader = vm.users.filter((user)=>user.mailAddress == leader)[0]
+                    return leader
+                })
                 vm.head = vm.users.filter((user)=>user.mailAddress == vm.head)[0]
 
-                
-                    
-                newDepartment = {name:vm.department, subordinates:vm.subordinates, hasServices:vm.hasServices, leader:vm.leader, head:vm.head, details:vm.details }
-            }
+               console.log("these are the leaders")
+               console.log(vm.leaders)     
 
+               if(vm.problemTypes[0] == "" || vm.problemTypes.length < 1 || vm.problemTypes == null || vm.problemTypes == undefined){
+                vm.$toast.warning("Please define problemTypes properly first")
+                return 
+               }
+                    
+                newDepartment = {name:vm.department, subordinates:vm.subordinates, hasServices:vm.hasServices, leaders:vm.leaders, head:vm.head, details:vm.details, problemTypes:vm.problemTypes }
+            }
+            console.log("this is the new department")
             console.log(newDepartment)
             
             var token = this.authStore.getToken;
@@ -342,7 +379,7 @@ export default{
 
             axios.post(vm.globalUrl + "createTeam", data).then((result)=>{
                 if(result.data == true){
-                    location.reload()
+                   location.reload()
                 }
             }).catch((error)=>{
                 vm.$toast.warning(error)
@@ -366,7 +403,6 @@ export default{
         },
 
      
-
         deleteSubordinate(event, counter){
             this.subordinates.splice(counter, 1);
         },
@@ -418,6 +454,41 @@ export default{
             var vm = this;
             vm.services.splice(counter, 1)
         },
+
+
+        selectLeader(event, counter){
+
+            this.leaders[counter] = event.target.value;
+            
+        },
+
+        addLeader(event, counter){
+            this.leaders.splice(counter + 1, 0, "")
+        },
+
+
+        removeLeader(event, counter){
+            if(counter < 1){
+                return
+            }else{
+                this.leaders.splice(counter, 1)
+            }
+        },
+
+
+        addProblemType(event, counter){
+            this.problemTypes.splice(counter + 1, 0, "")
+        },
+
+
+        removeProblemType(event, counter){
+            if(counter < 1){
+                return
+            }else{
+                this.problemTypes.splice(counter, 1)
+            }
+        },
+
 
 
         getUsers(){

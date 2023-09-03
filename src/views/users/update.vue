@@ -1,4 +1,5 @@
 <template>
+	
     <div  class=" flex justify-center items-center w-full">
 	<div class="shadow-2xl hover:shadow-blue-600 w-1/2 h-auto  flex flex-col justify-center items-center bg-white ">
 
@@ -23,6 +24,15 @@
 					<option  value="power">Power User</option>
 					<option  value="departmentPower">Department Power User</option>			 
 				  </select>
+
+
+				  	
+		  <label class="mb-20 font-bold mt-10" > User Location</label>
+		  <select name="userType" v-model="user.location" required class="mb-4 h-11 w-full  border border-solid border-gray-200" >
+			
+			<option  :value="location.name" v-for="(location, locationCounter) in locations" :key="locationCounter">{{location.name}}</option>
+				 
+		  </select>
 		
 				  <br class="border border-solid border-black">
 		
@@ -58,13 +68,16 @@ import '../../../node_modules/@yaireo/tagify/dist/tagify.css'
 			 groups:null,
 			 token:null,
 			 groupTags:null,
-			 updateUserCheck:false
+			 updateUserCheck:false,
+			 locations:[]
         }
     },
 
 
 
     created(){
+
+		var vm = this;
 	
      this.token = this.authStore.getToken;
 
@@ -86,6 +99,11 @@ import '../../../node_modules/@yaireo/tagify/dist/tagify.css'
 	  this.token = this.authStore.getToken
 
 	 console.log(`this is the token from update users: ${this.token}`)
+
+
+	 axios.get(vm.globalUrl + "getLocations").then((result)=>{
+		vm.locations = result.data
+	 }).catch((error)=>vm.$toast.warning(error))
 
     },
 

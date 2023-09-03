@@ -1,4 +1,16 @@
 <template>
+
+    <div v-if="categoryCheck" class="fixed top-[200px] left-[300px] bg-white p-10">
+
+        <label for="">Select a Category</label>
+        <select v-model="category">
+          <option v-for="(category, categoryCounter) in categories" :value="category">
+             {{category}}
+          </option>
+        </select>
+         <div @click="reassignDepartment">Proceed</div>
+         <div @click="cancelDepartmentReassign">Cancel</div>
+    </div>
     
     <FilterDrawer :paginator="this.$refs.paginator"/>
     
@@ -122,6 +134,10 @@
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Req. Date
                 </th>
+
+                <th scope="col" class="table-header2 px-6 py-3 ">
+                    Location
+                </th>
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     priority
                 </th>
@@ -158,7 +174,12 @@
                     </select>
                 </td>
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 ">
-                    {{ ticket.requestDate }}
+                    {{ new Date(ticket.requestDate).toDateString() }}
+                </td>
+                <td @click="showDetails(ticket._id)" class="table-row2 px-6">
+                 <select>
+                    <option v-for="(location, locationCounter) in locations" :value="location">{{location}}</option>
+                 </select>
                 </td>
                 <td  class="table-row2 px-6 ">
                     <select name="" id="" class="p-1 border border-solid border-black" @change="setPriority($event, ticket)">
@@ -184,17 +205,19 @@
                    {{ticket.raisedBy.empName}}
                 </td>
                 <td  class="table-row2 ">
-                    <template v-if="ticket.assignedTo && this.authStore.getUser.empName == ticket.ticketingHead.empName">
+                    <template v-if="ticket.assignedTo && ticket.ticketingHead && this.authStore.getUser.empName == ticket.ticketingHead.empName">
                         <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black">
-                            <option :value="ticket.assignedTo.empName" selected>{{ticket.assignedTo.empName}}</option>
-                            <option value="Unassigned" >Unassigned</option>
-                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="user.empName">{{user.empName}}</option>
+                            <option :value="JSON.stringify({value:ticket.assignedTo.empName, type:'name'})" selected>{{ticket.assignedTo.empName}}</option>
+                            <option :value="JSON.stringify({value:team, type:'department'})" v-for="(team, teamCounter) in teams">{{team.name}}</option>
+                            <option :value="JSON.stringify({value:'Unassigned', type:'name'})" >Unassigned</option>
+                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="JSON.stringify({value:user.empName, type:'name'})">{{user.empName}}</option>
                         </select>
                     </template> 
                     <template v-else>
                         <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black" >
-                            <option value="Unassigned" selected>Unassigned</option>
-                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="user.empName">{{user.empName}}</option>
+                            <option :value="JSON.stringify({value:team, type:'department'})" v-for="(team, teamCounter) in teams">{{team.name}}</option>
+                            <option :value="JSON.stringify({value:'Unassigned', type:'name'})" selected>Unassigned</option>
+                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="JSON.stringify({value:user.empName, type:'name'})">{{user.empName}}</option>
                         </select>
                     </template> 
                  </td>
@@ -251,7 +274,15 @@
                selectedItem:null,
                support:[],
                currentPage:1,
-               itemsPerPage:2
+               itemsPerPage:2,
+               teams:[],
+               value:'',
+               type:'',
+               ticket:'',
+               categoryCheck:false,
+               categories:[],
+               change:false,
+               category:''
             }
         },
 
@@ -271,7 +302,8 @@
 
 
         created(){
-         this.loadTickets()
+         this.loadTickets();
+         this.getTeams();
         },
 
     
@@ -286,110 +318,10 @@
              console.log("handlePageChanged called")
             },
 
-            assignTicket(event, ticket){
-            var vm = this;
-            vm.$toast.info("Assigning ticket please wait....")
-        
-            var vm = this;
-      
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
-            var comment = "Not Available"
-            var ticket = ticket
-            var prevAssignee = ticket.assignedTo
-
-            console.log("this is the selected name")
-            console.log(event.target.value);
-
-
-            if(event.target.value == "Unassigned" && ticket.assignedTo != null){
-                var data = new FormData();
-                data.append('token', token)
-                data.append('user', JSON.stringify(user))
-                data.append('comment', comment)
-                data.append('ticket', JSON.stringify(ticket))
-                data.append("prevAssignee", JSON.stringify(prevAssignee))
-
-
-                axios.post(vm.globalUrl + 'unassign', data).then((result)=>{
-                           if(result.data == true){
-                               vm.$toast.clear()
-                               vm.$toast.success('Assigning Done')
-                               vm.loadTickets()
-                           }else{
-                               vm.$toast.clear()
-                               vm.$toast.warning(result.data)
-                           }
-                       }).catch((error)=>{
-                           vm.$toast.clear()
-                           vm.$toast.warning(error)
-                       })
-
-               
-            }else if(ticket.assignedTo != null && event.target.value != "Unassigned"){
-                 var approver = vm.support.filter((user)=>user.empName == event.target.value)[0]
-                 
-                 var data = new FormData();
-                 
-                 data.append('token', token)
-                 data.append('user', JSON.stringify(user))
-                 data.append('comment', comment)
-                 data.append('ticket', JSON.stringify(ticket))
-                 data.append('approver', JSON.stringify(approver))
-
-                 axios.post(vm.globalUrl + 'reassign', data).then((result)=>{
-                    if(result.data == true){
-                        vm.$toast.clear()
-                        vm.$toast.success('Reassigning Done')
-                        vm.loadTickets()
-                      
-                    }else{
-                        vm.$toast.clear()
-                        vm.$toast.warning(result.data)
-                    }
-                }).catch((error)=>{
-                    vm.$toast.clear()
-                    vm.$toast.warning(error)
-                })
-
-
-            }else if(ticket.assignedTo == null && event.target.value != "Unassigned"){
-                var approver = vm.support.filter((user)=> user.empName == event.target.value)[0]
-
-                       console.log("this is the approver")
-                       console.log(approver)
-                       
-                       
-                       var data = new FormData();
-                       
-                       data.append('token', token)
-                       data.append('user', JSON.stringify(user))
-                       data.append('comment', comment)
-                       data.append('ticket', JSON.stringify(ticket))
-                       data.append('approver', JSON.stringify(approver))
-                       
-                       axios.post(vm.globalUrl + 'assign', data).then((result)=>{
-                           if(result.data == true){
-                               vm.$toast.clear()
-                               vm.$toast.success('Assigning Done')
-                               vm.loadTickets()
-                       
-                           }else{
-                               vm.$toast.clear()
-                               vm.$toast.warning(result.data)
-                           }
-                       }).catch((error)=>{
-                           vm.$toast.clear()
-                           vm.$toast.warning(error)
-                       })
-            }
-            
-            
-           
-        },
+          
 
         loadTickets(){
-            
+            console.log("calling load ticket")
             this.getSupport();
             this.$toast.info("Loading Data....")
             var vm = this;
@@ -621,7 +553,9 @@
     }).catch((error)=>console.log(error))
 
 
-  }
+  },
+
+
         }
     
     

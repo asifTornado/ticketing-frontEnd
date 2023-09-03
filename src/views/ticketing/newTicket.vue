@@ -52,18 +52,21 @@
     
         <div class=" mt-5 text-black  w-full flex flex-row">
             <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Concerned Department:</div>
-            <select v-model="ticket.department"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9' @change="checkService">
+            <select v-model="ticket.department"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9'  @change="setTeam($event)">
               <option v-for="(team, teamCounter) in teams" :key="teamCounter" :value="team.name">
                         {{ team.name }}
               </option>
             </select>
         </div>
 
-        <div class=" mt-5 text-black  w-full flex flex-row" v-if="hasService" >
-            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Section:</div>
-            <select @change="checkServiceDetail" v-model="ticket.serviceType"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9'>
+
+     
+
+        <div class=" mt-5 text-black  w-full flex flex-row" v-if="team" >
+            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Category:</div>
+            <select  v-model="ticket.category"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9'>
                 <option value=""  disabled selected>Please Select </option>
-                <option v-for="(service, serviceCounter) in team.services" :key="serviceCounter" :value="service.serviceName">{{ service.serviceName }}</option>
+                <option v-for="(category, categoryCounter) in team.problemTypes" :key="categoryCounter" :value="category">{{ category }}</option>
               
              
 
@@ -419,7 +422,7 @@ export default{
              axios.post(vm.globalUrl + 'submitTicket', data).then((result)=>{
                  vm.$toast.clear()
                  vm.$toast.success("Ticket Submitted")
-                 location.reload();
+                //  location.reload();
             
              }).catch((error)=>{
                 vm.$toast.clear()
@@ -481,6 +484,14 @@ export default{
             vm.ticket.phone = user.mobileNo
             vm.ticket.email = user.mailAddress
             
+        },
+
+        setTeam(event){
+            var vm = this;
+            var teamName = event.target.value
+
+            var selectedTeam = vm.teams.filter((team)=>team.name == teamName)[0];
+            vm.team = selectedTeam
         }
 
     }

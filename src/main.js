@@ -182,7 +182,8 @@ app.mixin({
           globalUrl:"http://localhost:5000/",
           frontUrl :"http://localhost:5173/",
           users:[],
-          tickets:[]
+          tickets:[],
+          locations:[]
      
         }
     },
@@ -193,6 +194,165 @@ app.mixin({
         ...mapStores(useAuthStore, useMainStore, useNotificationStore)
     },
     methods:{
+      cancelDepartmentReassign(){
+        var vm = this;
+        
+        vm.categoryCheck = false;
+      
+      },
+      assignTicket(event, ticket){
+        var vm = this;
+        vm.$toast.info("Assigning ticket please wait....")
+        var selectedEvent = JSON.parse(event.target.value)
+        var value = selectedEvent.value;
+        var type = selectedEvent.type;
+        vm.value = value;
+        vm.type = value
+    
+        var vm = this;
+
+        console.log("this is the event value")
+        console.log(value)
+  
+        var user = this.authStore.getUser
+        var token = this.authStore.getToken
+        var comment = "Not Available"
+        var ticket = ticket
+        vm.ticket = ticket
+        var prevAssignee = ticket.assignedTo
+        vm.prevAssignee = ticket.assignedTo
+        console.log("this is the selected name")
+        console.log(value);
+
+
+        if(value == "Unassigned" && ticket.assignedTo != null){
+            console.log("1")
+            var data = new FormData();
+            data.append('token', token)
+            data.append('user', JSON.stringify(user))
+            data.append('comment', comment)
+            data.append('ticket', JSON.stringify(ticket))
+            data.append("prevAssignee", JSON.stringify(prevAssignee))
+
+
+            axios.post(vm.globalUrl + 'unassign', data).then((result)=>{
+                       if(result.data == true){
+                           vm.$toast.clear()
+                           vm.$toast.success('Assigning Done')
+                           vm.loadTickets()
+                       }else{
+                           vm.$toast.clear()
+                           vm.$toast.warning(result.data)
+                       }
+                   }).catch((error)=>{
+                       vm.$toast.clear()
+                       vm.$toast.warning(error)
+                   })
+
+           
+        }else if(ticket.assignedTo != null && value != "Unassigned" && type == "name"){
+            console.log("2")
+             var approver = vm.support.filter((user)=>user.empName == value)[0]
+             
+             var data = new FormData();
+             
+             data.append('token', token)
+             data.append('user', JSON.stringify(user))
+             data.append('comment', comment)
+             data.append('ticket', JSON.stringify(ticket))
+             data.append('approver', JSON.stringify(approver))
+
+             axios.post(vm.globalUrl + 'reassign', data).then((result)=>{
+                if(result.data == true){
+                    vm.$toast.clear()
+                    vm.$toast.success('Reassigning Done')
+                    vm.loadTickets()
+                  
+                }else{
+                    vm.$toast.clear()
+                    vm.$toast.warning(result.data)
+                }
+            }).catch((error)=>{
+                vm.$toast.clear()
+                vm.$toast.warning(error)
+            })
+
+
+        }else if(ticket.assignedTo == null && value != "Unassigned" && type == "name"){
+            console.log("3")
+            var approver = vm.support.filter((user)=> user.empName == value)[0]
+
+                   console.log("this is the approver")
+                   console.log(approver)
+                   
+                   
+                   var data = new FormData();
+                   
+                   data.append('token', token)
+                   data.append('user', JSON.stringify(user))
+                   data.append('comment', comment)
+                   data.append('ticket', JSON.stringify(ticket))
+                   data.append('approver', JSON.stringify(approver))
+                   
+                   axios.post(vm.globalUrl + 'assign', data).then((result)=>{
+                       if(result.data == true){
+                           vm.$toast.clear()
+                           vm.$toast.success('Assigning Done')
+                           vm.loadTickets()
+                   
+                       }else{
+                           vm.$toast.clear()
+                           vm.$toast.warning(result.data)
+                       }
+                   }).catch((error)=>{
+                       vm.$toast.clear()
+                       vm.$toast.warning(error)
+                   })
+        }else if(ticket.assignedTo == null && type == "department" ){
+          this.categories = vm.teams.filter((team) => team.name == value.name)[0].problemTypes
+          this.categoryCheck = true
+           
+        }else if(ticket.assignedTo != null && type == "department"){
+          this.categories = vm.teams.filter((team) => team.name == value.name)[0].problemTypes
+           this.categoryCheck = true
+        }
+        
+        
+       
+    },
+
+    reassignDepartment(){
+
+      console.log("4")
+      var vm = this;
+      vm.categoryCheck = false;
+      var token = vm.authStore.getToken;
+      var user = vm.authStore.getUser;
+      var comment = "Not Available"
+      var ticket= vm.ticket
+      var value = vm.value
+
+      ticket.category = vm.category
+
+      console.log("entered department reassigned")
+      var data = new FormData();
+      data.append('token', token)
+       data.append('user', JSON.stringify(user))
+       data.append('comment', comment)
+       data.append('ticket', JSON.stringify(ticket))
+       data.append('department', value.name)
+       
+       console.log('this is the data')
+       console.log(data)
+       axios.post(vm.globalUrl + "reassignDepartment", data).then((result)=>{
+          vm.$toast.clear()
+          vm.$toast.success('Assigning Done')
+          vm.loadTickets()
+       }).catch((error)=>{
+          vm.$toast.clear()
+          vm.$toast.warning(error)
+       })
+    },
         logout(){
             this.authStore.setUser(null);
             this.authStore.setToken(null);
@@ -341,6 +501,20 @@ app.mixin({
             });
           },
 
+          getTeams(){
+            var vm = this;
+            var user = this.authStore.getUser;
+            var token = this.authStore.getToken;
+        
+            var data = new FormData();
+            data.append("token", token)
+           
+            axios.post(vm.globalUrl +"getTeams", data).then((result)=>{
+                vm.teams = result.data
+            }).catch((error)=>vm.$toast.warning(error))
+        
+          },
+
 
           getApprovers(){
             var vm = this
@@ -358,6 +532,14 @@ app.mixin({
           console.log(error);
           });
           },
+
+          getLocations(){
+                 var vm = this;
+                 axios.get(vm.globalUrl + "getLocations").then((result)=>{
+                  vm.locations = result.data
+                 }).catch((error)=>vm.$toast.warning(error))
+                 
+          }
 
 
        
