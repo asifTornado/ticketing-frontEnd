@@ -247,16 +247,16 @@
 
             switch(userType){
               case "admin":
-                this.$router.push("/systemAdmin");
+                this.$router.push("/ticketing/systemAdmin/manage");
                 break;
               case "normal":
-                 this.$router.push("/user");
+                 this.$router.push("/ticketing/normal");
                  break;
               case "power":
-                 this.$router.push("/power");
+                 this.$router.push("/ticketing/power");
                  break;
               case "leader":
-                 this.$router.push("leader");
+                 this.$router.push("/ticketing/leader/manage");
                  break;
             
             }

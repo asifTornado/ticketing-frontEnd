@@ -1,6 +1,8 @@
 <template>
-    <div style="height:450px; width:1000px"   class="relative shadow-md shadow-black p-4  bg-white">
+    <div style="height:300px; width:700px"   class="relative shadow-md shadow-black p-4  bg-white">
 
+
+   
       <div class="flex flex-row p-3 justify-start items-start">
 
         <span class=" text-black font-bold text-md mr-2">Zone</span>
@@ -40,6 +42,7 @@
         
         
         </div>
+  
     
     <div class="flex flex-row items-center ">
  
@@ -58,11 +61,11 @@
           <label class="mr-5 text-lg">{{ JSON.parse(duration).name }}</label></div>
  </div>
 
- 
+
    </div>
     </div>
 
- <div style="height:360px; width:900px" class="flex text-center  flex-row justify-center items-center"> <Bar :data="data" :options="options" /></div>
+ <div style="height:200px; width:600px" class="flex text-center  flex-row justify-center items-center"> <Bar :data="data" :options="options" /></div>
 
 
  </div>
@@ -175,13 +178,13 @@ export default {
             if(ticket.priority){
                  var currentDate = new Date();
 
-                 if(ticket.status == "Closed Ticket" ){
-                    var resolutionTime =new Date(ticket.actions[ticket.actions.length - 1].time)
+                 if(ticket.actions.length > 1){
+                    var responseTime =new Date(ticket.actions[1].time)
                     var raiseTime = new Date(ticket.actions[0].time)
 
-                    var SLA = vm.getTimeInMilli(ticket.priority.resolutionTime)
+                    var SLA = vm.getTimeInMilli(ticket.priority.responseTime)
 
-                    var diff = resolutionTime - raiseTime
+                    var diff = responseTime - raiseTime
 
                     if(diff > SLA){
                         return true
@@ -189,7 +192,7 @@ export default {
                  }else{
                     var raiseTime = new Date(ticket.actions[0].time)
 
-                    var SLA = vm.getTimeInMilli(ticket.priority.resolutionTime)
+                    var SLA = vm.getTimeInMilli(ticket.priority.responseTime)
 
                     var diff = currentDate - raiseTime
 
@@ -202,10 +205,6 @@ export default {
          })
 
 
-         console.log("these are the breaches")
-         console.log(breaches)
-
-
          var breachDepartments = breaches.map((ticket)=>{
             if(ticket.hasService){
               return ticket.serviceType
@@ -214,14 +213,8 @@ export default {
             }
           })
 
-          console.log("these are the breach departments")
-          console.log(breachDepartments)
-
           var breachesUnique = _.countBy(breachDepartments)
 
-       
-          console.log("these are the breaches unique")
-          console.log(breachesUnique)
 
           var breachData = []
           var breachLabels = []
@@ -232,9 +225,7 @@ export default {
              breachData.push(breachesUnique[x])
           }
 
-console.log("these are the breachLabels and data")
-console.log(breachData)
-console.log(breachLabels)
+
 
           vm.data = {...vm.data, labels:breachLabels,   datasets: [
 	  {
@@ -243,16 +234,6 @@ console.log(breachLabels)
 		data: breachData
 	  }
 	]}
-
-
-    vm.options = {...vm.options, scales:{
-	  y:{
-		ticks:{
-		  callback: value => `${value}`
-		}
-	  }
-	}}
-  
   
 
 

@@ -1,15 +1,15 @@
 <template> 
-    <div class="h-screen  w-full"  id="app">
+    <div class="h-[92vh]  w-full pr-[50px] overflow-y-scroll"  id="app">
 
         <div class="h-20 bg-gray-100 w-full flex flex-row justify-between p-2 items-center">
 
             <input type="text" v-model="department" placeholder="Enter Department Name" class="text-2xl p-4 ml-10 w-[500px] rounded-md border border-solid border-gray-600 h-12">
             
             
-        <div class="flex flex-row justify-center items-center">
+        <!-- <div class="flex flex-row justify-center items-center">
             <label for="hasServices" >Has Subsections</label>
             <input type="checkbox" v-model="hasServices" name="hasServices" id="hasServices" class="h-9 w-16 border border-solid border-gray-600">
-        </div>
+        </div> -->
         
     </div>
 
@@ -17,28 +17,35 @@
     <div id="body" class="h-24 w-full flex flex-col"  v-if="!hasServices">
 
         <div class="flex flex-row items-start justify-start w-full mt-10 ml-10">
-         <div class="flex flex-col w-1/2">   <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
-           <div class="w-1/4 flex flex-col " v-for="(leader, leaderCounter) in leaders" :ley="leaderCounter">
+         <div class="flex flex-col w-1/2 border border-solid border-black p-2">   <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
+           <div class="w-1/4 flex flex-col" v-for="(leader, leaderCounter) in leaders" :ley="leaderCounter">
            
-        <div class="flex flex-row w-full">   
-            <select  v-model="leaders[leaderCounter]" >
+        <div class="flex flex-row w-full  items-center ">   
+            <select  v-model="leaders[leaderCounter]" class="mt-2 border border-solid border-black p-1">
             <option v-for="(leaderList, LeaderListCounter) in leadersList" :key="leaderListCounter" :value="leaderList">{{leaderList}}</option>
            </select>
-           <font-awesome-icon icon="fa-solid fa-plus" @click="addLeader(event, leaderCounter)"/>
-           <font-awesome-icon icon="fa-solid fa-minus" @click="removeLeader(event, leaderCounter)"/>
+           <font-awesome-icon icon="fa-solid fa-plus" size="lg" class="mr-4 ml-4" @click="addLeader(event, leaderCounter)"/>
+           <font-awesome-icon icon="fa-solid fa-minus" size="lg" @click="removeLeader(event, leaderCounter)"/>
         </div>
            </div>
 </div>
 
-<div class="flex flex-col w-1/2">
-<label>Create Problem Types</label>
+<div class="flex flex-col w-1/2 border ml-2  border-solid border-black p-2">
+<label class="mr-10  text-lg">Create Problem Types</label>
 
-<div class="w-1/4 flex flex-col " v-for="(problem, problemCounter) in problemTypes" :ley="problemTypes">
+<div class="w-full flex flex-col " v-for="(problem, problemCounter) in problemTypes" :ley="problemTypes">
            
-    <div class="flex flex-row w-full">   
-       <input type="text" name="" id="" v-model="problemTypes[problemCounter]">
-       <font-awesome-icon icon="fa-solid fa-plus" @click="addProblemType(event, problemCounter)"/>
-       <font-awesome-icon icon="fa-solid fa-minus" @click="removeProblemType(event, problemCounter)"/>
+    <div class="flex flex-col w-full items-start justify-center">   
+       <div class="flex flex-row justify-center items-center"><input type="text" name="" id="" v-model="problemTypes[problemCounter].name" class="p-1 border border-solid border-black mr-3 mt-2">
+       <div class=" text-white p-2 w-[120px] mr-2 bg-emerald-500 " @click="addSubCategory(event, problemCounter)">Add Subcategory</div>
+       <font-awesome-icon icon="fa-solid fa-plus" size="lg" class="mr-2 justify-center items-center  " @click="addProblemType(event, problemCounter)"/>
+       <font-awesome-icon icon="fa-solid fa-minus" size="lg" class="justify-center items-center mr-2" @click="removeProblemType(event, problemCounter)"/></div>
+        
+    </div>
+    <div class="flex flex-row items-center" v-for="(subs, subsCounter) in problem.subs">
+        <input class="border border-solid border-black mt-1 ml-5 p-1" v-model="problemTypes[problemCounter].subs[subsCounter]">
+
+        <font-awesome-icon icon="fa-solid fa-minus" size="lg" class="justify-center items-center mr-2 ml-2" @click="removeSub(event, problemCounter, subsCounter)"/>
     </div>
        </div>
 </div>
@@ -257,7 +264,7 @@ export default{
             serviceDetailList:[],
             details:[],
             powerList:[],
-            problemTypes:['']
+            problemTypes:[{name:'', subs:['']}]
         }
     },
 
@@ -389,6 +396,13 @@ export default{
 
         },
 
+        addSubCategory(event, counter){
+            console.log("this is the chosen data")
+            console.log(counter)
+         this.problemTypes[counter].subs.push("")
+
+        },
+
 
         addSubordinate(){
             var vm = this;
@@ -475,9 +489,15 @@ export default{
             }
         },
 
+        removeSub(event, problemCounter, subCounter){
+
+            this.problemTypes[problemCounter].subs.splice(subCounter, 1)
+
+        },
+
 
         addProblemType(event, counter){
-            this.problemTypes.splice(counter + 1, 0, "")
+            this.problemTypes.splice(counter + 1, 0, {name:'', subs:[]})
         },
 
 

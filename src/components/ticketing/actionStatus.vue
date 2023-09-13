@@ -27,6 +27,19 @@
 
 </div>
 
+<div v-if="action.type == 0 && ticket.approvalRequired == false && ticket.raisedFor" class="p-4 font-bold bg-blue-300  shadow shadow-md shadow-black" >
+    <div class="flex flex-row text-start text-lg">
+        {{ ticket.raisedBy.empName }} has raised a new ticket on behalf of {{ticket.raisedFor.empName}} for the {{ ticket.department }} 
+        department</div>  <br/>
+    
+        <br/>
+    
+        <div class="text-start" v-if="action.comments">
+       <span class="underline">His/Her comment:</span> <br/> {{ action.comments }}
+        </div>
+    
+    </div>
+
 
 <div v-else-if="action.type == 4" class="p-4 font-bold bg-blue-300  shadow shadow-md shadow-black" >
 <div class="flex flex-row text-start text-2">

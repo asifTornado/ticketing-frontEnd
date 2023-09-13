@@ -174,7 +174,7 @@
                 filteredTickets:[],
                 sort:[ "emergency", "high", "medium", "normal",],
                 currentPage:1,
-                itemsPerPage:2
+                itemsPerPage:10
              }
          },
 
@@ -306,7 +306,7 @@
              var data = new FormData();
              data.append("token", token);
              data.append("user", JSON.stringify(user));
-             axios.post(vm.globalUrl + 'getTickets', data).then((result)=>{
+             axios.post(vm.globalUrl + 'getTickets2', data).then((result)=>{
                 vm.tickets = result.data
                 vm.filteredTickets = vm.tickets
                 this.$refs.paginator.onClickHandler(1)
@@ -315,7 +315,7 @@
           
               
                 vm.unassigned = vm.tickets.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
-                vm.assigned = vm.tickets.filter((ticket)=>ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.accepted == false)
+                vm.assigned = vm.tickets.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress && ticket.currentHandler != null)
                 vm.approval = vm.tickets.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
                 vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress ==user.mailAddress);
                 vm.info = vm.tickets.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)

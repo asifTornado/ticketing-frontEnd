@@ -21,7 +21,7 @@
    <div class=" flex flex-row   text-lg  h-full w-full  bg-[rgb(248,248,248)]  " id="app"  >
 
 
-    <div class="flex flex-col h-screen customborder  bg-gray-200  pt-2" id="sidePanel" v-if="this.mainStore.getSidePanelCheck">
+    <div class="flex flex-col h-screen fixed left-15 customborder  bg-gray-200  pt-2" id="sidePanel" v-if="this.mainStore.getSidePanelCheck">
        
 
         <div @click="filter($event, 'all')" :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
@@ -130,6 +130,10 @@
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Ticket Type
                 </th>
+
+                <th scope="col" class="table-header2 px-6 py-3 ">
+                    Problem Type
+                </th>
                 
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Req. Date
@@ -173,12 +177,16 @@
                         <option v-else value="Problem">Problem</option>
                     </select>
                 </td>
+                <td  class="table-row2 ">
+                    {{ticket.category}}
+                </td>
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 ">
                     {{ new Date(ticket.requestDate).toDateString() }}
                 </td>
-                <td @click="showDetails(ticket._id)" class="table-row2 px-6">
-                 <select>
-                    <option v-for="(location, locationCounter) in locations" :value="location">{{location}}</option>
+                <td  class="table-row2 px-6">
+                 <select @change="setLocation($event, ticket._id)" class="w-[80px] border border-black border-solid">
+                    <option selected>{{ticket.location}}</option>
+                    <option v-for="(location, locationCounter) in locations"  :value="location.name">{{location.name}}</option>
                  </select>
                 </td>
                 <td  class="table-row2 px-6 ">
@@ -189,7 +197,9 @@
                         <option value="Priority 2">Priority 2</option>
                         <option value="Priority 3">Priority 3</option>
                         <option value="Priority 4">Priority 4</option>
-                       
+                        <option value="Priority 5">Priority 5</option>
+                        <option value="Priority 6">Priority 6</option>
+                    
                     </select>
                 </td>
 
@@ -206,7 +216,7 @@
                 </td>
                 <td  class="table-row2 ">
                     <template v-if="ticket.assignedTo && ticket.ticketingHead && this.authStore.getUser.empName == ticket.ticketingHead.empName">
-                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black">
+                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black w-[100px]">
                             <option :value="JSON.stringify({value:ticket.assignedTo.empName, type:'name'})" selected>{{ticket.assignedTo.empName}}</option>
                             <option :value="JSON.stringify({value:team, type:'department'})" v-for="(team, teamCounter) in teams">{{team.name}}</option>
                             <option :value="JSON.stringify({value:'Unassigned', type:'name'})" >Unassigned</option>
@@ -214,7 +224,7 @@
                         </select>
                     </template> 
                     <template v-else>
-                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black" >
+                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black w-[100px]" >
                             <option :value="JSON.stringify({value:team, type:'department'})" v-for="(team, teamCounter) in teams">{{team.name}}</option>
                             <option :value="JSON.stringify({value:'Unassigned', type:'name'})" selected>Unassigned</option>
                             <option v-for="(user, userCounter) in support" :key="userCounter" :value="JSON.stringify({value:user.empName, type:'name'})">{{user.empName}}</option>
@@ -274,7 +284,7 @@
                selectedItem:null,
                support:[],
                currentPage:1,
-               itemsPerPage:2,
+               itemsPerPage:10,
                teams:[],
                value:'',
                type:'',
@@ -290,12 +300,16 @@
             sortedTickets(){
                 var vm = this;
              var tickets = vm.mainStore.getFilteredTickets
-             tickets.sort(vm.comparator)
-             console.log("these are the sorted Tickets")
+             if(tickets){
+                 
+                 tickets.sort(vm.comparator)
+                 console.log("these are the sorted Tickets")
              console.log(tickets)
              var start = (vm.currentPage - 1) * vm.itemsPerPage
              var end = start + vm.itemsPerPage
              return tickets.slice(start, end)
+             }
+            
             }
 
         },
@@ -304,6 +318,7 @@
         created(){
          this.loadTickets();
          this.getTeams();
+         this.getLocations();
         },
 
     
@@ -322,7 +337,7 @@
 
         loadTickets(){
             console.log("calling load ticket")
-            this.getSupport();
+          
             this.$toast.info("Loading Data....")
             var vm = this;
             var token = this.authStore.getToken
@@ -345,6 +360,8 @@
                vm.info = vm.tickets.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
                vm.$toast.clear()
                vm.$toast.success("Data Loaded Successfully")
+
+               vm.getSupport();
             }).catch((error)=>{
                 vm.$toast.clear()
                 console.log("this is the error")
@@ -548,7 +565,7 @@
     data.append("token", JSON.stringify(token))
 
     axios.post(vm.globalUrl + "getSupportFromHead", data).then((result)=>{
-        vm.support = result.data
+        vm.support = result.data.filter((support)=>support.location == user.location)
 
     }).catch((error)=>console.log(error))
 

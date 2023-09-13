@@ -444,7 +444,7 @@ console.log(typeof this.$refs.messageArea.scrollHeight)
   return inputString.replace(urlRegex, (url) => {
     let href = url;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      href = 'http://' + url; // Assuming http if the URL doesn't have a protocol
+      href = 'http:/' + url; // Assuming http if the URL doesn't have a protocol
     }
     return  `<a href="${href}" target="_blank">${url}</a>`;
   });

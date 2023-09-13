@@ -11,6 +11,7 @@
          			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Email  <button>filter</button></th>
          			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Department</th>
          			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Designation</th>
+					 <th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Location</th>
          			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">User Type</th>
     				 <th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">User Score</th>
     				 <th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Number Of Raters</th>
@@ -31,6 +32,10 @@
          		{{user.designation}}
         
          		  </td>
+				   <td  @click="showUser($event, user)" class="border-2 border-solid  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
+					{{user.location}}
+		   
+					  </td>
          		  <td  @click="showUser($event, user)" class="border-2 border-solid  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
          			{{user.userType}}
          

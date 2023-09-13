@@ -1,7 +1,7 @@
 <template >
     
 
-    <div class="w-[90vw] h-[100vh] px-10 py-10">
+    <div class="w-[100vw] h-[92vh] px-10 py-10 overflow-y-scroll">
   <div class="flex flex-row justify-center items-center border-2 border-solid border-black p-4 rounded-md">  <label class="text-black text-4xl font-bold">Knowledge Base</label></div>
     
 

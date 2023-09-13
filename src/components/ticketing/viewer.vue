@@ -1,5 +1,36 @@
 <template>
 
+   <!-- rating -->
+   <div class="flex flex-col w-auto p-14 h-auto left-[500px] top-[100px] z-[9999999] border border-solid border-black  fixed bg-white" v-if="rateCheck">
+                   
+
+      <div class="flex flex-col justify-center items-center w-full mb-5">
+            <div class="w-full font-bold text-center" >
+                                 Please Rate Your Handler:
+                             
+                      </div>
+                             <div class="w-full flex flex-row justify-center items-center">
+                                   <StarRating @update:rating ="setRating" :max-rating="10" :show-rating="true" :active-on-click="true" :star-size="30"/>
+                             </div>
+      </div>
+        <div class="flex flex-row w-full mt-4">
+            <div class="w-1/6 font-bold text-center mr-10" >
+                                   Comment:
+                               
+                        </div>
+                               <div class="w-5/6 ">
+                                     <textarea  class="border-2 border-solid w-full border-slate-300 p-3" v-model="comment"></textarea>
+                               </div>
+        </div>
+
+        <div class="flex flex-row w-full h-full justify-end " >
+         <button  class="bg-blue-500  text-white font-bold mr-2  mt-10 p-2 border border-solid    rounded-sm" @click="rate">Submit</button> 
+         <button  class="bg-slate-300  text-black  border border-solid b  font-bold mr-2  mt-10 p-2 rounded-sm" @click="rateCheck = false">Cancel</button>
+      </div>
+      </div>
+
+      <!-- rating  -->
+
    <div style="z-index:1233333333333333333333" class=" w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 border border-solid border-black" v-if="reassignTicketCheck">
       <div class="flex flex-col w-full h-full bg-white" >
                 
@@ -190,7 +221,7 @@
 
 </div>
 
-<Chat :ticketId="ticket._id" :user="ticket.currentHandler.empName"  v-if="ticket.currentHander && this.authStore.getUser.mailAddress == ticket.raisedBy.mailAddress && ticket.status != 'Closed Ticket'"/>
+
    <div class="flex flex-row w-full h-[92vh]" ref="main" >
 
 
@@ -203,7 +234,7 @@
 
      
    
-     <div class="  w-2/6 h-[92vh] overflow-y-scroll    p-2 border bg-gray-100 border-solid border-black ">
+     <div class="  w-2/6 h-[93vh] overflow-y-scroll    p-2 border bg-gray-100 border-solid border-black ">
 
 
       <vue-collapsible-panel-group accordion>
@@ -952,12 +983,12 @@
 
 </div>
    
-       <div class="w-2/6  h-[90vh] overflow-y-scroll  pr-2 text-center bg-blue">
+       <div class="w-2/6 relative  h-[93vh] overflow-y-scroll  pr-2 text-center bg-blue">
      
      <!-- <ActionStatus :ticket="ticket"  /> -->
 
     
-
+     <Chat :ticketId="ticket._id" :user="ticket.assignedTo.empName"  v-if="ticket.assignedTo && (this.authStore.getUser.mailAddress == ticket.raisedBy.mailAddress || this.authStore.getUser.mailAddress == ticket.assignedTo.mailAddress)" />
 <div v-if="showConversationCheck == true" class="mt-2 mr-4">
    <div class="text-2xl font-bold underline">Conversation:</div>
    <div class="flex flex-col h-[400px] w-auto bg-red" >
@@ -1039,10 +1070,11 @@
 
       </div>
   <div class="flex flex-row justify-end"> 
+   <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="ticket.raisedBy.mailAddress == this.authStore.getUser.mailAddress && ticket.actions[ticket.actions.length - 1].type == 11 " @click="rateCheck = true">Rate</button>
    <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="(this.authStore.getUser.empName == ticket.ticketingHead.empName || this.authStore.getUser.userType == 'admin') && ticket.assignedTo != null" @click="unassign($event, ticket)">Unassign</button>
    <button  class=" bg-fuchsia-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" @click="reassignTicketToggle"  v-if="(this.authStore.getUser.empName == ticket.ticketingHead.empName|| this.authStore.getUser.userType == 'admin') && ticket.assignedTo != null">Reassign</button>
-   <button class="bg-blue-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle" v-if="ticket.assignedTo == null && (user.mailAddress == ticket.ticketingHead.mailAddress || this.authStore.getUser.userType == 'admin')">Assign </button>
-   <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle" v-if="ticket.assignedTo == null && (ticket.users.includes(user.mailAddress) || this.authStore.getUser.userType == 'admin')">Assign To Self</button>
+   <button class="bg-blue-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle" v-if="ticket.assignedTo == null && (this.authStore.getUser.mailAddress == ticket.ticketingHead.mailAddress || this.authStore.getUser.userType == 'admin')">Assign </button>
+   <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle" v-if="ticket.assignedTo == null && (ticket.users.includes(this.authStore.getUser.mailAddress) || this.authStore.getUser.userType == 'admin')">Assign To Self</button>
     <button class="bg-amber-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showDetails">Show Details</button>
     <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        </div>
          
@@ -1349,7 +1381,9 @@
            support:[],
            tickets:[],
            ticketType:'',
-           currentHandler:null
+           currentHandler:null,
+           rateCheck:false,
+           rating:0
     
        
         
@@ -1364,9 +1398,9 @@
 
       created(){
          this.getTickets();
-           this.getSupport();
-          this.getApprovers();
-          this.getNotes();
+         this.getSupport();
+         this.getApprovers();
+         this.getNotes();
           this.priority = this.ticket.priority.priority
           this.ticketType = this.ticket.ticketType
           this.currentHandler = this.ticket.currentHandler
@@ -1397,6 +1431,35 @@
 
       methods:{
 
+         rate(){
+            this.$toast.info("Rating")
+            var vm = this;
+            var user = this.authStore.getUser
+            var ticket = this.ticket
+            var comment = this.comment
+            var rating = this.rating
+
+            var data = new FormData();
+            data.append("user", JSON.stringify(user))
+            data.append("ticket", JSON.stringify(ticket))
+            data.append("comment", comment)
+            data.append("rating", rating)
+
+
+            axios.post(vm.globalUrl + "rate", data).then((result)=>{
+               if(result.data == true){
+                  location.reload()
+               }
+            }).catch((error)=>vm.$toast.warning(error))
+            
+
+             
+         },
+
+         setRating2(value){
+            this.rating = value
+         },
+
          setPriority(){
                
                var vm = this;
@@ -1410,6 +1473,8 @@
                   vm.$toast.success("Priority Set")
                }).catch((error)=>vm.$toast.warning(error))
          },
+
+
          getTickets(){
            var vm = this;
            var user = this.authStore.getUser;

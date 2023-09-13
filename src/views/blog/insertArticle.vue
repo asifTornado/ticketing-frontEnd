@@ -19,8 +19,8 @@
 
 <label class="text-2xl font-bold">Article</label>
 
-<div class=" bg-white" id="editor"  contenteditable="true" >
-
+<div class=" bg-white" id="editor" >
+  <QuillEditor :options="options" v-model:content="content" contentType="html" />
  
 
 </div>
@@ -49,7 +49,7 @@
     
     <script >
     import axios from "axios"
-    // import { quillEditor } from 'vue3-quill'
+  
 
     
    export default{
@@ -72,9 +72,7 @@
         }
     },
 
-// components: {
-//     quillEditor
-//   },
+
 
   created(){
      this.token = this.authStore.getToken

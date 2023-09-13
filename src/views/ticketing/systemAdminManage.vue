@@ -9,7 +9,7 @@
    <div class=" flex flex-row   text-lg  h-full w-full  bg-[rgb(248,248,248)]  " id="app"  >
 
 
-    <div class="flex flex-col h-screen customborder  bg-gray-200  pt-2" id="sidePanel" v-if="this.mainStore.getSidePanelCheck">
+    <div class="flex flex-col fixed left-[50px] h-screen customborder  bg-gray-200  pt-2" id="sidePanel" v-if="this.mainStore.getSidePanelCheck">
        
 
         <div @click="filter($event, 'all')" :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
@@ -123,6 +123,9 @@
                     Req. Date
                 </th>
                 <th scope="col" class="table-header2 px-6 py-3 ">
+                    Location
+                </th>
+                <th scope="col" class="table-header2 px-6 py-3 ">
                     priority
                 </th>
                 <th scope="col" class="table-header2 px-6 py-3 ">
@@ -160,6 +163,12 @@
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 ">
                     {{ ticket.requestDate }}
                 </td>
+                <td  class="table-row2 px-6">
+                    <select @change="setLocation($event, ticket._id)" class="w-[80px] border border-black border-solid">
+                       <option selected>{{ticket.location}}</option>
+                       <option v-for="(location, locationCounter) in locations"  :value="location.name">{{location.name}}</option>
+                    </select>
+                   </td>
                 <td  class="table-row2 px-6 ">
                     <select name="" id="" class="p-1 border border-solid border-black" @change="setPriority($event, ticket)">
                         <option :value="ticket.priority.priority" selected>{{ticket.priority.priority}}</option>
@@ -168,32 +177,33 @@
                         <option value="Priority 2">Priority 2</option>
                         <option value="Priority 3">Priority 3</option>
                         <option value="Priority 4">Priority 4</option>
-                       
+                        <option value="Priority 5">Priority 5</option>
+                        <option value="Priority 5">Priority 6</option>
                     </select>
                 </td>
 
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 ">
                     {{ticket.status}}
                 </td>
-                <td @click="showProblemDetails($event)"  class="table-row2  text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
+                <td @click="showProblemDetails($event)"  class="table-row2   text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
                  <div class="flex flex-row justify-center items-center">
                     <font-awesome-icon icon="fa-solid fa-up-right-from-square" class="mr-4 text-xs text-red"/>
                     {{ticket.problemDetails}}</div>
                 </td>
-                <td @click="showDetails(ticket._id)" class="table-row2 ">
+                <td @click="showDetails(ticket._id)" class="table-row2 pl-4 ">
                    {{ticket.raisedBy.empName}}
                 </td>
                 <td  class="table-row2 ">
                     <template v-if="ticket.assignedTo ">
                         
-                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black">
+                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white w-[100px] border border-solid border-black">
                             <option :value="ticket.assignedTo.empName" selected>{{ ticket.assignedTo.empName }}</option>
                             <option value="Unassigned" >Unassigned</option>
                             <option v-for="(user, userCounter) in ticket.users" :key="userCounter" :value="user">{{user}}</option>
                         </select>
                     </template> 
                     <template v-else>
-                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black" >
+                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white w-[100px] border border-solid border-black" >
                             <option value="Unassigned" selected>Unassigned</option>
                             <option v-for="(user, userCounter) in ticket.users" :key="userCounter" :value="user">{{user}}</option>
                         </select>
@@ -252,7 +262,7 @@
                selectedItem:null,
                support:[],
                currentPage:1,
-               itemsPerPage:2
+               itemsPerPage:10
             }
         },
 
@@ -273,6 +283,7 @@
 
         created(){
          this.loadTickets()
+         this.getLocations();
         },
 
     

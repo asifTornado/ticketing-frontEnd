@@ -26,12 +26,12 @@
 
     <div class="text-sm w-full mb-5 p-3 bg-white    h-auto flex flex-col border-2 border-solid border-gray-800" v-for="(article, articleCounter) in filteredArticles" :key="articleCounter" >
          <div class="text-lg pb-4 font-bold text-black mb-4 border-b-2 border-b-gray-500 flex flex-row justify-between">{{ article.headline }} 
-            <div class="flex flex-row justify-end w-16 items-center"><font-awesome-icon icon="fa-solid fa-copy" size="lg" class="hover:text-emerald-600 hover:scale-125 hover:cursor-pointer" @click="copy($event, this.frontUrl + '#/blog/article/' + article._id)"/>
+            <div class="flex flex-row justify-end w-16 items-center"><font-awesome-icon icon="fa-solid fa-copy" size="lg" class="hover:text-emerald-600 hover:scale-125 hover:cursor-pointer" @click="copy($event, this.frontUrl + '/blog/article/' + article._id)"/>
             </div>
         </div>
          <div class="text-sm text-black h-[60px] truncate"  v-html="article.content"></div>
          <div class="mt-2 flex flex-row justify-between items-center"><div class=" border-2 border-solid border-black p-2">Written By: {{article.authors.empName}}</div>
-         <div class="border-2 border-solid border-black hover:cursor-pointer bg-blue-500 text-white font-bold p-2" @click="openPage($event, '/blog/article/'+article._id)">Read Article</div>
+         <div class="border-2 border-solid border-black hover:cursor-pointer bg-blue-500 text-white font-bold p-2" @click="openPage($event, '/ticketing/blog/article/'+article._id)">Read Article</div>
          
         </div>
          

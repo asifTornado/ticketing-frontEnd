@@ -5,26 +5,56 @@
 
             <input type="text" v-model="department" placeholder="Enter Department Name" class="text-2xl p-4 ml-10 w-[500px] rounded-md border border-solid border-gray-600 h-12">
             
-            
+<!--             
         <div class="flex flex-row justify-center items-center">
             <label for="hasServices" >Has Subsections</label>
             <input type="checkbox" v-model="hasServices" name="hasServices" id="hasServices" class="h-9 w-16 border border-solid border-gray-600">
-        </div>
+        </div> -->
         
     </div>
 
 
     <div id="body" class="h-full w-full flex flex-col" v-if="!hasServices">
 
-        <div class="flex flex-row items-center justify-start mt-10 ml-10">
-            <label for="" class="mr-10 text-lg">Select Team Leader</label>
-           <div class="w-1/4"> <vss :options="leadersList" v-model="leader" :searchable="true"  /></div>
-
-           <label for="" class="mr-10 text-lg ml-20">Select Department Head</label>
-           <div class="w-1/4"> <vss :options="powerList" v-model="head" :searchable="true"  /></div>
-
-        
-    </div>
+        <div class="flex flex-row items-start justify-start w-full mt-10 ml-10">
+            <div class="flex flex-col w-1/2 border border-solid border-black p-2">   <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
+              <div class="w-1/4 flex flex-col" v-for="(leader, leaderCounter) in leaders" :ley="leaderCounter">
+              
+           <div class="flex flex-row w-full  items-center ">   
+               <select  v-model="leaders[leaderCounter]" class="mt-2 border border-solid border-black p-1">
+               <option v-for="(leaderList, LeaderListCounter) in leadersList" :key="leaderListCounter" :value="leaderList">{{leaderList}}</option>
+              </select>
+              <font-awesome-icon icon="fa-solid fa-plus" size="lg" class="mr-4 ml-4" @click="addLeader(event, leaderCounter)"/>
+              <font-awesome-icon icon="fa-solid fa-minus" size="lg" @click="removeLeader(event, leaderCounter)"/>
+           </div>
+              </div>
+   </div>
+   
+   <div class="flex flex-col w-1/2 border ml-2  border-solid border-black p-2">
+   <label class="mr-10  text-lg">Problem Types</label>
+   
+   <div class="w-full flex flex-col " v-for="(problem, problemCounter) in problemTypes" :ley="problemTypes">
+              
+       <div class="flex flex-col w-full items-start justify-center">   
+          <div class="flex flex-row justify-center items-center"><input type="text" name="" id="" v-model="problemTypes[problemCounter].name" class="p-1 border border-solid border-black mr-3 mt-2">
+          <div class=" text-white p-2 w-[120px] mr-2 bg-emerald-500 " @click="addSubCategory(event, problemCounter)">Add Subcategory</div>
+          <font-awesome-icon icon="fa-solid fa-plus" size="lg" class="mr-2 justify-center items-center  " @click="addProblemType(event, problemCounter)"/>
+          <font-awesome-icon icon="fa-solid fa-minus" size="lg" class="justify-center items-center mr-2" @click="removeProblemType(event, problemCounter)"/></div>
+           
+       </div>
+       <div class="flex flex-row items-center" v-for="(subs, subsCounter) in problem.subs">
+           <input class="border border-solid border-black mt-1 ml-5 p-1" v-model="problemTypes[problemCounter].subs[subsCounter]">
+   
+           <font-awesome-icon icon="fa-solid fa-minus" size="lg" class="justify-center items-center mr-2 ml-2" @click="removeSub(event, problemCounter, subsCounter)"/>
+       </div>
+          </div>
+   </div>
+   <!-- 
+              <label for="" class="mr-10 ml-20 text-lg">Select Department Head</label>
+              <div class="w-1/4"> <vss :options="powerList" :searchable="true" v-model="head"  /></div> -->
+   
+           
+       </div>
 
     <div class="flex flex-col h-auto rounded-md p-[50px]  mt-10 justify-center items-center bg-gray-100">
         <div v-for="(subs, counter) in subordinates" :key="counter" class="flex flex-row w-full justify-center items-center mt-10">
@@ -164,7 +194,9 @@ export default{
             servicesHead:null,
             leadersList:[],
             subordinatesList:[],
-            powerList:[]
+            powerList:[],
+            leaders:[],
+            problemTypes:[]
         }
     },
 
@@ -174,6 +206,19 @@ export default{
     },
 
     methods:{ 
+
+        addLeader(event, counter){
+            this.leaders.splice(counter + 1, 0, "")
+        },
+
+
+        removeLeader(event, counter){
+            if(counter < 1){
+                return
+            }else{
+                this.leaders.splice(counter, 1)
+            }
+        },
 
         convertToInt(value){
            var newValue = parseInt(value, 10)
@@ -185,10 +230,7 @@ export default{
             var newDepartment;
             if(vm.hasServices){
 
-                if(vm.servicesHead == null || vm.servicesHead == undefined){
-                    vm.$toast.warning("Please select a department head first")
-                    return
-                }
+            
                 
              vm.servicesHead = vm.users.filter((user)=>user.mailAddress == vm.servicesHead)[0]
 
@@ -216,15 +258,9 @@ export default{
 
                 newDepartment = {name:vm.department, services:vm.services, hasServices:vm.hasServices, head:vm.servicesHead}
             }else{
-                if(vm.head == null || vm.head == undefined){
-                    vm.$toast.warning("Please select a department head first")
-                    return
-                }
+               
 
-                if(vm.leader == null || vm.leader == undefined){
-                    vm.$toast.warning("Please select a service leader first")
-                    return
-                }
+              
 
 
                 var fieldCheck = true
@@ -247,13 +283,14 @@ export default{
                 })
                  
            
-
-                vm.leader = vm.users.filter((user)=>user.mailAddress == vm.leader)[0]
-                vm.head = vm.users.filter((user)=>user.mailAddress == vm.head)[0]
+                var leaders = vm.users.filter((user)=> vm.leaders.includes(user.mailAddress))
+                vm.leaders = leaders;
+                // vm.leader = vm.users.filter((user)=>user.mailAddress == vm.leader)[0]
+                // vm.head = vm.users.filter((user)=>user.mailAddress == vm.head)[0]
                 console.log('this is the head')
-                console.log(vm.head)
+                // console.log(vm.head)
                     
-                newDepartment = {name:vm.department, subordinates:vm.subordinates, hasServices:vm.hasServices, leader:vm.leader, head:vm.head }
+                newDepartment = {name:vm.department, subordinates:vm.subordinates, hasServices:vm.hasServices, leaders:vm.leaders, problemTypes:vm.problemTypes }
             }
             
             console.log("this is the new department")
@@ -338,6 +375,35 @@ export default{
         },
 
 
+            addSubCategory(event, counter){
+            console.log("this is the chosen data")
+            console.log(counter)
+         this.problemTypes[counter].subs.push("")
+
+        },
+
+
+        removeSub(event, problemCounter, subCounter){
+
+this.problemTypes[problemCounter].subs.splice(subCounter, 1)
+
+},
+
+
+addProblemType(event, counter){
+this.problemTypes.splice(counter + 1, 0, {name:'', subs:[]})
+},
+
+
+removeProblemType(event, counter){
+if(counter < 1){
+    return
+}else{
+    this.problemTypes.splice(counter, 1)
+}
+},
+
+
         getTeam(){
             var vm = this;
             var user = this.authStore.getUser;
@@ -380,8 +446,9 @@ export default{
                         sub.user = user.mailAddress
                         return sub
                     });
-                    vm.leader = result.data.leader.mailAddress
-                    vm.head = result.data.head.mailAddress
+                    vm.leaders = result.data.leaders.map((leader) => leader.mailAddress)
+                    // vm.head = result.data.head.mailAddress
+                    vm.problemTypes = result.data.problemTypes
                 }
 
             })

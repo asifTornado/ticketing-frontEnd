@@ -1,15 +1,8 @@
 <template >
    <div class="flex flex-col bg-white border-2 border-solid border-black h-auto p-5 justify-center items-center w-[900px]" style="z-index: 999; position:fixed; top:-400px; left:250px; transition:0.5s;" ref="help"> 
-          
-<div class="flex flex-row w-full mb-4 border-b border-solid border-b-gray-400">
-        <div class="w-1/4 font-bold text-red-500">
-            Emergency Priority
-        </div>
-        <div class=" w-3/4 mb-5 ">
-            Defects or major problems that interrupt or halt production or business. Emergency priority support requests
-            takes precedence over all other support requests
-        </div>
-</div>
+      
+
+
 
 <div class="flex flex-row w-full mb-4 border-b border-solid border-b-gray-400">
         <div class="w-1/4 font-bold text-orange-400">
@@ -47,58 +40,77 @@
 <div class="w-full h-[92vh] px-10 py-10 z-10 overflow-y-scroll" ref="main">
 <label class="text-black text-4xl ">New Ticket</label>
 
-<div class='flex flex-col w-full h-[92vh] '>
+<div class='flex flex-col w-full h-[92vh] justify-start items-center '>
 
-    
-        <div class=" mt-5 text-black  w-full flex flex-row">
-            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Concerned Department:</div>
-            <select v-model="ticket.department"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9'  @change="setTeam($event)">
-              <option v-for="(team, teamCounter) in teams" :key="teamCounter" :value="team.name">
-                        {{ team.name }}
-              </option>
-            </select>
-        </div>
 
+   <div class="flex flex-row w-full justify-start">
+        <div class="flex flex-col bg-white  h-auto  justify-start items-start w-1/2">
+               <div class=" mt-5 text-black  w-full flex flex-row">
+                   <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Concerned Department:</div>
+                   <select v-model="ticket.department"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9'  @change="setTeam($event)">
+                     <option v-for="(team, teamCounter) in teams" :key="teamCounter" :value="team.name">
+                               {{ team.name }}
+                     </option>
+                   </select>
+               </div>
+       
+       
+               <div class=" mt-5 text-black  w-full flex flex-row" v-if="team" >
+                   <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Category:</div>
+                   <!-- <select  v-model="ticket.category"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9'>
+                       <option value=""  disabled selected>Please Select </option>
+                       <option v-for="(category, categoryCounter) in team.problemTypes" :key="categoryCounter" :value="category">{{ category }}</option>
+                     
+                    
+       
+                   </select> -->
+                <div class="w-[390px] border border-solid border-slate-300 rounded-md ">   <TreeSelect v-model="ticket.category" :disable-branch-nodes="true" :multiple="false" :options="options" /></div>
+               </div>
+       
+               <div class=" mt-5 text-black  w-full flex flex-row">
+                   <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Location:</div>
+                   <select v-model="ticket.location"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9' >
+                       <option v-for="(location, locationCounter) in locations" :value="location.name">{{ location.name }}</option>
+                   </select>
+               </div>
+       
+           </div> 
+       
+       
+       
+            
+           <div class="flex flex-col bg-white  h-auto  justify-start items-start w-1/2">
+               <div class=" mt-5 text-black  w-full flex flex-row">
+                   <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Phone Number:</div>
+                   <input class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9 px-2' v-model="ticket.phone" />
+                  
+               </div>
+       
+               <div class=" mt-5 text-black  w-full flex flex-row">
+                   <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Extension:</div>
+                   <input class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9 px-2' v-model="ticket.extension" />
+                  
+               </div>
+       
+               <div class=" mt-5 text-black  w-full flex flex-row">
+                   <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Email:</div>
+                   <input class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9 px-2' v-model="ticket.email" />
+                  
+               </div>
+           </div>
+           
+           
+       
+   </div>
 
      
 
-        <div class=" mt-5 text-black  w-full flex flex-row" v-if="team" >
-            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Category:</div>
-            <select  v-model="ticket.category"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9'>
-                <option value=""  disabled selected>Please Select </option>
-                <option v-for="(category, categoryCounter) in team.problemTypes" :key="categoryCounter" :value="category">{{ category }}</option>
-              
-             
+    
 
-            </select>
-        </div>
+    
 
 
-        <div class=" mt-5 text-black  w-full flex flex-row">
-            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Location:</div>
-            <select v-model="ticket.location"  name="" id="" class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9' >
-                <option v-for="(location, locationCounter) in locations" :value="location.name">{{ location.name }}</option>
-            </select>
-        </div>
-
-
-        <div class=" mt-5 text-black  w-full flex flex-row">
-            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Phone Number:</div>
-            <input class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9 px-2' v-model="ticket.phone" />
-           
-        </div>
-
-        <div class=" mt-5 text-black  w-full flex flex-row">
-            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Extension:</div>
-            <input class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9 px-2' v-model="ticket.extension" />
-           
-        </div>
-
-        <div class=" mt-5 text-black  w-full flex flex-row">
-            <div for="" class='w-44 text-end mr-10 flex flex-col justify-center font-bold'>Email:</div>
-            <input class='w-8/12 bg-lime-50 border border-solid rounded-md border-slate-300 h-9 px-2' v-model="ticket.email" />
-           
-        </div>
+        
 
 
       <template v-if="details.length > 0">  
@@ -231,7 +243,7 @@ export default{
                 problemDetails:'',
                 // priority:'normal',
                 approvalRequired:false,
-                raisedFor:'',
+                raisedFor:'Not Required',
                 remarks:'',
                 serviceType:'',
                 type:'problem',
@@ -276,6 +288,33 @@ export default{
             
             return result
           },
+
+          options(){
+            var problems = this.team.problemTypes
+            var options = problems.map((problem)=>{
+                var newOption = {
+                    id:problem.name,
+                    label:problem.name,
+                    children:[]
+                }
+
+                newOption.children = problem.subs.map((sub)=>{
+                    var newChild = {
+                        id:sub,
+                        label:sub
+                    }
+
+                    return newChild
+                })
+
+             
+
+                return newOption
+            })
+
+
+        return options
+          }
 
        
 

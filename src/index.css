@@ -6,6 +6,12 @@
  filter:drop-shadow(4px 4px 4px black)
 }
 
+@media print {
+ .no-print {
+    display: none;
+  }
+}
+
 .pagination-container {
   display: flex;
   column-gap: 10px;

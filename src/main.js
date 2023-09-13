@@ -9,7 +9,7 @@ import Popper from "vue3-popper";
 import VueCollapsiblePanel from '@dafcoe/vue-collapsible-panel'
 import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
 import ClearButtton from './components/clearButton.vue'
-
+import Treeselect from 'vue3-treeselect'
 import VueAwesomePaginate from "vue-awesome-paginate";
 import Pagination from './components/pagination.vue'
 import DepartmentReport from './components/departmentReport.vue'
@@ -52,6 +52,9 @@ import App from './App.vue'
 import TooltipComponent from './Tooltip.vue'
 import router from './router'
 
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import Tabs from './components/tabs.vue'
 import Tab from './components/tab.vue'
@@ -68,6 +71,7 @@ import {useMainStore} from './stores/store'
 import { VueSignalR } from '@dreamonkey/vue-signalr'
 import { useNotificationStore } from './stores/notification'
 import { HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
+import 'vue3-treeselect/dist/vue3-treeselect.css'
 
 import select2 from '@vueform/multiselect'
 
@@ -87,6 +91,7 @@ app.component('font-awesome-layers', FontAwesomeLayers)
 app.component('font-awesome-layers-text', FontAwesomeLayersText)
 app.component("star", vue3StarRatings);
 app.component("ClearButton", ClearButtton)
+app.component("TreeSelect", Treeselect)
 
 app.component('vss', select2)
 app.component("Popper", Popper)
@@ -165,6 +170,7 @@ app.component("Tooltip", TooltipComponent)
 app.component("FilterButton", FilterButton)
 app.component("FilterDrawer", FilterDrawer)
 app.component("NotificationDrawer", NotificationsDrawer)
+app.component('QuillEditor', QuillEditor)
 
 
 
@@ -200,6 +206,24 @@ app.mixin({
         vm.categoryCheck = false;
       
       },
+
+
+      setLocation(event, id){
+         
+           var vm = this;
+           vm.$toast.info("Setting Location")
+           var location = event.target.value
+           var data = new FormData();
+           data.append("id", id)
+           data.append("location", location)
+
+           axios.post(vm.globalUrl + "setLocation", data).then((result)=>{
+            vm.$toast.clear()
+            vm.$toast.info("Location Set")
+           }).catch((error)=>vm.$toast.warning(error))
+      },
+
+
       assignTicket(event, ticket){
         var vm = this;
         vm.$toast.info("Assigning ticket please wait....")

@@ -3,7 +3,7 @@
 
 
 
-	<div style="height:450px; width:1000px"   class="relative shadow-md shadow-black p-4   bg-white">
+	<div style="height:300px; width:700px"   class="relative shadow-md shadow-black p-4   bg-white">
     
 
 
@@ -94,7 +94,7 @@
    </div>
 	</div>
   
-  <div style="height:350px; width:900px" class="flex text-center  flex-row justify-center items-center"> <Bar :data="data" :options="options" /></div>
+  <div style="height:200px; width:600px" class="flex text-center  flex-row justify-center items-center"> <Bar :data="data" :options="options" /></div>
   
   
   </div>

@@ -58,16 +58,6 @@
 
           <div class="flex flex-col w-full h-full" v-else-if="value=='Close Request Accepted'">
                    
-
-          <div class="flex flex-col justify-center items-center w-full mb-5">
-                <div class="w-full font-bold text-center" >
-                                     Please Rate Your Handler:
-                                 
-                          </div>
-                                 <div class="w-full flex flex-row justify-center items-center">
-                                       <StarRating @update:rating ="setRating" :max-rating="10" :show-rating="true" :active-on-click="true" :star-size="30"/>
-                                 </div>
-          </div>
             <div class="flex flex-row w-full mt-4">
                 <div class="w-1/6 font-bold text-center" >
                                        Comment:

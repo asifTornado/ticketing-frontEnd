@@ -1,6 +1,6 @@
 <template>
   
-<div class="flex flex-row justify-between h-16 bg-gray-100    text-xs shadow-md shadow-black z-0 " >
+<div class="flex flex-row justify-between h-16 bg-gray-100 no-print    text-xs shadow-md shadow-black z-0 " >
 
 
 
@@ -98,7 +98,7 @@ export default {
 
       if(user) {
         if(user.userType == "normal"){
-                this.$router.push('/ticketing/user')
+                this.$router.push('/ticketing/normal')
         }else if(user.userType == "support"){
           this.$router.push('/ticketing/support/assist')
         }else if(user.userType == "admin"){

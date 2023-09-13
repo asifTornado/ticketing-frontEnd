@@ -56,6 +56,16 @@
           <label class=" hover:cursor-pointer  text-sm ">{{ infoMe.length }}</label>
      </div>
 
+     <div @click="filter($event, 'closedTickets')" ref="closedTickets" :class="{selected:selectedItem == 'closedTickets', notSelected:selectedItem != 'closedTickets'}">
+        <div class=" hover:cursor-pointer flex flex-row  w-full items-center">
+
+          <div class=" hover:cursor-pointer w-1/6"><font-awesome-icon icon=" hover:cursor-pointer fa-solid fa-quote-left" /></div>
+           <label class=" hover:cursor-pointer  text-sm ">My Closed Tickets</label>
+          
+        </div>
+        <label class=" hover:cursor-pointer  text-sm ">{{ closedTickets.length }}</label>
+   </div>
+
 
      <div @click="filter($event, 'mention')" ref="mention" :class="{selected:selectedItem == 'mention', notSelected:selectedItem != 'mention'}">
           <div class=" hover:cursor-pointer flex flex-row  w-full items-center">
@@ -98,9 +108,9 @@
 
 
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-    <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400 table-header2">
+    <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400 table-header2" style="z-index:1dxxd;">
         <tr>
-            <th scope="col" class="px-6 py-3 table-header2">
+            <th scope="col" class="px-6 py-3 table-header2" style="z-index: 1;">
                 Ticket No.
             </th>
             <th scope="col" class="px-6 py-3 table-header2">
@@ -191,6 +201,7 @@
                mentions:[],
                selectedItem:null,
                sidePanelCheck:true,
+               closedTickets:[]
             }
         },
 
@@ -223,6 +234,7 @@
                vm.mainStore.setTickets(vm.tickets)
                vm.mainStore.setFilteredTickets(vm.tickets)
                
+               
                vm.mentions = result.data.filter((ticket)=>{
                 if(ticket.mentions){
                     for(var mention in ticket.mentions){
@@ -240,6 +252,7 @@
                vm.my = vm.tickets.filter((ticket)=> ticket.raisedBy.mailAddress == user.mailAddress );
                vm.infoMe = result.data.filter((ticket)=>ticket.currentHandler &&  ticket.currentHandler.mailAddress == user.mailAddress && ticket.status == "Open (Seeking Information...)");
                vm.reject = vm.tickets.filter((ticket)=>!ticket.currentHandler && ticket.raisedBy.mailAddress == user.mailAddress && ticket.beenRejected == true)
+               vm.closedTickets = vm.tickets.filter((ticket)=>ticket.raisedBy.mailAddress == user.mailAddress && ticket.status == "Closed Ticket")
                vm.$toast.clear()
                vm.$toast.success("Data Loaded Successfully")
             }).catch((error)=>{
@@ -299,6 +312,8 @@
         return "Tickets Requiring My Approval"
      }else if(this.selectedItem == "mention"){
         return "Tickets Where I Am Mentioned"
+     }else if(this.selectedItem == "closedTickets"){
+        return "My Closed Tickets"
      }
   },
 
@@ -343,6 +358,11 @@ switch(type){
     case "mention":
         vm.mainStore.setFilteredTickets(vm.mentions)
         vm.mainStore.setInitialTickets(vm.mentions)
+        break;
+    case "closedTickets":
+        vm.mainStore.setFilteredTickets(vm.closedTickets)
+        vm.mainStore.setInitialTickets(vm.closedTickets)
+        break;
 
 }
 },

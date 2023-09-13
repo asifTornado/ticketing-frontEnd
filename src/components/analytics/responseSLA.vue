@@ -2,44 +2,46 @@
     <div style="height:450px; width:100%"   class="relative shadow-md shadow-black p-4  bg-white">
 
 
-      <div v-if="filterCheck" class="fixed flex flex-col justify-center items-center top-[100px] left-[500px] w-auto h-auto p-4 bg-white border border-solid border-black">
-<div class="flex flex-row justify-center w-full items-center text-3xl font-bold">Filter</div>
-<div class="flex flex-col w-full p-3 justify-center items-center">
-<div class="flex flex-row w-full">
-  <span class=" text-black font-bold text-md w-1/3">Zone</span>
-        <select v-model="location" class="border border-solid border-black p-2 w-2/3" >
-          <option v-for="(location, locationCounter) in locations" :key="locationCounter" :value="location.name">{{location.name}}</option>
-          <option value="all" selected>All</option>
-        </select>
-</div>
+   
+      <div class="flex flex-row p-3 justify-start items-start">
 
-<div class="flex flex-row w-full mt-3">
-  <span class=" text-black font-bold text-md  w-1/3 ">Duration</span>
-        <select class="border border-solid border-black p-2  w-2/3" v-model="duration">
-          <option :value="JSON.stringify({duration:86400, name:'Last 24 Hours'})" selected>Last 24 Hours</option>
-          <option :value="JSON.stringify({duration:172800, name:'Last Two Days'})">Last Two Days</option>
-          <option :value="JSON.stringify({duration:604800, name:'This Week'})">This Week</option>
-          <option :value="JSON.stringify({duration:2592000, name:'Last Month'})">Last Month</option>
-          <option :value="JSON.stringify({duration:12960000, name:'Last Five Months'})">Last Five Months</option>
-          <option :value="JSON.stringify({duration:31104000, name:'This Year'})">This Year</option>
-          <option :value="JSON.stringify({duration:'all', name:'All Until Now'})">All Until Now</option>
+        <span class=" text-black font-bold text-md mr-2">Zone</span>
+            <select v-model="location" class="border border-solid border-black mr-4 "  @change="filter()">
+            <option v-for="(location, locationCounter) in locations" :key="locationCounter" :value="location.name">{{location.name}}</option>
+            <option value="all">All</option>
+            </select>
+        
+        
+        
+        <span class=" text-black font-bold text-md  mr-2">Duration</span>
+            <select class="border border-solid border-black mr-4" v-model="duration" @change="filter()">
+            <option :value="JSON.stringify({duration:86400, name:'Last 24 Hours'})" selected>Last 24 Hours</option>
+            <option :value="JSON.stringify({duration:172800, name:'Last Two Days'})">Last Two Days</option>
+            <option :value="JSON.stringify({duration:604800, name:'This Week'})">This Week</option>
+            <option :value="JSON.stringify({duration:2592000, name:'Last Month'})">Last Month</option>
+            <option :value="JSON.stringify({duration:12960000, name:'Last Five Months'})">Last Five Months</option>
+            <option :value="JSON.stringify({duration:31104000, name:'This Year'})">This Year</option>
+            <option :value="JSON.stringify({duration:'all', name:'All Until Now'})">All Until Now</option>
+            
+            </select>
+        
+        
+        
+        
+        <!-- <span class=" text-black font-bold text-md  mr-2">Ticket Status</span>
+            <select class="border border-solid border-black mr-4" v-model="status" @change="filter()">
+            <option value="unassigned" selected>Unassigned</option>
+            <option value="assigned">Assigned</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
           
-        </select>
-</div>
-
-
-
-
-
-
-<div class="flex flex-row w-full justify-end items-center mt-4">
-  <div class="bg-blue-400 p-3 font-bold text-white hover:cursor-pointer" @click="filter">Apply Filter</div>
-  <div class="bg-red-400 p-3 ml-3 font-bold text-white hover:cursor-pointer" @click="filterCheck = false">Cancel</div>
-</div>
-</div>
-
-
-</div>
+            
+            </select> -->
+        
+        
+        
+        
+        </div>
   
     
     <div class="flex flex-row items-center ">
@@ -59,7 +61,7 @@
           <label class="mr-5 text-lg">{{ JSON.parse(duration).name }}</label></div>
  </div>
 
- <div class="bg-white border-solid border-black border p-2 hover:cursor-pointer" @click="filterCheck = !filterCheck"> <font-awesome-icon class="mr-2" icon="fa-solid fa-filter" size="lg"/></div>
+
    </div>
     </div>
 
@@ -103,7 +105,7 @@ export default {
       days:[],
       duration:"",
       locations:[],
-      location:'Dhaka (Head Office)',
+      location:'all',
       departments:[],
       data:{
     labels: [

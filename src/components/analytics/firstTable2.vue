@@ -1,6 +1,8 @@
 <template>
-    <div style="height:450px; width:1000px"   class="relative shadow-md shadow-black p-4  bg-white">
+    <div style="height:300px; width:700px"   class="relative shadow-md shadow-black p-4  bg-white">
 
+
+   
       <div class="flex flex-row p-3 justify-start items-start">
 
         <span class=" text-black font-bold text-md mr-2">Zone</span>
@@ -40,6 +42,7 @@
         
         
         </div>
+  
     
     <div class="flex flex-row items-center ">
  
@@ -58,11 +61,10 @@
           <label class="mr-5 text-lg">{{ JSON.parse(duration).name }}</label></div>
  </div>
 
- 
    </div>
     </div>
 
- <div style="height:360px; width:900px" class="flex text-center  flex-row justify-center items-center"> <Bar :data="data" :options="options" /></div>
+ <div style="height:200px; width:600px" class="flex text-center  flex-row justify-center items-center"> <Bar :data="data" :options="options" /></div>
 
 
  </div>
@@ -100,7 +102,7 @@ export default {
       minutes:[],
       hours:[],
       days:[],
-      duration:"",
+      duration:"all",
       locations:[],
       location:'all',
       departments:[],
@@ -170,107 +172,93 @@ export default {
       getData(tickets){
          var vm = this;
           //get the number for each departments 
-         var breaches = tickets.filter((ticket)=>{
-         
-            if(ticket.priority){
-                 var currentDate = new Date();
+          var departments = []
 
-                 if(ticket.status == "Closed Ticket" ){
-                    var resolutionTime =new Date(ticket.actions[ticket.actions.length - 1].time)
-                    var raiseTime = new Date(ticket.actions[0].time)
+         for(var ticket of vm.tickets){
+           if(ticket.hasService){
+             departments.push(ticket.serviceType)
+           }else{
+             departments.push(ticket.department)
+           }
+         }
+              var departmentsUnique = _.countBy(departments)
 
-                    var SLA = vm.getTimeInMilli(ticket.priority.resolutionTime)
-
-                    var diff = resolutionTime - raiseTime
-
-                    if(diff > SLA){
-                        return true
-                    }
-                 }else{
-                    var raiseTime = new Date(ticket.actions[0].time)
-
-                    var SLA = vm.getTimeInMilli(ticket.priority.resolutionTime)
-
-                    var diff = currentDate - raiseTime
-
-                    if(diff > SLA){
-                        return true
-                    }
-                 }
+          console.log("these are the unique departments")
+          console.log(departmentsUnique)
            
+          //map the departments to have a companion time variable
+          var departmentsWithtime = []
+
+          for(var x in departmentsUnique){
+            var newObject = {
+              department:x,
+              time:{
+                minutes:0,
+                hours:0,
+                days:0
+              },
+              count:0
             }
-         })
 
-
-         console.log("these are the breaches")
-         console.log(breaches)
-
-
-         var breachDepartments = breaches.map((ticket)=>{
-            if(ticket.hasService){
-              return ticket.serviceType
-            }else{
-              return ticket.department
-            }
-          })
-
-          console.log("these are the breach departments")
-          console.log(breachDepartments)
-
-          var breachesUnique = _.countBy(breachDepartments)
-
-       
-          console.log("these are the breaches unique")
-          console.log(breachesUnique)
-
-          var breachData = []
-          var breachLabels = []
-
-
-          for(var x in breachesUnique){
-             breachLabels.push(x);
-             breachData.push(breachesUnique[x])
+            departmentsWithtime.push(newObject)
           }
 
-console.log("these are the breachLabels and data")
-console.log(breachData)
-console.log(breachLabels)
-
-          vm.data = {...vm.data, labels:breachLabels,   datasets: [
-	  {
-		label: 'breaches',
-		backgroundColor: 'dodgerBlue',
-		data: breachData
-	  }
-	]}
-
-
-    vm.options = {...vm.options, scales:{
-	  y:{
-		ticks:{
-		  callback: value => `${value}`
-		}
-	  }
-	}}
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-     
+          console.log("departmentsWithTime")
+          console.log(departmentsWithtime)
 
            //iterate over the tickets and get the first time to respond and map it to the departmentswithtime variable
         
- 
+            for(var y of departmentsWithtime){
+              for(var x of tickets){
+                if(y.department == x.department || y.department == x.serviceType){
+                   var date1 = new Date(x.actions[0].time)
+                   if(x.actions[1] == undefined){
+                      break 
+                    }
+                    var date2 = new Date(x.actions[1].time)
+                    console.log("this is the new date")
+                    console.log(date2)
+                   
+                    var time = vm.getTimeDifference(date2, date1)
+                    if(time == false){
+                      return 
+                    }
+                    y.count++
+                    y.time.days = (y.time.days + time.days) / y.count
+                    y.time.hours = (y.time.hours + time.hours) / y.count
+                    y.time.minutes = (y.time.minutes + time.minutes) / y.count
+                }
+              }
+            }
+         
+            var minutes = departmentsWithtime.map((item)=>item.time.minutes)
+            var hours = departmentsWithtime.map((item)=>item.time.hours)
+            var days = departmentsWithtime.map((item)=>item.time.days)
+            var labels = departmentsWithtime.map((item)=>item.department)
 
+            vm.minutes = minutes;
+            vm.hours = hours;
+            vm.days = days;
+            vm.departments = labels;
+
+            vm.data = {...vm.data, labels:labels,   datasets: [
+      {
+        label: 'Mean First Response Times In Minutes',
+        backgroundColor: 'dodgerblue',
+        data: minutes
+      }
+    ]}
+
+
+    vm.options = {...vm.options, scales:{
+      y:{
+        ticks:{
+          callback: value => `${value} minutes`
+        }
+      }
+    }}
+
+    
 
 
 
@@ -395,20 +383,6 @@ getLocations(){
     axios.get(vm.globalUrl + "getLocations").then((result)=>{
       vm.locations = result.data
     }).catch((error)=>vm.$toast.warning(error))
-  },
-
-
-  getTimeInMilli(timeString){
-const [hours, minutes, seconds] = timeString.split(':').map(Number);
-
-// Calculate the total seconds
-const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-
-// Calculate milliseconds if needed
-const totalMilliseconds = totalSeconds * 1000;
-
-return totalMilliseconds
-
   }
   },
 

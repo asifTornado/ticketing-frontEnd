@@ -28,6 +28,26 @@ const router = createRouter({
         },
 
 
+        {
+          path: 'power/dashboard',
+          name:'powerDashboard',
+          component: () => import('../views/ticketing/dashboard.vue')
+          
+        },
+
+
+        
+
+
+        {
+          path: 'bot',
+          name:'bot',
+          component: () => import('../views/ticketing/bot.vue')
+          
+        },
+
+
+
 
         {
           path: 'show-user',

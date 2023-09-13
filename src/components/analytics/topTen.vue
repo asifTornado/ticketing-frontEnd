@@ -1,6 +1,8 @@
 <template>
     <div style="height:450px; width:1000px"   class="relative shadow-md shadow-black p-4  bg-white">
 
+
+   
       <div class="flex flex-row p-3 justify-start items-start">
 
         <span class=" text-black font-bold text-md mr-2">Zone</span>
@@ -22,6 +24,32 @@
             <option :value="JSON.stringify({duration:'all', name:'All Until Now'})">All Until Now</option>
             
             </select>
+
+
+                  
+        <span class=" text-black font-bold text-md  mr-2">Numbers</span>
+        <select class="border border-solid border-black mr-4" v-model="numbers" @change="filter()">
+        <option :value="10" selected>10</option>
+        <option :value="9">9</option>
+        <option :value="8">8</option>
+        <option :value="7">7</option>
+        <option :value="6">6</option>
+        <option :value="5">5</option>
+        <option :value="4">4</option>
+        <option :value="3">3</option>
+        <option :value="2">2</option>
+        <option :value="1">1</option>
+        
+        </select>
+
+
+        <span class=" text-black font-bold text-md  mr-2">Department</span>
+        <select class="border border-solid border-black mr-4" v-model="department" @change="filter()">
+        <option value="All" >{{"All"}}</option>
+        <option :value="team.name" v-for="(team, teamCounter) in teams">{{team.name}}</option>
+        
+        
+        </select>
         
         
         
@@ -40,6 +68,7 @@
         
         
         </div>
+  
     
     <div class="flex flex-row items-center ">
  
@@ -58,7 +87,6 @@
           <label class="mr-5 text-lg">{{ JSON.parse(duration).name }}</label></div>
  </div>
 
- 
    </div>
     </div>
 
@@ -95,15 +123,18 @@ export default {
   },
   data() {
     return {
+      teams:[],
       filterCheck:false,
       tickets:null,
       minutes:[],
       hours:[],
       days:[],
-      duration:"",
+      duration:"all",
       locations:[],
       location:'all',
       departments:[],
+      numbers:10,
+      department:'All',
       data:{
     labels: [
   
@@ -130,6 +161,7 @@ export default {
   //start of created
 
   created(){
+    this.getTeams();
     this.duration = JSON.stringify({duration:"all", name:"All Until Now"})
     this.getLocations()
      var vm = this;
@@ -170,107 +202,71 @@ export default {
       getData(tickets){
          var vm = this;
           //get the number for each departments 
-         var breaches = tickets.filter((ticket)=>{
-         
-            if(ticket.priority){
-                 var currentDate = new Date();
+          var problems = []
 
-                 if(ticket.status == "Closed Ticket" ){
-                    var resolutionTime =new Date(ticket.actions[ticket.actions.length - 1].time)
-                    var raiseTime = new Date(ticket.actions[0].time)
-
-                    var SLA = vm.getTimeInMilli(ticket.priority.resolutionTime)
-
-                    var diff = resolutionTime - raiseTime
-
-                    if(diff > SLA){
-                        return true
-                    }
-                 }else{
-                    var raiseTime = new Date(ticket.actions[0].time)
-
-                    var SLA = vm.getTimeInMilli(ticket.priority.resolutionTime)
-
-                    var diff = currentDate - raiseTime
-
-                    if(diff > SLA){
-                        return true
-                    }
-                 }
+         for(var ticket of tickets){
            
-            }
-         })
+            problems.push(ticket.category)
+         }
+              var problemsUnique = _.countBy(problems)
 
 
-         console.log("these are the breaches")
-         console.log(breaches)
+              const extractedData = Object.keys(problemsUnique)
+  .slice(0, vm.numbers)
+  .reduce((obj, key) => {
+    obj[key] = problemsUnique[key];
+    return obj;
+  }, {});
 
 
-         var breachDepartments = breaches.map((ticket)=>{
-            if(ticket.hasService){
-              return ticket.serviceType
-            }else{
-              return ticket.department
-            }
-          })
-
-          console.log("these are the breach departments")
-          console.log(breachDepartments)
-
-          var breachesUnique = _.countBy(breachDepartments)
-
-       
-          console.log("these are the breaches unique")
-          console.log(breachesUnique)
-
-          var breachData = []
-          var breachLabels = []
 
 
-          for(var x in breachesUnique){
-             breachLabels.push(x);
-             breachData.push(breachesUnique[x])
+// Convert the JSON object to an array of key-value pairs
+const jsonArray = Object.entries(extractedData);
+
+// Sort the array in descending order based on the values
+jsonArray.sort((a, b) => b[1] - a[1]);
+
+// Convert the sorted array back to an object
+const sortedObject = Object.fromEntries(jsonArray);
+
+          console.log("these are the unique problems")
+          console.log(problemsUnique)
+
+          var problemsName = [];
+          var problemsCount = [];
+
+          for(var p in sortedObject){
+               problemsName.push(p)
+               problemsCount.push(sortedObject[p])
           }
+           
+          //map the departments to have a companion time variable
+           
 
-console.log("these are the breachLabels and data")
-console.log(breachData)
-console.log(breachLabels)
+          
 
-          vm.data = {...vm.data, labels:breachLabels,   datasets: [
-	  {
-		label: 'breaches',
-		backgroundColor: 'dodgerBlue',
-		data: breachData
-	  }
-	]}
+    //       console.log("departmentsWithTime")
+        
+
+            vm.data = {...vm.data, labels:problemsName,   datasets: [
+      {
+        label: 'Top Problems',
+        backgroundColor: 'dodgerblue',
+        data: problemsCount
+      }
+    ]}
 
 
     vm.options = {...vm.options, scales:{
-	  y:{
-		ticks:{
-		  callback: value => `${value}`
-		}
-	  }
-	}}
-  
-  
+      y:{
+        ticks:{
+          callback: value => `${value}`
+        }
+      }
+    }}
 
-
-
-
-
-
-
-
-
-
-
-     
-
-           //iterate over the tickets and get the first time to respond and map it to the departmentswithtime variable
-        
- 
-
+    
 
 
 
@@ -292,15 +288,24 @@ console.log("filter fired")
   console.log("this is the first duration")
   console.log(duration)
 
-  vm.filterCheck = !vm.filterCheck
+  
   var tickets = vm.tickets;
 
   var currentTickets;
+
+  
 
   if(vm.location == "all"){
     currentTickets = tickets 
   }else{
     currentTickets = tickets.filter(ticket=>ticket.location == vm.location)
+  }
+
+
+  if(vm.department != "All"){
+    currentTickets = currentTickets.filter((ticket)=>{
+        return ticket.department == vm.department || ticket.serviceType == vm.department
+    })
   }
 
 
@@ -395,22 +400,11 @@ getLocations(){
     axios.get(vm.globalUrl + "getLocations").then((result)=>{
       vm.locations = result.data
     }).catch((error)=>vm.$toast.warning(error))
-  },
-
-
-  getTimeInMilli(timeString){
-const [hours, minutes, seconds] = timeString.split(':').map(Number);
-
-// Calculate the total seconds
-const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-
-// Calculate milliseconds if needed
-const totalMilliseconds = totalSeconds * 1000;
-
-return totalMilliseconds
-
   }
   },
+
+
+
 
   //method to get the time difference
  

@@ -1,6 +1,6 @@
 <template>
 
-<div class="flex flex-col justify-between w-[50px] bg-[rgb(2,54,61)] h-[92vh]   " style="z-index: 999;">
+<div class="flex flex-col justify-between w-[50px] bg-[rgb(2,54,61)] h-[92vh]  no-print " style="z-index: 999;">
     <div><template v-if="userType == 'leader'" >
  
     <div @click="clickedTab($event, 'item1', '/ticketing/newTicket')" :class="{selectedTab: selectedItem == 'item1', unselectedTab:selectedItem != 'item1'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
@@ -8,11 +8,11 @@
       <font-awesome-icon icon="fa-solid fa-ticket" size="2x" class=" hover:cursor-pointer"/>
     </div>
         <div @click="clickedTab($event, 'item2', '/ticketing/myTickets')" :class="{selectedTab: selectedItem == 'item2', unselectedTab:selectedItem != 'item2'}"  @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
-         <div class="  absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="visibility: hidden;">My Tickets</div> 
+         <div class="  absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="visibility: hidden; z-index: 9999999999999999999999999999;">My Tickets</div> 
          <font-awesome-icon icon="fa-solid fa-clipboard-list" size="2x" class=" hover:cursor-pointer"/>
     </div>
     <div @click="clickedTab($event, 'item3', '/ticketing/leader/manage')" :class="{selectedTab: selectedItem == 'item3', unselectedTab:selectedItem != 'item3'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
-      <div class="  absolute right-[-112px] top-[12px] p-3 bg-gray-600 text-white" style="visibility: hidden;">Manage Tickets</div>  
+      <div class="  absolute right-[-112px] top-[12px] p-3 bg-gray-600 text-white" style="visibility: hidden; z-index: 9999999999999999999999999999">Manage Tickets</div>  
       <font-awesome-icon icon="fa-solid fa-people-roof" size="2x" class=" hover:cursor-pointer"/>
     </div>
 </template>
@@ -30,16 +30,24 @@
       <div class="opacity-0 group-hover:opacity-100 absolute right-[-55px] top-[12px] p-3 bg-gray-600 text-white">Assist</div> 
       <font-awesome-icon icon="fa-solid fa-headset" size="2x" class=" hover:cursor-pointer"/>
     </div>
+    <div @click="clickedTab($event, 'item20', '/ticketing/bot')" :class="{selectedTab: selectedItem == 'item20', unselectedTab:selectedItem != 'item2'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+      <div class="opacity-0 group-hover:opacity-100 absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white">My Tickets</div> 
+      <font-awesome-icon icon="fa-solid fa-robot" size="2x" class=" hover:cursor-pointer"/>
+ </div>
+
 </template>
 <template v-else-if="userType == 'normal'">
     <div @click="clickedTab($event, 'item1', '/ticketing/newTicket')" :class="{selectedTab: selectedItem == 'item1', unselectedTab:selectedItem != 'item1'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
-      <div class="opacity-0 group-hover:opacity-100 absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white">Raise Ticket</div>   
+      <div class="  absolute right-[-92px] top-[12px] p-3 bg-gray-600 text-white"  style="visibility: hidden; z-index: 9999999999999999999999999999;">Raise Ticket</div>   
       <font-awesome-icon icon="fa-solid fa-ticket" size="2x" class=" hover:cursor-pointer"/>
     </div>
         <div @click="clickedTab($event, 'item2', '/ticketing/myTickets')" :class="{selectedTab: selectedItem == 'item2', unselectedTab:selectedItem != 'item2'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
-         <div class="opacity-0 group-hover:opacity-100 absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white">My Tickets</div> 
+         <div class="  absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white"  style="visibility: hidden; z-index: 9999999999999999999999999999;">My Tickets</div> 
          <font-awesome-icon icon="fa-solid fa-clipboard-list" size="2x" class=" hover:cursor-pointer"/>
     </div>
+
+
+   
 
 </template>
 
@@ -110,10 +118,17 @@
       <font-awesome-icon icon="fa-solid fa-chart-bar" size="x" class=" hover:cursor-pointer"/>
  </div>
 
- <div @click="clickedTab($event, 'item8', '/ticketing/power/report')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+
+ 
+ <div @click="clickedTab($event, 'item8', '/ticketing/power/dashboard')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+  <div  class="opacity-0  group-hover:opacity-100 absolute right-[-75px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999">Dashboard</div>  
+  <font-awesome-icon icon="fa-solid fa-gauge-high" size="x" class=" hover:cursor-pointer"/>
+</div>
+
+ <!-- <div @click="clickedTab($event, 'item8', '/ticketing/power/report')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
   <div  class="opacity-0  group-hover:opacity-100 absolute right-[-75px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999">Analytics</div>  
   <font-awesome-icon icon="fa-solid fa-file-contract" size="x" class=" hover:cursor-pointer"/>
-</div>
+</div> -->
 </template>
 
 
