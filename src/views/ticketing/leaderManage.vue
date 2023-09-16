@@ -207,8 +207,8 @@
                     {{ticket.status}}
                 </td>
                 <td @click="showProblemDetails($event)"  class="table-row2  text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
-                 <div class="flex flex-row justify-center items-center">
-                    <font-awesome-icon icon="fa-solid fa-up-right-from-square" class="mr-4 text-xs text-red"/>
+                 <div class="flex flex-row justify-center items-center underline">
+
                     {{ticket.problemDetails}}</div>
                 </td>
                 <td @click="showDetails(ticket._id)" class="table-row2 ">
@@ -607,6 +607,7 @@
 .table-row2{
     font-size:12px;
     font-weight: 400;
+    
 }
 
 

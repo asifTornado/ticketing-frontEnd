@@ -11,20 +11,22 @@
 <div class="flex flex-row justify-end text-xs pt-2">{{ notification.time }}</div>
 
 </div>
-<div class="flex flex-col hover:cursor-pointer p3  text-blue-900 p-3 " v-if="notification.type == 'mention'" @click="getToSource($event, notification)">
+<div class="flex flex-col hover:cursor-pointer p3  text-blue-900 p-3 " v-else-if="notification.type == 'mention'" @click="getToSource($event, notification)">
            <div> You have been mention by {{ notification.from.empName }} in a comment</div>
            
 <div class="flex flex-row justify-end text-xs pt-2">{{ notification.time }}</div>
 
 </div>
-
-
-        <div class="flex flex-col hover:cursor-pointer p-3  text-emerald-900" v-else @click="getToSource($event, notification)">
-    {{ notification.message }}
-
+<div class="flex flex-col hover:cursor-pointer p3  text-blue-900 p-3 " v-else @click="getToSource($event, notification)">
+  <div>{{notification.message}}</div>
+  
 <div class="flex flex-row justify-end text-xs pt-2">{{ notification.time }}</div>
 
 </div>
+
+
+
+      
     
 </div>
 

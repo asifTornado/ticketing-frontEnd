@@ -105,7 +105,7 @@
          </thead>
          <tbody>
              <tr @click="showDetails(ticket._id)" :class="setRowColor(ticket.priority)" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
-                 <td scope="row" class="cursor-pointer table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                 <td scope="row" class="cursor-pointer table-row2 px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-white">
                      {{ ticket.number }}
                  </td>
                  <td class="cursor-pointer table-row2 px-6 py-4">
@@ -115,8 +115,8 @@
                      {{ticket.status}}
                  </td>
                  <td class="cursor-pointer table-row2 py-3 text-center text-sm overflow-hidden text-ellipsis cursor-pointer whitespace-nowrap max-w-0 text-red-400">
-                    <div class="flex flex-row justify-center items-center">
-                        <font-awesome-icon icon="fa-solid fa-up-right-from-square" class="mr-4 text-xs text-red"/>
+                    <div class="flex flex-row justify-center items-center underline">
+                        
                         {{ticket.problemDetails}}</div>
                  </td>
                  <td class="cursor-pointer table-row2 px-6 py-4">

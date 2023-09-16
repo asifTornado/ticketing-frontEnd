@@ -31,7 +31,7 @@
 
       <!-- rating  -->
 
-   <div style="z-index:1233333333333333333333" class=" w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 border border-solid border-black" v-if="reassignTicketCheck">
+   <div style="z-index:1233333333333333333333" class=" w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 " v-if="reassignTicketCheck">
       <div class="flex flex-col w-full h-full bg-white" >
                 
          <div class="flex flex-row w-full h-full mt-2 mb-2 bg-white">
@@ -143,7 +143,7 @@
 
 
 
-   <div  v-if="mentionCheck" style="z-index:99" class="border border-solid border-black w-[350px] h-[300px] fixed bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
+   <div  v-if="mentionCheck" style="z-index:999999999999999999999" class="border border-solid border-black w-[350px] h-[300px] fixed bottom-[10px] right-[2px] bg-white  flex flex-col justify-between">
    <div style="z-index:1"> <div class="p-2 hover:cursor-pointer" @click="mentionCheck = false" style="z-index:1"><font-awesome-icon icon="fa-solid fa-multiply"/></div>
     <div class="w-full h-[200px] overflow-y-scroll relative p-5" style="z-index:1">
       
@@ -234,7 +234,7 @@
 
      
    
-     <div class="  w-2/6 h-[93vh] overflow-y-scroll    p-2 border bg-gray-100 border-solid border-black ">
+     <div class="  w-2/6 h-[93vh] overflow-y-scroll    p-2  bg-gray-100 border-solid border-black ">
 
 
       <vue-collapsible-panel-group accordion>
@@ -1070,12 +1070,13 @@
 
       </div>
   <div class="flex flex-row justify-end"> 
-   <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="ticket.raisedBy.mailAddress == this.authStore.getUser.mailAddress && ticket.actions[ticket.actions.length - 1].type == 11 " @click="rateCheck = true">Rate</button>
+   <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="ticket.raisedBy.mailAddress == this.authStore.getUser.mailAddress && ticket.actions[ticket.actions.length - 1].type == 11 && ticket.assignedTo" @click="rateCheck = true">Rate</button>
    <button  class=" bg-red-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" v-if="(this.authStore.getUser.empName == ticket.ticketingHead.empName || this.authStore.getUser.userType == 'admin') && ticket.assignedTo != null" @click="unassign($event, ticket)">Unassign</button>
    <button  class=" bg-fuchsia-500 text-white font-bold mr-2  mt-10 p-2  rounded-sm shadow-sm shadow-black" @click="reassignTicketToggle"  v-if="(this.authStore.getUser.empName == ticket.ticketingHead.empName|| this.authStore.getUser.userType == 'admin') && ticket.assignedTo != null">Reassign</button>
    <button class="bg-blue-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignTicketToggle" v-if="ticket.assignedTo == null && (this.authStore.getUser.mailAddress == ticket.ticketingHead.mailAddress || this.authStore.getUser.userType == 'admin')">Assign </button>
    <button class="bg-emerald-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="assignSelfToggle" v-if="ticket.assignedTo == null && (ticket.users.includes(this.authStore.getUser.mailAddress) || this.authStore.getUser.userType == 'admin')">Assign To Self</button>
     <button class="bg-amber-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showDetails">Show Details</button>
+    <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="closeTicket" v-if="ticket.status != 'Closed Ticket'">Close Ticket</button> 
     <button class="bg-green-500 text-white font-bold mr-2  mt-10 p-2 rounded-sm" @click="showConversation" v-if="ticket.status == 'Closed Ticket'">Show Conversation</button>        </div>
          
    </div>
@@ -1236,6 +1237,9 @@
                 
               </template>
 
+
+           
+
               <template v-else-if="action.type == 5">
 
                  <Actions  :action="'Assigned By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Forwarded To'" :comment="action.comments" />
@@ -1284,7 +1288,7 @@
 
 <template v-else-if="action.type == 4">
 
-<Actions  :action="'Assigned By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Assigned To'" :comment="action.comments" />
+<Actions  :action="'Assigned By'" :from="action.raisedBy" :to="action.raisedBy" :toAction="'Assigned To'" :comment="action.comments" />
 </template>
 
 
@@ -1293,6 +1297,13 @@
 <Actions  :action="'Assigned By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Assigned To'" :comment="action.comments" />
 </template>
        
+
+
+<template v-else-if="action.type == 14">
+
+   <Actions  :action="'Rated By'" :from="action.raisedBy" :to="action.forwardedTo" :toAction="'Assigned To'" :comment="action.comments" />
+   </template>
+          
            
 
 
@@ -1328,7 +1339,7 @@
       
          
    </div>
-   
+  
    
    </template>
    
@@ -1923,13 +1934,16 @@ this.$refs.commentBox.scrollTo({
          }else if(action.type == 10){
             return "Ticket Close Request"
          }else if(action.type == 11){
-            return "Ticket Close Request Accept"
+            return "Ticket Closed"
          }else if(action.type == 12){
             console.log("rejecting request")
             return "Ticket Close Request Reject"
          }else if(action.type == 13){
             console.log("rejecting request")
             return "Ticket Unassigned"
+         }else if(action.type == 14){
+            console.log("rejecting request")
+            return "Rated Ticket Handler"
          }
       },
 

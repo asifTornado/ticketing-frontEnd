@@ -18,14 +18,14 @@
   <div class="flex flex-col justify-center items-start h-[92vh]  w-full overflow-y-scroll " id="report" ref="report">
 
 
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
 
    <Line />
 
 </div>
 
 
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
 
    <TopTen />
 
@@ -33,7 +33,7 @@
    
 
    
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
     
     <Acceptance/>
 
@@ -41,42 +41,42 @@
 
 
    
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
     
     <First/>
 
 </div>
 
 
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
     
     <Resolution/>
 
 </div>
 
 
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
     
     <Current/>
 
 </div>
 
 
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
     
     <Total/>
 
 </div>
 
 
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
     
     <ResponseSLA/>
 
 </div>
 
 
-<div class="flex flex-row justify-center items-center relative  p-[50px] html2pdf__page-break" style="z-index: 34;">
+<div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
     
     <ResolutionSLA/>
 
