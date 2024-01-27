@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.boxShadow{
+ filter:drop-shadow(4px 4px 4px black)
+}
+
+@media print {
+ .no-print {
+    display: none;
+  }
+
+  .changePrint{
+    margin:0px;
+    padding: 0px;    
+  }
+
+
+}
+
+.pagination-container {
+  display: flex;
+  column-gap: 10px;
+}
+.paginate-buttons {
+  height: 40px;
+  width: 40px;
+  border-radius: 0px;
+  cursor: pointer;
+  background-color: rgb(242, 242, 242);
+  border: 1px solid rgb(217, 217, 217);
+  color: black;
+}
+.paginate-buttons:hover {
+  background-color: #d8d8d8;
+}
+.active-page {
+  background-color: #3498db;
+  border: 1px solid #3498db;
+  color: white;
+}
+.active-page:hover {
+  background-color: #2988c8;
+}
+
+
+
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 2px;
+    
+  }
+   
+
+  ::-webkit-scrollbar-thumb {
+    background: rgb(96,165,250); 
+    border-radius: 10px;
+  }
+  
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(96,165,250); 
+  }
+
+
+  .customborder{
+    border: 1px solid rgb(225,228,230)
+  }
+
+  *{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+  }
+
