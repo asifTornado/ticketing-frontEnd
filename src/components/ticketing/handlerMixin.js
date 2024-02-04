@@ -1,6 +1,7 @@
 
 
 import axios from 'axios'
+import {inject} from "vue"
 
 var mixin = {
 
@@ -9,7 +10,7 @@ var mixin = {
             files:[]
         }
     },
-    
+    inject:["globalStore"],
     methods:{
 
         setFile(event){
@@ -26,8 +27,8 @@ var mixin = {
         supervisorApprove(comment, ticket){
             var vm = this;
             this.$toast.info("Approving...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
           
          
@@ -40,7 +41,7 @@ var mixin = {
 
         
 
-            axios.post(vm.globalUrl + 'supervisorApprove', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'supervisorApprove', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Approved')
@@ -58,8 +59,8 @@ var mixin = {
         higherApprove(comment, files, ticket, additionalInfo, ){
             var vm = this;
             this.$toast.info("Approving...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
             
           
@@ -79,7 +80,7 @@ var mixin = {
 
          
 
-            axios.post(vm.globalUrl + 'higherApprove', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'higherApprove', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Approved')
@@ -98,21 +99,21 @@ var mixin = {
             
             var vm = this;
             this.$toast.info("Assigning Ticket...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
    
-
+            
             var data = new FormData()
             var ticket = ticket;
          
             data.append('token', token)
             data.append('user', JSON.stringify(user))
             data.append('comment', comment)
-            data.append('ticket', JSON.stringify(ticket))
+            data.append('ticketId', JSON.stringify(ticket._id))
             data.append('approver', JSON.stringify(approver))
 
-            axios.post(vm.globalUrl + 'assign', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'assign', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Done')
@@ -128,10 +129,11 @@ var mixin = {
         },
 
         closeRequest(comment, files, ticket, additionalInfo){
+            debugger
             var vm = this;
             this.$toast.info("Requesting...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
             
             
@@ -150,9 +152,9 @@ var mixin = {
             data.append('ticket', JSON.stringify(ticket))
 
   
-            
+            debugger
 
-            axios.post(vm.globalUrl + 'closeRequest', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'closeRequest', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Request Sent')
@@ -170,10 +172,11 @@ var mixin = {
 
 
         closeTicket(comment, ticketing, rating, files){
+            debugger
             var vm = this;
             this.$toast.info("Closing Ticket...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
             var ticket = this.componentTicket
             var rating = rating
@@ -192,7 +195,7 @@ var mixin = {
             data.append('ticket', JSON.stringify(ticket))
             data.append("rating", rating)
 
-            axios.post(vm.globalUrl + 'closeTicket', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'closeTicket', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Ticket Closed')
@@ -212,8 +215,8 @@ var mixin = {
         closeRequestReject(comment){
             var vm = this;
             this.$toast.info("Rejecting...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
             var ticket = this.componentTicket
             
@@ -229,7 +232,7 @@ var mixin = {
             
             
 
-            axios.post(vm.globalUrl + 'closeRequestReject', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'closeRequestReject', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Rejected')
@@ -250,13 +253,13 @@ var mixin = {
         ask(comment, ticket, approver){
             var vm = this;
             this.$toast.info("asking for additional info...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
             var ticket = this.ticket
 
          
-            
+            debugger
 
            var data = new FormData();
            data.append('user', JSON.stringify(user))
@@ -268,7 +271,7 @@ var mixin = {
            
       
 
-            axios.post(vm.globalUrl + 'askInfo', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'askInfo', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Asked')
@@ -288,8 +291,8 @@ var mixin = {
         askApproval(comment, ticket, approver){
             var vm = this;
             this.$toast.info("asking for additional info...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
             var ticket = this.ticket
 
@@ -305,7 +308,7 @@ var mixin = {
 
     
 
-            axios.post(vm.globalUrl + 'askApproval', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'askApproval', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Asked')
@@ -323,18 +326,18 @@ var mixin = {
 
         assignSelf(comment, ticket){
             var vm = this;
-            var user = this.authStore.getUser;
-            var token = this.authStore.getToken;
-          
+            var user = this.authStore.user;
+            var token = this.authStore.token;
+            
 
             var data = new FormData();
         
             data.append("token", token);
             data.append("comment", comment);
-            data.append("ticket", JSON.stringify(ticket));
+            data.append("ticketId", JSON.stringify(ticket._id));
             data.append("user", JSON.stringify(user));
 
-            this.axios.post(vm.globalUrl + "assignSelf", data).then((result)=>{
+            this.axios.post(vm.$globalUrl + "assignSelf", data).then((result)=>{
                
                     vm.$toast.clear()
                     vm.$toast.success('Done')
@@ -352,8 +355,8 @@ var mixin = {
           
             var vm = this;
             
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
    
 
@@ -363,10 +366,10 @@ var mixin = {
             data.append('token', token)
             data.append('user', JSON.stringify(user))
             data.append('comment', comment)
-            data.append('ticket', JSON.stringify(ticket))
+            data.append('ticketId', JSON.stringify(ticket._id))
             data.append('approver', JSON.stringify(approver))
 
-                axios.post(vm.globalUrl + 'reassign', data).then((result)=>{
+                axios.post(vm.$globalUrl + 'reassign', data).then((result)=>{
                     if(result.data == true){
                         vm.$toast.clear()
                         vm.$toast.success('Done')
@@ -385,13 +388,13 @@ var mixin = {
         giveInfo(comment, files, ticket, additionalInfo){
             var vm = this;
             this.$toast.info("Giving Info...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
             var comment = comment
             var ticket = this.componentTicket
 
 
-         
+            debugger
             
 
             var data = new FormData()
@@ -408,7 +411,7 @@ var mixin = {
 
          
 
-            axios.post(vm.globalUrl + 'giveInfo', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'giveInfo', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Done')
@@ -430,8 +433,8 @@ var mixin = {
         rejectTicket(comment, ticket){
             var vm = this;
             this.$toast.info("Rejecting...")
-            var user = this.authStore.getUser
-            var token = this.authStore.getToken
+            var user = this.authStore.user
+            var token = this.authStore.token
           
 
             var data = new FormData()
@@ -442,7 +445,7 @@ var mixin = {
             data.append('ticket', JSON.stringify(ticket))
 
 
-            axios.post(vm.globalUrl + 'rejectTicket', data).then((result)=>{
+            axios.post(vm.$globalUrl + 'rejectTicket', data).then((result)=>{
                 if(result.data == true){
                     vm.$toast.clear()
                     vm.$toast.success('Rejected')

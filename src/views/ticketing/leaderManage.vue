@@ -18,10 +18,10 @@ asds
          <div class="flex flex-row items-end w-full justify-end hover:cursor-pointer sticky top-0 " @click="hideProblemDetails" > <div class="flex flex-col justify-center" style="border-radius: 200%; width:20px; height:20px; background-color: black; padding: 2px;"> <font-awesome-icon icon="fa-solid fa-xmark" class="text-white"/></div></div>
         <div id="text" style="word-wrap: break-word; max-width:100%"></div>
         </div>
-   <div class=" flex flex-row   text-lg  h-[92vh] w-full  bg-[rgb(248,248,248)] ml-[30px]  " id="app"  >
+   <div class=" flex flex-row   text-lg  h-[92vh] w-full  ml-[20px]  " id="app"  >
 
 
-    <div class="flex flex-col h-[92vh] customborder absolute  bg-white ml-[20px]     py-10 " style="z-index: 9999999999999999999999999999999999;" id="sidePanel" v-if="mainStore.getSidePanelCheck">
+    <div class="flex flex-col h-[92vh] customborder absolute  bg-white " style="z-index: 9999999999999999999999999999999999;" id="sidePanel" v-if="mainStore.sidePanelCheck">
        
 
         <div @click="filter($event, 'all')" :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
@@ -101,7 +101,7 @@ asds
     </div>
 
 
-  <div class="h-[92vh]  p-5 bg-[rgb(248,248,248)] flex flex-col w-full mx-2">  
+  <div class="h-[92vh]  p-5 bg-gray-100 flex flex-col w-full mx-2">  
   <div class="flex flex-row items-center justify-between "><div class="ml-[500px] mb-[10px] border border-solid border-black text-2xl bg-white p-[10px] font-bold">{{ getSelectedItem() }}</div>
 <div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
     Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-4"/>
@@ -110,7 +110,7 @@ asds
 <ClearButton/>
 </div>
 </div>
-    <div class=" relative overflow-x-auto    shadow-md customerborder w-full  max-h-[80vh] overflow-y-scroll " style="max-height: 80vh; min-height: auto;">
+    <div class=" relative overflow-x-auto  bg-white   shadow-md shadow-black customerborder w-full  max-h-[80vh]  " style="max-height: 80vh; min-height: auto;">
        
     <table class="w-full text-md text-left text-gray-500 dark:text-gray-400 ">
         <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400 table-header2">
@@ -166,10 +166,9 @@ asds
                     {{ ticket.number }}
                 </td>
                 <td  class="table-row2 ">
-                    <select name="" id="" class="p-1 border border-solid border-black" @change="setTicketType($event, ticket)">
-                        <option :value="ticket.ticketType" selected>{{ticket.ticketType}}</option>
-                        <option v-if="ticket.ticketType == 'Problem'" value="Incident">Incident</option>
-                        <option v-else value="Problem">Problem</option>
+                    <select v-model="ticket.ticketType" name="" id="" class="p-1 border border-solid border-black" @change="setTicketType($event, ticket)">
+                        <option  value="Incident">Incident</option>
+                        <option  value="Problem">Problem</option>
                     </select>
                 </td>
                 <td  class="table-row2 " @click="showDetails(ticket._id)" >
@@ -211,18 +210,16 @@ asds
                 </td>
                 <td  class="table-row2 ">
                     <template v-if="ticket.assignedTo && ticket.ticketingHead && user && user.empName == ticket.ticketingHead.empName">
-                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black w-[100px]">
-                            <option :value="JSON.stringify({value:ticket.assignedTo.empName, type:'name'})" selected>{{ticket.assignedTo.empName}}</option>
-                            <option :value="JSON.stringify({value:team, type:'department'})" v-for="(team, teamCounter) in teams">{{team.name}}</option>
-                            <option :value="JSON.stringify({value:'Unassigned', type:'name'})" >Unassigned</option>
-                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="JSON.stringify({value:user.empName, type:'name'})">{{user.empName}}</option>
+                        <select  name=""  id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black w-[100px]">
+                            <option :value="ticket.assignedTo.empName" selected>{{ ticket.assignedTo.empName }}</option>
+                            <option value="Unassigned" >Unassigned</option>
+                            <option v-for="(user, userCounter) in ticket.users"  :key="userCounter" :value="user">{{user}}</option>
                         </select>
                     </template> 
                     <template v-else>
-                        <select name="" id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black w-[100px]" >
-                            <option :value="JSON.stringify({value:team, type:'department'})" v-for="(team, teamCounter) in teams">{{team.name}}</option>
-                            <option :value="JSON.stringify({value:'Unassigned', type:'name'})" selected>Unassigned</option>
-                            <option v-for="(user, userCounter) in support" :key="userCounter" :value="JSON.stringify({value:user.empName, type:'name'})">{{user.empName}}</option>
+                        <select name=""  id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black w-[100px]" >
+                            <option value="Unassigned" selected>Unassigned</option>
+                            <option v-for="(user, userCounter) in ticket.users" :key="userCounter" :value="user">{{user}}</option>
                         </select>
                     </template> 
                  </td>

@@ -155,11 +155,12 @@
   import { storeToRefs } from "pinia";
 
   import { useUserStore } from "../../stores/users";
+  import {useAuthStore} from "../../stores/authentication";
 import { useTicketStore } from "../../stores/ticket";
 
- var {user, edit, eye} = storeToRefs(useUserStore())
+ var {user, edit, eye} = storeToRefs(useAuthStore())
  
-
+ debugger
  var save = ref(false)
 
  var {makeChange} = useUserStore()

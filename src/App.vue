@@ -8,7 +8,7 @@
     <NotificationDrawer/>
     <Drawer ref="drawer" @cancel="toggleDrawer()" />
       <div class="h-[100%] w-full   z-10" >
-        <RouterView class="h-[100%] w-full z-0 bg-white " />
+        <RouterView class="h-[100%] w-full z-0 " />
         </div>
   </div>
 </template>

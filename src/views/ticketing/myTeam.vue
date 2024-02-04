@@ -1,12 +1,12 @@
 <template>
 
 
-<div class="flex flex-wrap flex-col w-full items-center justify-center h-full p-[20px] mt-[200px]" v-if="departments">
+<div class="flex flex-wrap flex-col w-full  bg-gray-200 h-full py-[40px] px-[100px] " v-if="departments">
 
-<div class="w-1/4 p-1/4" v-for="(department, departmentCounter) in departments">
+<div class="w-1/4 p-1/4 border-black p-[20px] border-2 border-solid bg-white shadow-md shadow-black" v-for="(department, departmentCounter) in departments">
     <div class="w-full font-bold text-2xl underline mb-[10px]">{{department.name}}</div>
 <div class="flex flex-col w-full border border-solid border-black mb-[10px]" v-for="(member, memberCounter) in department.subordinates">
-    <div class="flex flex-row w-full bg-black text-white p-3">{{member.user.empName}}</div>
+    <div class="flex flex-row w-full  bg-[rgb(2,54,61)]  text-white p-3">{{member.user.empName}}</div>
     <div class="flex flex-col w-full">   
         <div class="flex flex-row w-full p-[8px]">
             <div class="flex flex-row w-1/2 justify-center items-center">Currently Assigned</div>

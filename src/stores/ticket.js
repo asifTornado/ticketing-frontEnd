@@ -171,17 +171,18 @@ export const useTicketStore = defineStore("tickets", () => {
 
       
             axios.post(globalStore.globalUrl + "getTickets2", data).then((result)=>{
+                debugger
                console.log("these are the data")
                console.log(result.data)
 
-                tickets.value = result.data.filter((ticket)=>ticket.raisedBy.mailAddress == user.mailAddress)
+                tickets.value = result.data.filter((ticket)=>ticket.raisedBy.mailAddress == user.value.mailAddress)
                 filteredTickets.value = tickets.value
   
                 mentions.value = result.data.filter((ticket)=>{
                   if(ticket.mentions){
                       for(var mention of ticket.mentions){
                           
-                         if(mention == user.empName){
+                         if(mention == user.value.empName){
                           return true
                          }
                       }
@@ -189,14 +190,14 @@ export const useTicketStore = defineStore("tickets", () => {
                  })
   
                  unassigned.value = tickets.value.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
-                 assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
-                 info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
-                 approval.value = result.data.filter((ticket)=>ticket.currentHandler  && ticket.currentHandler.mailAddress == user.mailAddress && ( ticket.status == 'Ticket Submitted - Seeking Additional Approval'  || ticket.status == "Ticket Submitted - Seeking Department Head's Approval"));
-                 closeRequestsForMe.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress && ticket.madeCloseRequest == true);
-                 my.value = tickets.value.filter((ticket)=> ticket.raisedBy.mailAddress == user.mailAddress );
-                 infoMe.value = result.data.filter((ticket)=>ticket.currentHandler &&  ticket.currentHandler.mailAddress == user.mailAddress && ticket.status == "Open (Seeking Information...)");
-                 reject.value = tickets.value.filter((ticket)=>!ticket.currentHandler && ticket.raisedBy.mailAddress == user.mailAddress && ticket.beenRejected == true)
-                 closedTickets.value = tickets.value.filter((ticket)=>ticket.raisedBy.mailAddress == user.mailAddress && ticket.status == "Closed Ticket")
+                 assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.value.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
+                 info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.value.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.value.mailAddress)
+                 approval.value = result.data.filter((ticket)=>ticket.currentHandler  && ticket.currentHandler.mailAddress == user.value.mailAddress && ( ticket.status == 'Ticket Submitted - Seeking Additional Approval'  || ticket.status == "Ticket Submitted - Seeking Department Head's Approval"));
+                 closeRequestsForMe.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler && ticket.currentHandler.mailAddress == user.value.mailAddress && ticket.madeCloseRequest == true);
+                 my.value = tickets.value.filter((ticket)=> ticket.raisedBy.mailAddress == user.value.mailAddress );
+                 infoMe.value = result.data.filter((ticket)=>ticket.currentHandler &&  ticket.currentHandler.mailAddress == user.value.mailAddress && ticket.status == "Open (Seeking Information...)");
+                 reject.value = tickets.value.filter((ticket)=>!ticket.currentHandler && ticket.raisedBy.mailAddress == user.value.mailAddress && ticket.beenRejected == true)
+                 closedTickets.value = tickets.value.filter((ticket)=>ticket.raisedBy.mailAddress == user.value.mailAddress && ticket.status == "Closed Ticket")
 
             }).catch((error)=>{
                 console.log(error)
@@ -250,7 +251,7 @@ export const useTicketStore = defineStore("tickets", () => {
 
 
  function getTickets4(){
-    
+    debugger
     var newUser = user.value;
     var data = new FormData();
     
@@ -262,7 +263,7 @@ export const useTicketStore = defineStore("tickets", () => {
 
         }
       }).then((result)=>{
-
+    debugger
     assigned.value = result.data.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.value.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
 
 }).catch((error)=>{
@@ -283,6 +284,7 @@ export const useTicketStore = defineStore("tickets", () => {
     data.append("token", token.value);
     data.append("user", JSON.stringify(user.value));
     axios.post(globalStore.globalUrl + 'getAllTickets', data).then((result)=>{
+        debugger
        console.log("after getting results")
        tickets.value = result.data
        console.log(1)
@@ -329,7 +331,7 @@ export const useTicketStore = defineStore("tickets", () => {
 
    
       axios.post(globalStore.globalUrl + url, data).then((result)=>{
-
+        debugger
         if(result.data){
             console.log("these are the support again")
             console.log(result.data)
@@ -388,8 +390,18 @@ export const useTicketStore = defineStore("tickets", () => {
     console.log("setting location")
 
     axios.post(globalStore.globalUrl + "setLocation", data).then((result)=>{
+        debugger
      toast.clear()
-     toast.success("Location Set")
+     tickets.value = tickets.value.map((ticket)=>{
+        if(ticket._id == result.data._id){
+            return result.data
+        }else{
+            return ticket
+        }
+     })
+
+     filteredTickets.value = tickets.value
+     initialTickets.value = tickets.value
    
     }).catch((error)=>console.log(error))
 }
@@ -632,7 +644,7 @@ export const useTicketStore = defineStore("tickets", () => {
             
                 data.append("user", JSON.stringify(user.value))
                 data.append("token", JSON.stringify(token.value))
-                data.append("ticket", JSON.stringify(ticket))
+                 data.append("ticketId", JSON.stringify(ticket._id))
 
 
       
@@ -962,24 +974,26 @@ export const useTicketStore = defineStore("tickets", () => {
 
               function  assignTicket2(event, ticket2){
    
-            
+                debugger
                 toast.info("Assigning Ticket")
           
       
                 var comment = "Not Available"
               
                 var prevAssignee = ticket2.assignedTo
-    
+                
     
     
     
                 if(event.target.value == "Unassigned" && ticket2.assignedTo != null){
                     var data = new FormData();
+                    var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
                     data.append('token', token.value)
                     data.append('user', JSON.stringify(user.value))
                     data.append('comment', comment)
-                    data.append('ticket', JSON.stringify(ticket2))
+                    data.append('ticketId', JSON.stringify(ticket2._id))
                     data.append("prevAssignee", JSON.stringify(prevAssignee))
+                    data.append('approver', JSON.stringify(approver))
     
     
                     axios.post(globalStore.globalUrl + 'unassign', data, {
@@ -988,6 +1002,7 @@ export const useTicketStore = defineStore("tickets", () => {
     
       }
     }).then((result)=>{
+        debugger
                                if(result.data == true){
                                   toast.success("Unassigned")
                                    getTickets5()
@@ -1000,7 +1015,7 @@ export const useTicketStore = defineStore("tickets", () => {
     
                    
                 }else if(ticket2.assignedTo != null && event.target.value != "Unassigned"){
-                     var approver = support.value.filter((user)=>user.mailAddress == event.target.value)[0]
+                     var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
                      console.log("this is the approver");
                      console.log(approver)
                      console.log(event.target.value)
@@ -1009,7 +1024,7 @@ export const useTicketStore = defineStore("tickets", () => {
                      data.append('token', token)
                      data.append('user', JSON.stringify(user.value))
                      data.append('comment', comment)
-                     data.append('ticket', JSON.stringify(ticket2))
+                     data.append('ticketId', JSON.stringify(ticket2._id))
                      data.append('approver', JSON.stringify(approver))
     
                      axios.post(globalStore.globalUrl + 'reassign', data, {
@@ -1019,6 +1034,7 @@ export const useTicketStore = defineStore("tickets", () => {
       }
     }).then((result)=>{
                         if(result.data == true){
+                            debugger
                             toast.success("Reassigned Successfully")
                             getTickets5()
                           
@@ -1034,7 +1050,7 @@ export const useTicketStore = defineStore("tickets", () => {
                     console.log("these are the support")
                     console.log(support.value)
                
-                    var approver = support.value.filter((user)=> user.mailAddress == event.target.value)[0]
+                    var approver = support.value.filter((user)=> user.empName == event.target.value)[0]
     
                            console.log("from approver branch")
                            console.log(approver)
@@ -1044,7 +1060,7 @@ export const useTicketStore = defineStore("tickets", () => {
                            data.append('token', token.value)
                            data.append('user', JSON.stringify(user.value))
                            data.append('comment', comment)
-                           data.append('ticket', JSON.stringify(ticket2))
+                           data.append('ticketId', JSON.stringify(ticket2._id))
                            data.append('approver', JSON.stringify(approver))
                            
                            axios.post(globalStore.globalUrl + 'assign', data, {
@@ -1054,6 +1070,7 @@ export const useTicketStore = defineStore("tickets", () => {
       }
     }).then((result)=>{
                                if(result.data == true){
+                                debugger
                                 toast.success("Assigned Successfully")
                                    getTickets5()
                            
@@ -1083,12 +1100,13 @@ function  assignTicket(event, ticket2){
     
     
     
-                if(JSON.parse(event.target.value).value == "Unassigned" && ticket2.assignedTo != null){
+                if(event.target.value == "Unassigned" && ticket2.assignedTo != null){
+                    var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
                     var data = new FormData();
                     data.append('token', token.value)
                     data.append('user', JSON.stringify(user.value))
                     data.append('comment', comment)
-                    data.append('ticket', JSON.stringify(ticket2))
+                    data.append('ticketId', JSON.stringify(ticket2._id))
                     data.append("prevAssignee", JSON.stringify(prevAssignee))
     
     
@@ -1109,14 +1127,14 @@ function  assignTicket(event, ticket2){
                            })
     
                    
-                }else if(ticket2.assignedTo != null && JSON.parse(event.target.value).value != "Unassigned"){
-                     var approver = support.value.filter((user)=>user.empName == JSON.parse(event.target.value).value)[0]
+                }else if(ticket2.assignedTo != null && event.target.value != "Unassigned"){
+                     var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
                      var data = new FormData();
                      
                      data.append('token', token)
                      data.append('user', JSON.stringify(user.value))
                      data.append('comment', comment)
-                     data.append('ticket', JSON.stringify(ticket2))
+                     data.append('ticketId', JSON.stringify(ticket2._id))
                      data.append('approver', JSON.stringify(approver))
     
                      axios.post(globalStore.globalUrl + 'reassign', data, {
@@ -1137,11 +1155,11 @@ function  assignTicket(event, ticket2){
                     })
     
     
-                }else if(ticket2.assignedTo == null && JSON.parse(event.target.value).value != "Unassigned"){
+                }else if(ticket2.assignedTo == null && event.target.value != "Unassigned"){
                     console.log("these are the support")
                     console.log(support.value)
-                    console.log(JSON.parse(event.target.value))
-                    var approver = support.value.filter((user)=> user.empName == JSON.parse(event.target.value).value)[0]
+             
+                    var approver = support.value.filter((user)=> user.empName == event.target.value)[0]
     
                            console.log("from approver branch")
                            console.log(approver)
@@ -1151,7 +1169,7 @@ function  assignTicket(event, ticket2){
                            data.append('token', token.value)
                            data.append('user', JSON.stringify(user.value))
                            data.append('comment', comment)
-                           data.append('ticket', JSON.stringify(ticket2))
+                           data.append('ticketId', JSON.stringify(ticket2._id))
                            data.append('approver', JSON.stringify(approver))
                            
                            axios.post(globalStore.globalUrl + 'assign', data, {

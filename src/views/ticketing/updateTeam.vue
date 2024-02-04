@@ -73,7 +73,8 @@
         <div v-for="(subs, counter) in subordinates" :key="counter" class="flex flex-row w-full justify-center items-center mt-10">
        
      <div class="flex flex-row w-3/4 mr-10">
-        <label for="" class="">Select Subordinate</label>
+        <label for="" class="">Select Subordinasdate</label>
+        
         <vss :options="subordinatesList" v-model="subordinates[counter].user"/>
     </div>
     
@@ -140,7 +141,7 @@
 <div v-for="(subs, counter) in serviceSubordinateList[serviceCounter]" :key="counter" class="flex flex-row w-full justify-center items-center mt-10">        
 
  <div class="flex flex-row w-3/4 mr-10">
-    <label for="" class="">Select Subordinate</label>
+    <label for="" class="">Select Subordinatasde</label>
     <vss :options="subordinatesList" v-model="serviceSubordinateList[serviceCounter][counter].user"/>
 </div>
 
@@ -328,7 +329,7 @@ export default{
                     return monitor
                 })
          
-           
+                debugger
                     
                 newDepartment = {name:vm.department, subordinates:vm.subordinates, hasServices:vm.hasServices, leaders:vm.leaders, problemTypes:vm.problemTypes, monitors:vm.monitors }
             }
@@ -403,6 +404,7 @@ export default{
 
 
         getUsers(){
+            debugger
             var vm = this;
             var token = this.authStore.token
             var data = new FormData();
@@ -413,6 +415,7 @@ export default{
   
   }
 }).then((result)=>{
+               debugger
                 vm.users = result.data
                 vm.usersList = vm.users.map((user)=>user.mailAddress)
                 vm.leadersList = vm.users.filter((user)=>user.userType == "leader").map((user)=>user.mailAddress)
@@ -471,6 +474,7 @@ if(counter < 1){
     
   }
 }).then((result)=>{
+                debugger
                 vm.department = result.data.name;
                 vm.team = result.data;
                 if(result.data.hasServices){

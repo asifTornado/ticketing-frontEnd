@@ -1,17 +1,17 @@
 <template>
- <div class="flex flex-col ml-[20px]">
+ <div class="flex flex-col ml-[20px] bg-gray-200">
   <div class="flex flex-row justify-center items-start h-[92vh] w-[95vw] app" >
 
 
-   <div class="flex flex-row justify-center items-center relative  p-[50px]" style="z-index: 34;">
+   <div class="flex flex-row justify-center items-center relative  p-[50px] " style="z-index: 34;">
 
-    <component v-bind:is="currentComponent"></component>
+    <component class="bg-white shadow-md shadow-black p-[20px]" v-bind:is="currentComponent"></component>
 
 
    </div>
 
 
-   <div class="flex flex-col   h-auto p-5 justify-start  items-center shadow-md shadow-black mt-10">
+   <div class="flex flex-col   h-auto p-5 justify-start  items-center shadow-md shadow-black mt-10 bg-white ">
 
    <button class="text-black border-2 border-solid border-black font-bold p-3 mb-2 w-52  rounded-sm  hover:bg-blue-500 hover:text-white" @click="switchComponent($event, 'Line')">Total Tickets</button>
    <button class="text-black border-2 border-solid border-black font-bold p-3 mb-2 w-52  rounded-sm  hover:bg-blue-500 hover:text-white" @click="switchComponent($event, 'Total')">Tickets Distribution</button>

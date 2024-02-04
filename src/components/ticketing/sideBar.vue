@@ -22,7 +22,7 @@
     </div>
 
     
- <div @click="clickedTab($event, 'item8', '/ticketing/power/dashboard')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+ <div @click="clickedTab($event, 'item8', '/ticketing/power/analytics')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
   <div  class=" absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999; visibility:hidden">Dashboard</div>  
   <font-awesome-icon icon="fa-solid fa-gauge-high" size="2x" class=" hover:cursor-pointer"/>
 </div>
@@ -49,8 +49,8 @@
  </div>
 
  
-<div @click="clickedTab($event, 'item8', '/ticketing/power/dashboard')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
-<div  class=" absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999; visibility:hidden">Dashboard</div>  
+<div @click="clickedTab($event, 'item8', '/ticketing/power/analytics')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+<div  class=" absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999; visibility:hidden">analytics</div>  
 <font-awesome-icon icon="fa-solid fa-gauge-high" size="2x" class=" hover:cursor-pointer"/>
 </div>
 </template>
@@ -159,7 +159,7 @@
 
 
  
- <div @click="clickedTab($event, 'item8', '/ticketing/power/dashboard')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
+ <div @click="clickedTab($event, 'item8', '/ticketing/power/analytics')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
   <div  class=" absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999; visibility:hidden">Dashboard</div>  
   <font-awesome-icon icon="fa-solid fa-gauge-high" size="x" class=" hover:cursor-pointer"/>
 </div>

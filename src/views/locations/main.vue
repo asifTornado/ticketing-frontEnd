@@ -112,11 +112,11 @@ export default{
             data.append("id", id)
             data.append("token", token)
             data.append("user", JSON.stringify(user))
-
+            debugger
             axios.post(this.globalStore.globalUrl + 'deleteLocation', data, {
   headers: {
     'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
+    
   }
 }).then((result)=>{
                 if(result.data == true){

@@ -184,7 +184,7 @@
     
     
     <script setup>
-    import { useTicketStore } from '../../stores/ticket';
+    import {useTicketStore} from '../../stores/ticket'
     import {useMainStore} from "../../stores/store"
     import {ref, onMounted} from "vue"
     import axios from 'axios'

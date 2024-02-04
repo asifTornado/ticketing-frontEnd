@@ -29,11 +29,11 @@
     </div>
 
 
-<div class="w-full h-full px-10 py-10 ml-[30px] z-10 " ref="main">
-<label class="text-black text-4xl ">New Issue</label>
+<div class="w-full h-full px-10 py-10 ml-[30px] z-10  bg-gray-200" ref="main">
 
-<div class='flex flex-col w-full h-[92vh] justify-start items-center '>
 
+<div class="flex flex-col w-full p-[20px] shadow-md shadow-black justify-start items-center bg-white">
+    <label class="text-black text-4xl font-bold">New Issue</label>
 
    <div class="flex flex-row w-full justify-start">
         <div class="flex flex-col bg-white  h-auto  justify-start items-start w-1/2">

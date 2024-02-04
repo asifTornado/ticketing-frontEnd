@@ -39,6 +39,7 @@
         import { useAuthStore } from '../../stores/authentication';
         import { useGlobalStore } from '../../stores/globalStore';
         import { mapStores } from 'pinia';
+        import { inject } from 'vue';
       
        export default{
         data(){
@@ -49,9 +50,13 @@
             }
         },
 
+        
+
         computed:{
-             ...mapStores(useAuthStore, useGlobalStore)
+             ...mapStores(useAuthStore)
         },
+
+        
     
         created(){
             var vm = this;
@@ -62,7 +67,7 @@
             data.append("user", user);
             data.append("token", token);
     
-            axios.post(this.globalStore.globalUrl + "getTeams", data, {
+            axios.post(vm.$globalUrl + "getTeams", data, {
       headers: {
         'Authorization': `Bearer ${token}`,
        
@@ -79,9 +84,10 @@
     
         methods:{
             deleteTeam(event, team){
+            debugger
                 var vm = this;
-                var user = this.authStore.getUser;
-                var token = this.authStore.getToken;
+                var user = this.authStore.user;
+                var token = this.authStore.token;
                 var team = team
         
                 debugger
@@ -90,16 +96,17 @@
                 data.append("team", JSON.stringify(team));
                 data.append("token", token);
     
-                axios.post(this.globalStore.globalUrl + "deleteTeam", data, {
+                axios.post(vm.$globalUrl + "deleteTeam", data, {
       headers: {
         'Authorization': `Bearer ${token}`,
         
       }
     }).then((result)=>{
-                
+                    
                     var teams = vm.teams.filter((team)=>team._id != result.data)
                     vm.teams = teams
                     vm.filteredTeams = vm.teams
+                    console.log("result")
     
                 }).catch((error)=>{
                     vm.$toast.warning(error)

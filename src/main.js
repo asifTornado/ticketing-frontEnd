@@ -107,7 +107,7 @@ app.component("Pagination", Pagination)
 app.component('tabs', Tabs);
 app.component('tab', Tab);
 
-app.mixin(VueHeadMixin)
+
 
 
 function downloadExcel() {
@@ -157,7 +157,7 @@ var dataList = this.mainStore.getFilteredTickets
 
 
 
-app.config.globalProperties.axios = axios;
+
 app.config.globalProperties.XLSX = XLSX;
 app.config.globalProperties.downloadExcel = downloadExcel;
 app.config.globalProperties.convertToExcelData = convertToExcelData;
@@ -189,6 +189,7 @@ app.component('QuillEditor', QuillEditor)
 
 
 app.config.globalProperties.$gsap = gsap;
+app.config.globalProperties.$globalUrl = 'http://localhost:5000/'
 
 const globalStore = {
   globalUrl:ref("http://localhost:5000/"),

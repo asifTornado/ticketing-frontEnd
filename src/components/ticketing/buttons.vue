@@ -7,9 +7,9 @@
 
 
         
-     <div class="flex flex-row justify-end items-end flex-wrap" v-if="ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress || user.userType == 'admin'">
+     <div class="flex flex-row justify-end items-end flex-wrap" v-if="ticket.currentHandler && user && ticket.currentHandler.mailAddress == user.mailAddress || user.userType == 'admin'">
 
-        
+  
         <template v-if="(lastAction.type == 0 || lastAction.type == 3 || lastAction.type == 1  ) && ticket.currentHandler.mailAddress == ticket.ticketingHead.mailAddress">
              
        
@@ -152,7 +152,7 @@
 
      <div v-else-if="ticket.assignedTo == null">
     
-            sadfaweraewfadsf
+          
      </div>
 
 

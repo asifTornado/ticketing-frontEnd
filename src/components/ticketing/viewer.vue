@@ -1099,7 +1099,7 @@
            componentTicket:null,
            files:[],
            additionalInfo:'',
-           approver:null,
+          
            priority:'',
            nosolutionvalue:'Please select an option',
         
@@ -1284,7 +1284,7 @@
           data.append('token', token)
           data.append('user', JSON.stringify(user))
           data.append('comment', comment)
-          data.append('ticket', JSON.stringify(ticket))
+          data.append('ticketId', JSON.stringify(ticket._id))
           data.append('approver', JSON.stringify(vm.approver))
 
               axios.post(this.globalStore.globalUrl + 'reassign', data).then((result)=>{
@@ -1318,11 +1318,11 @@
             var ticket = vm.ticket;
 
             var approver = this.approver;
-         
+            debugger
             data.append('token', token)
             data.append('user', JSON.stringify(user))
             data.append('comment', comment)
-            data.append('ticket', JSON.stringify(ticket))
+            data.append('ticketId', JSON.stringify(ticket._id))
             data.append('approver', JSON.stringify(approver))
 
             axios.post(this.globalStore.globalUrl + 'assign', data).then((result)=>{
@@ -1352,11 +1352,11 @@
    
             data.append("token", token);
 
-            data.append("ticket", JSON.stringify(vm.ticket));
+            data.append("ticketId", JSON.stringify(vm.ticket._id));
             data.append("user", JSON.stringify(user));
             data.append("comment", "Not Available")
 
-            this.axios.post(this.globalStore.globalUrl + "assignSelf", data).then((result)=>{
+            axios.post(this.globalStore.globalUrl + "assignSelf", data).then((result)=>{
                
                     vm.$toast.clear()
                     vm.$toast.success('Done')
@@ -1440,9 +1440,12 @@
       var ticket = this.ticket;
       var user = this.authStore.user;
       var mentions = this.mentions;
+      debugger
       var newMentions = mentions.map((mention)=>{
+         debugger
          var splitted = mention.split("---")[1].split("(")[0].trim()
-         var user = vm.users.find((user)=>{
+         var user = this.usersStore.users.find((user)=>{
+            debugger
             return user.mailAddress == splitted
          })
 
@@ -1625,7 +1628,8 @@ this.$refs.commentBox.scrollTo({
     }else if(value == 'Close Request Rejected'){
       this.closeRequestReject(this.comment, this.ticket)
     }else if(value == 'Asking For Information'){
-      this.ask(this.comment, this.ticket)
+      debugger
+      this.ask(this.comment, this.ticket, this.approver)
     }else if(value == 'Giving Information'){
       this.giveInfo(this.comment, this.files, this.ticket, this.additionalInfo)
     }
@@ -1690,17 +1694,18 @@ this.$refs.commentBox.scrollTo({
       },
 
       unassign(event, ticket){
+         debugger
          var vm = this;
          vm.$toast.info("Unassigning Ticketing Please Wait....")
          var prevAssignee = JSON.stringify(ticket.assignedTo)
-         var user = vm.authStore.getUser
-         var ticket = JSON.stringify(ticket)
-         var token = JSON.stringify(vm.authStore.getToken)
+         var user = vm.authStore.user
+         var ticketId = JSON.stringify(ticket._id)
+         var token = JSON.stringify(vm.authStore.token)
          
          var data = new FormData();
          data.append("prevAssignee", prevAssignee)
          data.append("user", JSON.stringify(user))
-         data.append("ticket", ticket)
+         data.append("ticketId", ticketId)
          data.append("token", token)
          data.append("comment", "Not Available")
       
@@ -1848,7 +1853,7 @@ this.$refs.commentBox.scrollTo({
       reopen(){
          var vm = this;
      
-         var user = vm.authStore.getUser;
+         var user = vm.authStore.user;
          var ticket = vm.ticket;
          var comment = vm.comment;
          var files = vm.files;

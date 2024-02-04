@@ -190,14 +190,14 @@
                 <td  class="table-row2 ">
                     <template v-if="ticket.assignedTo ">
                         
-                        <select name="" id="" @change="assignTicket2($event, ticket)" class="bg-white w-[100px] border border-solid border-black">
+                        <select  name="" id="" @change="assignTicket2($event, ticket)" class="bg-white w-[100px] border border-solid border-black">
                             <option :value="ticket.assignedTo.empName" selected>{{ ticket.assignedTo.empName }}</option>
                             <option value="Unassigned" >Unassigned</option>
-                            <option v-for="(user, userCounter) in ticket.users" :key="userCounter" :value="user">{{user}}</option>
+                            <option v-for="(user, userCounter) in ticket.users"  :key="userCounter" :value="user">{{user}}</option>
                         </select>
                     </template> 
                     <template v-else>
-                        <select name="" id="" @change="assignTicket2($event, ticket)" class="bg-white w-[100px] border border-solid border-black" >
+                        <select  name="" id="" @change="assignTicket2($event, ticket)" class="bg-white w-[100px] border border-solid border-black" >
                             <option value="Unassigned" selected>Unassigned</option>
                             <option v-for="(user, userCounter) in ticket.users" :key="userCounter" :value="user">{{user}}</option>
                         </select>
@@ -256,7 +256,7 @@ getLocations()
 
 var {sortedTickets, approval, assigned, my, myCloseRequests, 
     info, reject, infoMe, tickets, unassigned, filteredTickets, sort, selectedItem, support,
-    currentPage, itemsPerPage, locations, paginator  } = storeToRefs(useTicketStore())
+    currentPage, itemsPerPage, locations, paginator } = storeToRefs(useTicketStore())
 
 var mainStore = useMainStore()
 

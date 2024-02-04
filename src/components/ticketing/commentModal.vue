@@ -365,12 +365,12 @@ handleInfoChange(event){
 },
 
 handleApproverChange(event){
-
+    debugger
     var value = event
 
     var splitted = value.split("---")[1].split("(")[0].trim();
 
-    var user = this.users.find((user)=>{
+    var user = this.usersStore.users.find((user)=>{
         
         return user.mailAddress == splitted;
 

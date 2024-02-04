@@ -49,6 +49,8 @@
     
     <script >
     import axios from "axios"
+    import {mapStores} from "pinia"
+    import {useAuthStore} from "../../stores/authentication"
   
 
     
@@ -73,16 +75,21 @@
     },
 
 
+    computed:{
+      ...mapStores(useAuthStore)
+    },
+
+
 
   created(){
-     this.token = this.authStore.getToken
+     this.token = this.authStore.token
   },
 
   methods:{
     insertArticle(){
         var vm = this;
-        var user = this.authStore.getUser;
-        var token = this.authStore.getToken;
+        var user = this.authStore.user;
+        var token = this.authStore.token;
         var content = this.content;
         var headline = this.headline;
 
@@ -92,7 +99,7 @@
         data.append("content", content)
         data.append("headline", headline)
 
-        axios.post(vm.globalUrl + "createBlog", data, {
+        axios.post(vm.$globalUrl + "createBlog", data, {
   headers: {
     'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json'

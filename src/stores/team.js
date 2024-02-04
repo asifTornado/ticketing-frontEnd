@@ -87,7 +87,7 @@ function setTeam(event){
 function getTeams(){
     
 
-
+    debugger
     var data = new FormData();
     data.append("user", user.value);
     data.append("token", token.value);
@@ -98,6 +98,7 @@ headers: {
 
 }
 }).then((result)=>{
+    debugger
         teams.value = result.data;
 
     }).catch((error)=>toast.warning(error))
