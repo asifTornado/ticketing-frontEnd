@@ -825,7 +825,7 @@
                     <div class="flex flex-col w-full">
                      <div class="flex flex-row w-full items-center justify-start pb-3">{{note.caption}}</div>    
                      <div v-for="(file, fileCounter) in note.files" :key="fileCounter" class="flex flex-row w-full">
-                           <a :href="this.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline hover:cursor-pointer">{{file.originalName}}</a>
+                           <a :href="globalStore.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline hover:cursor-pointer">{{file.originalName}}</a>
                            
                      </div>
                   </div>
