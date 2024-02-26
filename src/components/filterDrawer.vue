@@ -1,5 +1,5 @@
 <template>
-<div style="z-index: 1231240129381209318023981203982;" class="border pb-10 border-solid border-black fixed h-[100vh] w-[30vw] bg-white right-0 p-10 flex flex-col" v-if="mainStore.getFilterCheck == true">
+<div style="z-index: 1231240129381209318023981203982;" class="border pb-10 overflow-y-scroll border-solid border-black fixed h-[100vh] w-[30vw] bg-white right-0 p-10 flex flex-col overflow-y-scrolltick" v-if="mainStore.filterCheck == true">
 <div class="flex flex-row justify-between items-center mb-10"><label for="" class="text-3xl ">Filter</label>
 <font-awesome-icon icon="fa-solid fa-multiply " class="hover:cursor-pointer" size="2x" @click="toggleFilter"/>
 </div>

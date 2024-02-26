@@ -2,7 +2,7 @@
   
   <div class=" w-full h-full flex flex-row justify-center items-start mt-[100px]"  ref="login" id="login">
  
-<img src="../assets/front.jpg" class=" mt-10 mr-24" style="filter:grayscale(0.4)" alt="" srcset="">
+<img src="../assets/front.jpg" class="shadow-2xl shadow-black mt-10 mr-24" style="filter:grayscale(0.4)" alt="" srcset="">
 <div class="w-96 h-50   hover:shadow-blue-500 mt-20">
 
 <form @submit.prevent="authStore.login" style="box-shadow: 10px 10px 1px rgba(0, 0, 0, 0.5)"    class="bg-white drop-shadow-md   rounded-b-md    pb-8 mb-4 h-auto " id="form">

@@ -1,5 +1,5 @@
 import { HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
-
+debugger
 const connection = new HubConnectionBuilder()
   .withUrl("http://localhost:5000/chat", {
     skipNegotiation:true,
@@ -10,6 +10,7 @@ const connection = new HubConnectionBuilder()
 
 export default {
   startConnection() {
+    debugger
     return connection.start();
   },
 
@@ -26,6 +27,7 @@ export default {
   },
 
   invoke(methodName, ...args) {
+    debugger
     return connection.invoke(methodName, ...args);
   }
 };

@@ -49,7 +49,8 @@
         <span class=" text-black font-bold text-md  mr-2">Department</span>
         <select class="border border-solid border-black mr-4" v-model="department" @change="filter()">
         <option value="All" >{{"All"}}</option>
-        <option :value="team.name" v-for="(team, teamCounter) in teams">{{team.name}}</option>
+        <option :value="team.name" v-for="(team, teamCounter) in teamStore.teams">{{team.name}}</option>
+   
         
         
         </select>
@@ -124,7 +125,7 @@ export default {
   },
   data() {
     return {
-      teams:[],
+      
       filterCheck:false,
       tickets:null,
       minutes:[],
@@ -180,6 +181,7 @@ export default {
 
      data.append("token", token);
      data.append("totalUser", JSON.stringify(user))
+     data.append("page", 1)
 
 
      if(userType == "power"  || userType == "admin"){

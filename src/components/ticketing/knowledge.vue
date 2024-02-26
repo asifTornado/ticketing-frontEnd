@@ -30,7 +30,7 @@
             </div>
         </div>
          <div class="text-sm text-black h-[60px] truncate"  v-html="article.content"></div>
-         <div class="mt-2 flex flex-row justify-between items-center"><div class=" border-2 border-solid border-black p-2">Written By: {{article.authors.empName}}</div>
+         <div class="mt-2 flex flex-row justify-between items-center"><div class=" border-2 border-solid border-black p-2">Written By: {{article.author.empName}}</div>
          <div class="border-2 border-solid border-black hover:cursor-pointer bg-blue-500 text-white font-bold p-2" @click="openPage($event, '/ticketing/blog/article/'+article._id)">Read Article</div>
          
         </div>

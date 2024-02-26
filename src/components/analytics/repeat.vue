@@ -122,6 +122,7 @@ export default {
 
      data.append("token", token);
      data.append("totalUser", JSON.stringify(user))
+     data.append("page", 1)
 
 
      if(userType == "power"  || userType == "admin"){

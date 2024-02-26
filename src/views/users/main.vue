@@ -1,54 +1,54 @@
 <template>
-<div class="flex flex-col w-full h-[80vh] ml-[40px]">
-  <div class="flex flex-row w-[90vw] m-3 justify-end">
-	<input type="search" placeholder="Search" v-model="searchTerm" class="border shadow-sm shadow-black border-solid border-gray-300 p-2 focus:outline-none"/>
-	<div @click="filter" class="flex flex-col hover:cursor-pointer shadow-sm shadow-black justify-center items-center ml-1 bg-gray-300 p-3"><font-awesome-icon icon="fa-solid fa-search"/></div>
+<div class="flex bg-gray-200 flex-col items-center  w-full pl-[2vw] h-screen ">
+  <div class="flex  flex-row w-[90vw] m-3 justify-end">
+	<input type="search" placeholder="Search" v-model="searchTerm" class="border shadow-md shadow-black border-solid border-gray-300 p-2 focus:outline-none"/>
+	<div @click="filter" class="flex flex-col hover:cursor-pointer shadow-md shadow-black justify-center items-center ml-1 bg-gray-300 p-3"><font-awesome-icon icon="fa-solid fa-search"/></div>
   </div>
-     <div class="w-full h-full overflow-y-scroll  px-5 flex flex-col ">
-            <table  >
+     <div class=" bg-white shadow-md shadow-black   overflow-y-scroll w-[90vw] ">
+            <table  class="bg-white shadow-md shadow-black w-full">
          	<thead class="bg-[rgb(2,54,61)] text-white font-bold  " >
          		<tr >
-         			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Email  <button>filter</button></th>
-         			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Department</th>
-         			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Designation</th>
-					 <th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Location</th>
-         			<th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">User Type</th>
-    				 <th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">User Score</th>
-    				 <th  class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Number Of Raters</th>
-         			<th  v-if="user.userType == 'admin'" class="border border-slate-300 h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0"></th>
+         			<th  class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Email  <button>filter</button></th>
+         			<th  class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Department</th>
+         			<th  class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Designation</th>
+					 <th  class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Location</th>
+         			<th  class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">User Type</th>
+    				 <th  class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">User Score</th>
+    				 <th  class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0">Number Of Raters</th>
+         			<th  v-if="user.userType == 'admin'" class=" h-14 bg-gradient-to-b bg-[rgb(2,54,61)] text-center pr-16 text-sm sticky top-0"></th>
          		
          		</tr>
          	</thead>
          	<tbody>
          		<tr v-for="(user2, userCounter) in filteredUsers" :key="userCounter" scope="row" class="hover:bg-blue-200" >
-                   <td @click="showUser($event, user2)"  class="border-2 border-solid  text-sm text-center border-slate-300  pr-16 hover:cursor-pointer ">
+                   <td @click="showUser($event, user2)"  class="border-b  border-b-black  text-sm text-center border-slate-300  pr-16 hover:cursor-pointer ">
          			 {{user2.empName}}  
          		</td>
-         		  <td  @click="showUser($event, user22)" class="border-2 border-solid  text-sm text-center border-slate-300  pr-16 hover:cursor-pointer">
+         		  <td  @click="showUser($event, user22)" class="border-b  border-b-black  text-sm text-center border-slate-300  pr-16 hover:cursor-pointer">
          			{{user2.department}}
          
          		  </td>
-         		  <td  @click="showUser($event, user2)" class="border-2 border-solid  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
+         		  <td  @click="showUser($event, user2)" class="border-b  border-b-black  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
          		{{user2.designation}}
         
          		  </td>
-				   <td  @click="showUser($event, user2)" class="border-2 border-solid  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
+				   <td  @click="showUser($event, user2)" class="border-b  border-b-black  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
 					{{user2.location}}
 		   
 					  </td>
-         		  <td  @click="showUser($event, user2)" class="border-2 border-solid  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
+         		  <td  @click="showUser($event, user2)" class="border-b  border-b-black  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
          			{{user2.userType}}
          
          		  </td>
-    			   <td  @click="showUser($event, user2)" class="border-2 border-solid  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
+    			   <td  @click="showUser($event, user2)" class="border-b  border-b-black  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
          			{{user2.rating}}
          
          		  </td>
-    			   <td  @click="showUser($event, user2)" class="border-2 border-solid  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
+    			   <td  @click="showUser($event, user2)" class="border-b  border-b-black  text-sm text-center border-slate-300 pr-16 hover:cursor-pointer">
          			{{user2.raters}}
          
          		  </td>
-         		  <td v-if="user.userType == 'admin'" class="border-2 border-solid p-4 text-sm text-center border-slate-300  pr-16 mb-10"><button @click="router.push('/ticketing/users/update/' + user2._id)" class="h-8 rounded-md text-green-500  font-bold"><font-awesome-icon icon="fa-solid fa-pen" /></button>
+         		  <td v-if="user.userType == 'admin'" class="border-b  border-b-black p-4 text-sm text-center border-slate-300  pr-16 mb-10"><button @click="router.push('/ticketing/users/update/' + user2._id)" class="h-8 rounded-md text-green-500  font-bold"><font-awesome-icon icon="fa-solid fa-pen" /></button>
          		  <button @click="deleteUser(user2)"  class="h-8 ml-10  rounded-md text-rose-500 font-bold"><font-awesome-icon icon="fa-solid fa-trash"/></button>
          		</td>
          
@@ -59,10 +59,7 @@
      </div>
     
     
-    <div class="flex flex-row justify-end items-end mt-4">
-    	
-      
-    </div>
+   
 </div>
 
 </template>

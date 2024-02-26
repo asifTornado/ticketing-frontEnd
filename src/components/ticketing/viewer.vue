@@ -119,7 +119,7 @@
    <div style="z-index:1233333333333333333333" class="overflow-y-scroll w-2/4 h-auto bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 " v-if="reassignTicketCheck">
       <div class="flex flex-col w-full h-full bg-white" >
                 
-         <div class="flex flex-row w-full  mt-2 mb-2 bg-white overflow-y-scroll h-[300px]">
+         <div class="flex flex-row w-full  mt-2 mb-2 bg-white overflow-y-scroll max-h-[300px]">
             <table>
               <thead class="mb-10">
                   <th class="pb-4">User</th>
@@ -157,7 +157,7 @@
 <div style="z-index:1233333333333333333333" class=" w-2/4 h-auto  bg-white fixed top-[100px] left-[380px]  rounded-md p-5 pt-10 border border-solid border-black" v-if="assignTicketCheck">
    <div class="flex flex-col w-full h-full bg-white" >
              
-      <div class="flex flex-row w-full  mt-2 mb-2 bg-white h-[300px] overflow-y-scroll">
+      <div class="flex flex-row w-full  mt-2 mb-2 bg-white max-h-[300px] overflow-y-scroll">
          <table>
            <thead class="mb-10">
                <th class="pb-4">User</th>
@@ -311,14 +311,14 @@
 </div>
 
 
-   <div class="flex flex-row w-[95vw] h-full  ml-[50px]" ref="main" >
+   <div class="flex flex-row w-[95vw] p-[20px] bg-gray-200   ml-[50px]" ref="main" >
 
 
 
 
 
    
-     <div class="  w-2/6 h-[93vh] overflow-y-scroll    p-2  bg-gray-100 border-solid border-black ">
+     <div class="  w-[30vw] h-[83vh] mr-[20px] overflow-y-scroll    p-2  bg-white shadow-md shadow-black border-solid border-black ">
 
 
       <vue-collapsible-panel-group accordion>
@@ -622,7 +622,7 @@
 
 </div>
    
-       <div class="w-2/6 relative  h-[93vh] overflow-y-scroll overflow-x-clip  pr-2 text-center bg-blue">
+       <div class="bg-white shadow-md mr-[20px] shadow-black w-[30vw] relative  h-[83vh] overflow-y-scroll overflow-x-clip  pr-2 text-center bg-blue">
      
    
      <div v-if="ticket.actions && ticket.actions[ticket.actions.length - 1] && ticket.actions[ticket.actions.length - 1].type == 11 && ticket.prevHandler " class="p-4 font-bold bg-blue-300  shadow-md shadow-black" >
@@ -704,7 +704,7 @@
 </div>
 
     
-     <Chat :ticketId="ticket._id" :user="ticket.assignedTo.empName"  v-if="ticket.assignedTo && (this.authStore.user.mailAddress == ticket.raisedBy.mailAddress || this.authStore.user.mailAddress == ticket.assignedTo.mailAddress)" />
+     <Chat :ticketId="ticket._id" :user="ticket.assignedTo"  v-if="ticket.assignedTo && (this.authStore.user.mailAddress == ticket.raisedBy.mailAddress || this.authStore.user.mailAddress == ticket.assignedTo.mailAddress)" />
 <div v-if="showConversationCheck == true" class="mt-2 mr-4 fixed p-3 bg-white top-[50px] left-[400px] border border-solid border-black h-auto">
    <div class="text-2xl font-bold underline">Conversation:</div>
    <div class="flex flex-col h-auto w-auto bg-red" >
@@ -761,7 +761,7 @@
 </div>
 
 <div class="flex flex-col  w-full justify-end h-auto ">     
-   <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="user && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress ">
+   <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="authStore.user && ticket.ticketingHead && ticket.ticketingHead._id == authStore.user._id ">
             
       <div>  <span class="font-bold">Priority:</span>
   
@@ -776,7 +776,7 @@
 
      <div class="ml-10">  <span class="font-bold">Type:</span>
   
-        <select class="ml-2 border border-solid border-black p-1" v-model="ticketType" @change="setTicketType($event, ticket)">
+        <select class="ml-2 border border-solid border-black p-1" v-model="ticketType" @change="ticketsStore.setTicketType($event, ticket)">
            <option value="Incident">Incident</option>
            <option value="Problem">Problem</option>
 
@@ -805,7 +805,7 @@
    </div>
 
 
-   <div class="flex flex-row w-2/6 justify-start " style="z-index:1">
+   <div class="flex flex-row h-[83vh] w-[30vw] justify-start bg-white shadow-md shadow-black" style="z-index:1">
              <div class="border border-solid flex flex-col w-full p-4  " style="z-index: 99;"  >
                     
                <div class="font-bold flex flex-row text-4xl pb-2">
@@ -1234,6 +1234,7 @@
            console.log(user)
            var data = new FormData();
            data.append("user", JSON.stringify(user))
+           data.append("page", 1)
 
            axios.post(this.globalStore.globalUrl + "getAllTickets", data).then((result)=>{
             vm.tickets = result.data

@@ -1,15 +1,15 @@
 <template> 
-    <div class=" w-full flex flex-col px-[100px] mt-[40px]"  id="app">
+    <div class=" w-full h-screen flex flex-col px-[100px] pt-[20px]"  id="app">
 
-        <div class="h-20 bg-gray-100 w-full flex flex-row justify-between p-2 items-center">
+        <div class="h-20 w-full flex flex-row justify-between p-2 items-center">
 
-            <input type="text" v-model="department" placeholder="Enter Service Name" class="text-2xl p-4 ml-10 w-[500px] rounded-md border border-solid border-gray-600 h-12">
+            <input type="text" v-model="department" placeholder="Enter Service Name" class="bg-white shadow-md shadow-black text-2xl p-4 ml-10 w-[500px] rounded-md  h-12">
             
           
         
     </div>
 
-    <div class="h-auto bg-gray-100 mt-[20px] w-full flex flex-row justify-center items-center p-2 items-center">
+    <div class="h-auto bg-white shadow-md shadow-black mt-[20px] w-full flex flex-row justify-center items-center p-2 items-center">
 
         <div class="flex flex-col mb-[20px] w-full  p-2 justify-center items-center">   <label for="" class="mr-10 text-lg">Select Central Monitors</label>
            <div class="w-1/4 flex flex-col" v-for="(leader, leaderCounter) in monitors" :ley="leaderCounter">
@@ -31,11 +31,11 @@
 
     <div id="body" class=" w-full flex flex-col"  v-if="!hasServices">
 
-        <div class="flex flex-col items-center justify-center w-full mt-10 ml-10">
-         <div class="flex flex-col mb-[20px] w-1/2 border border-solid border-black p-2">   <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
-           <div class="w-1/4 flex flex-col" v-for="(leader, leaderCounter) in leaders" :ley="leaderCounter">
+        <div class="  p-[20px] flex flex-col items-center justify-center w-full mt-10 ">
+         <div class="bg-white shadow-md shadow-black flex flex-col mb-[20px] w-1/2  p-[10px]">   <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
+           <div class="w-1/4 flex flex-col " v-for="(leader, leaderCounter) in leaders" :ley="leaderCounter">
            
-        <div class="flex flex-row w-full  items-center ">   
+        <div class=" flex flex-row w-full  items-center ">   
             <select  v-model="leaders[leaderCounter]" class="mt-2 border border-solid border-black p-1">
             <option v-for="(leader, LeaderListCounter) in leadersList" :key="leaderListCounter" :value="leader">{{leader}}</option>
            </select>
@@ -45,7 +45,7 @@
            </div>
 </div>
 
-<div class="flex flex-col w-1/2 border ml-2  border-solid border-black p-2">
+<div class="flex bg-white shadow-md shadow-black flex-col w-1/2 ml-2   p-[10px]">
 <label class="mr-10  text-lg">Create Problem Types</label>
 
 <div class="w-full flex flex-col " v-for="(problem, problemCounter) in problemTypes" :ley="problemTypes">
@@ -69,7 +69,7 @@
         
     </div>
 
-    <div class="flex flex-col h-auto rounded-md p-[50px]  mt-10 justify-center w-full items-center bg-gray-100">
+    <div class="bg-white shadow-md shadow-black  flex flex-col h-auto rounded-md p-[50px]  mt-10 justify-center w-full items-center bg-gray-100">
         <div v-for="(subs, counter) in subordinates" :key="counter" class="flex flex-row w-full justify-center items-center mt-10">
        
      <div class="flex flex-row w-3/4 mr-10">
@@ -107,7 +107,7 @@
     </div>
 
 
-    <div class="flex flex-col  mb-[30px] rounded-md p-[50px]  mt-10 justify-center w-full items-center bg-gray-100">
+    <div class="flex flex-col  mb-[30px] rounded-md bg-white shadow-md shadow-black p-[50px]  mt-10 justify-center w-full items-center bg-gray-100">
         <div v-for="(detail, counter) in details" :key="counter" class="flex flex-row w-full justify-center items-center mt-10">
        
   
@@ -139,7 +139,7 @@
     </div>
         
     <div class="flex flex-row items-center w-full justify-end mr-10">
-    <div @click="insertDepartment" class=" h-auto w-auto p-6 mr-10 mb-10 rounded-md  text-black border border-solid border-black right-[10px] hover:bg-blue-600 hover:text-white font-bold text-lg hover:cursor-pointer">Create Department</div>
+    <div @click="insertDepartment" class="bg-white shadow-md shadow-black h-auto w-auto p-6 mr-10 mb-10 rounded-md  text-black  right-[10px] hover:bg-blue-600 hover:text-white font-bold text-lg hover:cursor-pointer">Create Department</div>
 </div>
 
 

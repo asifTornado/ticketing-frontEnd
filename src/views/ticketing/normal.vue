@@ -95,18 +95,23 @@
 
 
 
-<div class="h-[92vh]  bg-[rgb(248,248,248)]  flex flex-col w-full mx-2 p-5">
-    <div class="flex flex-row items-center justify-between  mb-2 ">
+<div class="h-[92vh]  bg-gray-200  flex flex-col items-center w-full mx-2 p-5">
+    <div class="flex flex-row items-center justify-between  mb-2 w-full ">
         
-        <div class="ml-[400px] text-2xl font-bold border border-solid border-gray-400 p-3 bg-white">{{ ticketStore.getSelectedItem() }}</div>
-<div class="flex flex-row">        <div @click="this.downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-2"/></div> 
+        <div class=" text-2xl ml-[40vw] shadow-black shadow-md font-bold border border-solid border-gray-400 p-3 bg-white">{{ ticketStore.getSelectedItem() }}</div>
+  
+  
+<div class="flex flex-row">     
+    <div @click="this.downloadExcel" class="p-2 bg-white shadow-black shadow-md hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-2"/></div> 
   <FilterButton/>
   <ClearButton/>
+</div>
+  
   </div>
     
-    </div>
+  
     
-    <div class="  relative overflow-x-auto    shadow-md customerborder w-full  max-h-[80vh] overflow-y-scroll  ">
+    <div class=" relative overflow-x-auto bg-white shadow-md shadow-black  customerborder w-[90vw]  max-h-[80vh]   ">
 
 
 
@@ -136,7 +141,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr class="hover:bg-gray-200 hover:text-black"   v-for="(ticket, ticketCounter) in ticketStore.filteredTickets" :key="ticketCounter">
+        <tr class="hover:bg-gray-200 hover:text-black hover:cursor-pointer"   v-for="(ticket, ticketCounter) in ticketStore.filteredTickets" :key="ticketCounter">
             <td @click="ticketStore.showDetails(ticket._id)"  scope="row" class=" table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
                 {{ ticket.number }}
             </td>
@@ -167,7 +172,7 @@
 </table>
 </div>
 
-<Pagination @page-Changed="handlePageChanged" :items="ticketStore.filteredTickets.length" :itemsPerPage="itemsPerPage" ref="paginator"/>
+<Pagination @changePage="ticketStore.getTickets2"  ref="paginator" />
 
 </div>
 
@@ -205,11 +210,11 @@
     var {filter} = useTicketStore()
 
 
-    ticketStore.getTickets2()
+    ticketStore.getTickets2(1)
      
 
    function handlePageChange(page){
-      currentPage.value = page
+      console.log(`this is the page ${page}`)
    }
 
 
@@ -304,7 +309,11 @@
   padding: 1.25rem; 
   cursor: default;
   background-color: transparent;
+  box-shadow: 0px 2px 2px;
   border: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
 
  }
 
@@ -319,7 +328,8 @@
 
  table th{
     border-bottom:1px solid rgb(184, 181, 181);
-    background-color: lightgray;
+    background-color: rgb(2,54,61);
+    color:white;
  }
 
  table td {
@@ -327,14 +337,17 @@
  }
 
  #sidePanel{
-    background-color: rgb(230, 230, 230);
-    padding:4px
+    background-color:rgb(195, 212, 214);
+    padding:4px;
+    border-right:1px solid gray
  }
  
 
  #sidePanel div{
    background-color: white;
+   
    margin-bottom: 5px;
+
  }
 
 

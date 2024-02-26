@@ -1,10 +1,12 @@
 <template >
     
 
-    <div class="w-full h-[92vh] px-10 py-10 overflow-y-scroll ml-[30px]">
-  <div class="flex flex-row justify-center items-center border-2 border-black border-solid p-4 rounded-md">  <label class="text-black text-4xl font-bold">My Profile</label></div>
+    <div class="w-full h-[92vh] bg-gray-200 px-10 py-10 overflow-y-scroll ml-[5vw]  ">
+
+
+  <div class="flex flex-row justify-center first-line: bg-white items-center shadow-md shadow-black p-4 border-b border-b-solid border-b-black">  <label class="text-black text-4xl font-bold">My Profile</label></div>
     
-<div class="flex flex-row">
+<div class="flex flex-row bg-white shadow-md shadow-black">
     
     
         <div class='flex flex-col w-full h-[92vh]'>
@@ -128,12 +130,12 @@
                 
         
                  
-        <hr class="border border-solid border-slate-300 "/>
+        <hr class="border-1 border-solid border-black "/>
               
             
         <div class="flex flex-row justify-center items-center mt-5">
-            <div class="bg-slate-200 h-auto w-auto text-gray-400 font-bold py-2 px-10 shadow shadow-black"  id="save" @click="makeChange">Save Changes</div>
-            <div class="bg-slate-300 h-auto w-auto text-black font-bold py-2 px-10 shadow shadow-black ml-5 hover:cursor-pointer" @click="cancel">Cancel</div>
+            <div class="bg-slate-200 h-auto w-auto text-gray-400 font-bold py-2 px-10 shadow-md shadow-black"  id="save" @click="makeChange">Save Changes</div>
+            <div class="bg-slate-300 h-auto w-auto text-black font-bold py-2 px-10 shadow-md shadow-black ml-5 hover:cursor-pointer" @click="cancel">Cancel</div>
         </div>
         
            

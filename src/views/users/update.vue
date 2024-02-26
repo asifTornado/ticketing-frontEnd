@@ -1,7 +1,7 @@
 <template>
 	
     <div  class=" flex justify-center items-center w-full">
-	<div class="shadow-2xl hover:shadow-blue-600 w-1/2 h-auto  flex flex-col justify-center items-center bg-white ">
+	<div class=" hover:shadow-blue-600 w-1/2 h-auto  flex flex-col justify-center items-center border-2 border-solid border-black ">
 
 		<div class="flex flex-row justify-center items-start w-full mb-10 bg-blue-500 text-white p-3 "><span class="text-4xl font-bold ">Update User</span></div>
 		
@@ -38,10 +38,10 @@
 		
 				  <br class="border border-solid border-black">
 		
-			   <button type="submit" class="w-full mt-8 h-11 bg-blue-500 rounded-md text-2xl text-white font-bold mb-2">Update</button> 
+			   <button type="submit" class="w-full mt-8 h-11 bg-blue-500 border-2 border-solid border-black rounded-md text-2xl text-white font-bold mb-2">Update</button> 
 		
 		
-			   <button @click="this.$router.back()" class="w-full h-11 bg-gray-300 rounded-md text-2xl text-gray-500 font-bold mb-10">Return</button>
+			   <button @click="this.$router.back()" class="w-full border-2 border-solid border-black h-11 bg-gray-300 rounded-md text-2xl text-gray-500 font-bold mb-10">Return</button>
 		
 			  </form>
 			</div>

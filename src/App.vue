@@ -1,13 +1,13 @@
 
-<template class="h-[92vh] w-full bg-gray-200">
+<template class="h-screen w-full ">
 
 
   <Topbar class="sticky top-0 z-20 noprintheader p-3 shadow-md shadow-black" @drawer="toggleDrawer()" @faq="toggleFaq()" /> 
   
-  <div class="flex flex-row h-[92vh]" >
+  <div class="flex flex-row h-screen  " >
     <NotificationDrawer/>
     <Drawer ref="drawer" @cancel="toggleDrawer()" />
-      <div class="h-[100%] w-full   z-10" >
+      <div class="h-[100%] w-full    z-10" >
         <RouterView class="h-[100%] w-full z-0 " />
         </div>
   </div>

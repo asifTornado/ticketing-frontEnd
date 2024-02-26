@@ -161,6 +161,7 @@ export default {
          data.append("user", user.mailAddress);
          data.append("token", token);
          data.append("totalUser", JSON.stringify(user))
+         data.append("page", 1)
 
        
       if(user.userType == "power" || userType == "admin"){

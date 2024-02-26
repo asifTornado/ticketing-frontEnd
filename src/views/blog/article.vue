@@ -1,12 +1,12 @@
 <template>
     
 
-<div class="flex flex-col justify-start items-start p-12 h-[92vh] overflow-y-scroll w-full">
+<div class="flex  flex-col justify-start items-center p-12 h-[92vh] overflow-y-scroll w-full">
     
     
-    <div class="text-black text-6xl font-bold mb-10 px-24 border-b-2 border-solid border-black w-full pb-5" v-if="blog">{{ blog.headline }}</div>
+    <div class="text-black ml-[2vw] w-[80vw] text-6xl bg-white text-center font-bold mb-10   shadow-md shadow-black py-[10px]  " v-if="blog">{{ blog.headline }}</div>
     
-    <div v-if="blog"  v-html="blog.content" class="px-24">
+    <div v-if="blog"  v-html="blog.content" class="px-24 bg-white shadow-md shadow-black p-[20px]">
     
     </div>
     

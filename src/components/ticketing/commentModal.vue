@@ -298,6 +298,7 @@ export default {
            var user = this.authStore.user;
            var data = new FormData();
            data.append("user", JSON.stringify(user))
+           data.append("page", 1)
 
            axios.post(this.globalStore.globalUrl + "getTickets", data).then((result)=>{
             vm.tickets = result.data

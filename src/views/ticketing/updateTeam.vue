@@ -1,17 +1,19 @@
 <template>
     <div class=" w-full ml-[30px] flex flex-col px-[100px] pt-[20px]"  id="app">
 
-        <div class="h-20 bg-gray-100 w-full flex flex-row justify-between p-2 items-center">
+        <div class="h-20  w-full flex flex-row justify-between p-2 items-center">
 
-            <input type="text" v-model="department" placeholder="Enter Department Name" class="text-2xl p-4 ml-10 w-[500px] rounded-md border border-solid border-gray-600 h-12">
+            <input type="text" v-model="department" placeholder="Enter Department Name" class="bg-white shadow-md shadow-black  text-2xl p-4 ml-10 w-[500px]  h-12 ">
             
 
         
     </div>
 
-    <div class="h-auto bg-gray-100 mt-[20px] w-full flex flex-row justify-center items-center p-2 items-center">
+    <div class="h-auto mt-[20px] w-full flex flex-row justify-center bg-white shadow-md shadow-black items-center p-2 items-center">
 
-<div class="flex flex-col mb-[20px] w-full  p-2 justify-center items-center">   <label for="" class="mr-10 text-lg">Select Central Monitors</label>
+<div class="flex flex-col mb-[20px] w-full  p-2 justify-center items-center ">  
+    
+    <label for="" class="mr-10 text-lg">Select Central Monitors</label>
    <div class="w-1/4 flex flex-col" v-for="(leader, leaderCounter) in monitors" :ley="leaderCounter">
    
 <div class="flex flex-row w-full  items-center ">   
@@ -31,11 +33,12 @@
 
     <div id="body" class="h-auto  w-full flex flex-col" v-if="!hasServices">
 
-        <div class="flex flex-col items-center justify-center w-full mt-10 ml-10">
-            <div class="flex flex-col w-1/2 border border-solid mb-[20px] border-black p-2">   <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
+        <div class="flex  flex-col items-center justify-center w-full mt-10 ml-10 ">
+            <div class="flex flex-col w-1/2  mb-[20px]  bg-white shadow-md shadow-black p-[10px]">   
+                <label for="" class="mr-10 text-lg">Select Ticketing Managers</label>
               <div class="w-1/4 flex flex-col" v-for="(leader, leaderCounter) in leaders" :ley="leaderCounter">
               
-           <div class="flex flex-row w-full  items-center ">   
+           <div class=" flex flex-row w-full  items-center ">   
                <select  v-model="leaders[leaderCounter]" class="mt-2 border border-solid border-black p-1">
                <option v-for="(leaderList, LeaderListCounter) in leadersList" :key="leaderListCounter" :value="leaderList">{{leaderList}}</option>
               </select>
@@ -45,8 +48,8 @@
               </div>
    </div>
    
-   <div class="flex flex-col w-1/2 border ml-2  border-solid border-black p-2">
-   <label class="mr-10  text-lg">Problem Types</label>
+   <div class="flex flex-col w-1/2  ml-2   bg-white shadow-md shadow-black p-[10px]">
+   <label class="mr-10  text-lg ">Problem Types</label>
    
    <div class="w-full flex flex-col " v-for="(problem, problemCounter) in problemTypes" :ley="problemTypes">
               
@@ -69,7 +72,7 @@
            
        </div>
 
-    <div class="flex flex-col h-auto rounded-md p-[50px] mb-[20px]  mt-10 justify-center items-center bg-gray-100">
+    <div class="bg-white shadow-md shadow-black p-[10px] flex flex-col h-auto rounded-md p-[50px] mb-[20px]  mt-10 justify-center items-center bg-gray-100">
         <div v-for="(subs, counter) in subordinates" :key="counter" class="flex flex-row w-full justify-center items-center mt-10">
        
      <div class="flex flex-row w-3/4 mr-10">
@@ -121,7 +124,7 @@
 <div class="flex flex-col h-auto rounded-md p-[50px]  mt-10 justify-center items-center bg-gray-100" v-for="(service, serviceCounter) in services" :key="serviceCounter" >
     <div class="h-20 bg-gray-100 w-full flex flex-row justify-between p-2 items-center">
 
-        <input type="text" v-model="services[serviceCounter].serviceName" placeholder="Enter Team Name" class="text-2xl p-4 ml-10 w-[500px] rounded-md border border-solid border-gray-600 h-12">
+        <input type="text" v-model="services[serviceCounter].serviceName" placeholder="Enter Team Name" class="text-2xl p-4 ml-10 w-[500px]  border border-solid border-gray-600 h-12">
         
         <font-awesome-icon icon="fa-solid fa-trash" class="text-red-500 hover:cursor-pointer" @click="deleteService($event, serviceCounter)" size="3x"/>
 </div>
@@ -169,17 +172,17 @@
     
     
     
-    <div class="h-auto w-auto mt-10 bg-blue-500 text-md font-bold text-white p-3 rounded-md hover:cursor-pointer" @click="addServiceSubordinate($event, serviceCounter)" >Add Subordinate</div>
+    <div class="h-auto w-auto mt-10 bg-blue-500 text-md font-bold text-white p-3  hover:cursor-pointer" @click="addServiceSubordinate($event, serviceCounter)" >Add Subordinate</div>
     
 </div>
 
 <div class="flex flex-row justify-center items-center">
-    <div class="h-auto  w-auto my-10 bg-emerald-500 text-2xl font-bold text-white p-5 rounded-md" @click="addService" >Add Team</div>
+    <div class="h-auto  w-auto my-10 bg-emerald-500 text-2xl font-bold text-white p-5 " @click="addService" >Add Team</div>
 </div>
   </div>
 
-<div class="flex flex-row bottom-[20px] items-center w-full justify-end mr-10 hover:cursor-pointer">
-    <div @click="updateDepartment" class="h-auto w-auto p-6 mr-10 mb-10 rounded-md  text-text-white font-bold text-lg border border-solid border-black hover:bg-blue-600 hover:text-white">Update Department</div>
+<div class="flex flex-row bottom-[20px] items-center w-full justify-end mr-10 hover:cursor-pointer ">
+    <div @click="updateDepartment" class="bg-white shadow-md shadow-black p-[10px]  h-auto w-auto  mr-10 mb-10   text-text-white font-bold text-lg  hover:bg-blue-600 hover:text-white">Update Department</div>
 </div>
 
     </div>

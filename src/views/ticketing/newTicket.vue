@@ -228,6 +228,8 @@ function initiate(){
 
         getTeams()
         setContact()
+
+        ticket.value.extension = user.value.extension
       
         axios.get(globalStore.globalUrl + 'getLocations', {
   headers: {

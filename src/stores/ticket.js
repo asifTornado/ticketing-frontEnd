@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from "pinia";
-import {ref, computed} from 'vue'
+import {ref, computed, watchEffect} from 'vue'
 import {useAuthStore} from './authentication'
 import { useGlobalStore } from "./globalStore";
 import * as XLSX from 'xlsx';
@@ -14,6 +14,8 @@ export const useTicketStore = defineStore("tickets", () => {
     var globalStore = useGlobalStore()
     var tickets = ref([])
     var toast = useToast()
+    var pages = ref(1)
+    var currentPage = ref(1)
 
     var ticket = ref({
         department:'',
@@ -78,25 +80,30 @@ export const useTicketStore = defineStore("tickets", () => {
     var {users} = storeToRefs(useUserStore())
     var main = ref(null)
     var authStore = useAuthStore()
-
+    
+    var sortedTickets = ref([])
     
 
-    var sortedTickets = computed(()=>{
+    // var sortedTickets = computed(()=>{
 
-        console.log("these are the filtered tickets")
-        console.log(filteredTickets.value)
+    //     console.log("these are the filtered tickets")
+    //     console.log(filteredTickets.value)
 
-        var tickets2 = filteredTickets.value
+    //     var tickets2 = filteredTickets.value
 
-        console.log("these are the tickets 2")
-        console.log(tickets2)
+    //     console.log("these are the tickets 2")
+    //     console.log(tickets2)
 
-        tickets2.sort(comparator)
+    //     tickets2.sort(comparator)
 
-        return tickets2
-    })
+    //     return tickets2
+    // })
 
-
+   watchEffect(()=>{
+    var tickets2 = filteredTickets.value;
+    tickets2.sort(comparator)
+    sortedTickets.value = tickets2
+   })
 
 
 
@@ -113,13 +120,14 @@ export const useTicketStore = defineStore("tickets", () => {
     }
 
 
-    function getTickets(){
+    function getTickets(page){
       
               if(user.value){
                 var data = new FormData();
                     data.append("token", token.value);
                     data.append("user", JSON.stringify(user.value));
-
+                    data.append("page", page)
+                    debugger
 
                     var url = ""
                   
@@ -133,10 +141,17 @@ export const useTicketStore = defineStore("tickets", () => {
                     console.log(user.value.userType)
 
                    axios.post(globalStore.globalUrl + url, data).then((result)=>{
+                    debugger
+                    // pages.value = result.data.count
+                    currentPage.value = page
+
+                    
 
                     tickets.value = result.data.filter((ticket) => ticket.status != 'Closed Ticket')
-                    filteredTickets.value = tickets.value
                     initialTickets.value = tickets.value
+               
+
+
                    
                     unassigned.value = tickets.value.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
                     accepted.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress)
@@ -144,6 +159,8 @@ export const useTicketStore = defineStore("tickets", () => {
                     approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
                  //    vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress);
                     info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
+                    
+                    filter(null, selectedItem.value)
                     getSupport()
                    }).catch((error)=>{
                     console.log(error)
@@ -162,12 +179,13 @@ export const useTicketStore = defineStore("tickets", () => {
     }
 
 
-   function getTickets2(){
+   function getTickets2(page){
            
      
            var data = new FormData()
            data.append("token", token.value);
            data.append("user", JSON.stringify(user.value));
+           data.append("page", page)
 
       
             axios.post(globalStore.globalUrl + "getTickets2", data).then((result)=>{
@@ -176,7 +194,10 @@ export const useTicketStore = defineStore("tickets", () => {
                console.log(result.data)
 
                 tickets.value = result.data.filter((ticket)=>ticket.raisedBy.mailAddress == user.value.mailAddress)
-                filteredTickets.value = tickets.value
+                initialTickets.value = tickets.value
+                // filteredTickets.value = tickets.value
+                // pages.value = Math.ceil(result.data.count/10)
+                currentPage.value = page
   
                 mentions.value = result.data.filter((ticket)=>{
                   if(ticket.mentions){
@@ -199,55 +220,75 @@ export const useTicketStore = defineStore("tickets", () => {
                  reject.value = tickets.value.filter((ticket)=>!ticket.currentHandler && ticket.raisedBy.mailAddress == user.value.mailAddress && ticket.beenRejected == true)
                  closedTickets.value = tickets.value.filter((ticket)=>ticket.raisedBy.mailAddress == user.value.mailAddress && ticket.status == "Closed Ticket")
 
+                 filter(null, selectedItem.value)
+
             }).catch((error)=>{
                 console.log(error)
             })
              
            
 
+
     }
 
 
+//   function getAllSupportTickets(page, data){
+//         debugger
+        
+//          axios.post(globalStore.globalUrl + "getAllSupportTickets", data).then((result)=>{
+//             debugger
+//             tickets.value = result.data.tickets
+//             initialTickets.value = tickets.value
+//             filteredTickets.value = tickets.value
+//             pages.value = Math.ceil(result.data.count/10)
+//             currentPage.value = page
 
-    async function getTickets3(){
-           
-      
+//          }).catch((error)=> console.log(error))
+//     }
+
+
+
+
+
+     function getTickets3(page){
+      debugger       
+       
         var data = new FormData()
         data.append("token", token.value);
         data.append("user", JSON.stringify(user.value));
+        data.append("page", page)
 
 
-        axios.post(globalStore.globalUrl + "getTickets2", data).then((result)=>{
+       axios.post(globalStore.globalUrl+"getTickets2", data).then((result)=>{
+        tickets.value = result.data
+        initialTickets.value = tickets.value
+        // filteredTickets.value = []
+        // filteredTickets.value = tickets.value
+        
 
-            console.log("these are the results")
-            console.log(result.data)
-            tickets.value = result.data
-            filteredTickets.value = tickets.value
- 
-            mentions.value = result.data.filter((ticket)=>{
-              if(ticket.mentions){
-                  for(var mention of ticket.mentions){
-                      
-                     if(mention == user.empName){
-                      return true
-                     }
-                  }
-              }
-             })
-             console.log("calling from inside the store")
-             unassigned.value = tickets.value.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
-             console.log("these are the unassigned tickets")
-             console.log(unassigned.value)
-             assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
-             approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
-             // vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress ==user.mailAddress);
-             info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
+        // pages.value = Math.ceil(filteredTickets.value.length / 10)
 
-        }).catch((error)=>console.log(error))
+        currentPage.value = page
+
+        unassigned.value = tickets.value.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
+        assigned.value =  assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.value.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
+        approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
+        // myCloseRequests = tickets.value.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress ==user.mailAddress);
+        info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
+
+
+
+       }).catch((error)=> console.log(error))
+
+
+        }
+
+            
+
           
      
 
- }
+ 
 
 
  function getTickets4(){
@@ -274,7 +315,7 @@ export const useTicketStore = defineStore("tickets", () => {
  }
 
 
- function getTickets5(){
+ function getTickets5(page){
 
    console.log("from get tickets 5")
  
@@ -283,15 +324,19 @@ export const useTicketStore = defineStore("tickets", () => {
     var data = new FormData();
     data.append("token", token.value);
     data.append("user", JSON.stringify(user.value));
+    data.append("page", page)
     axios.post(globalStore.globalUrl + 'getAllTickets', data).then((result)=>{
+
+    
+        currentPage.value = page
+
         debugger
        console.log("after getting results")
        tickets.value = result.data
-       console.log(1)
-       paginator.value.onClickHandler(1)
-       console.log(2)
-       filteredTickets.value = tickets.value
        initialTickets.value = tickets.value
+    
+    //    filteredTickets.value = tickets.value
+    //    initialTickets.value = tickets.value
        unassigned.value = tickets.value.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
        accepted.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress)
        assigned.value = tickets.value.filter((ticket)=>ticket.assigned == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.accepted == false)
@@ -300,11 +345,29 @@ export const useTicketStore = defineStore("tickets", () => {
        info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
         
        console.log("before calling get Support")
+
+       filter(null, selectedItem.value)
        getSupport();
 
     }).catch((error)=>{
       
     })
+ }
+
+ function getMyTickets(page){
+
+ }
+
+ function getTicketsForManager(page){
+
+ }
+
+ function getTicketsForDepartmentHead(page){
+
+ }
+
+ function getTicketsForAdmin(page){
+
  }
 
 
@@ -361,16 +424,45 @@ export const useTicketStore = defineStore("tickets", () => {
   }
 
 
-    function setTicketType(event, ticket){
+  function setPriorityForTable(event, ticket){
+    toast.info("Setting Priority")
+    
+    var data = new FormData();
+    var priority = event.target.value;
+    data.append("priority", priority)
+    data.append("id", ticket._id)
+    axios.post(globalStore.globalUrl + 'setPriorityForTable', data).then((result)=>{
+        filteredTickets.value = filteredTickets.value.map((f)=>{
+            if(f._id == result.data.id){
+                return result.data
+            }else{
+                return f
+            }
+        })
+      toast.clear()
+      toast.success("Priority Set Successfully")
+    }).catch((error)=>console.log(error))
+    
+  }
+
+
+    function setTicketType(event, ticket2){
         toast.info("setting ticket type...")
         var data = new FormData();
         var type = event.target.value;
         data.append("ticketType", type)
-        data.append("id", ticket._id)
+        data.append("id", ticket2._id)
         axios.post(globalStore.globalUrl + 'setTicketType', data).then((result)=>{
           
           
-           vm.ticketType = result.data
+           tickets.value = tickets.value.map(x => {
+            if(x._id == ticket2._id){
+                x.ticketType = result.data
+                return x
+            }else{
+                return x
+            }
+           })
            toast.clear()
            toast.success("Ticket Type Set")
         }).catch((error)=>toast.warning(error))
@@ -392,6 +484,7 @@ export const useTicketStore = defineStore("tickets", () => {
     axios.post(globalStore.globalUrl + "setLocation", data).then((result)=>{
         debugger
      toast.clear()
+     toast.success("Location Set Successfully")
      tickets.value = tickets.value.map((ticket)=>{
         if(ticket._id == result.data._id){
             return result.data
@@ -426,8 +519,9 @@ export const useTicketStore = defineStore("tickets", () => {
 
      
      function selectItem(item) {
+        debugger
         if (selectedItem.value === item) {
-          selectedItem.value = null; 
+          selectedItem.value = item; 
         } else {
           selectedItem.value = item; 
         }
@@ -462,7 +556,7 @@ export const useTicketStore = defineStore("tickets", () => {
 
      function filter(event, type){
 
-   
+       debugger
         
         selectItem(type);
         
@@ -470,7 +564,7 @@ export const useTicketStore = defineStore("tickets", () => {
 
             case "all":
                 console.log("from case all")
-                filteredTickets.value = tickets.value
+                // filteredTickets.value = tickets.value
                 initialTickets.value = tickets.value
                 console.log(filteredTickets.value)
 
@@ -478,51 +572,53 @@ export const useTicketStore = defineStore("tickets", () => {
 
             case "my":
                 
-                filteredTickets.value = my.value
+                // filteredTickets.value = my.value
                 initialTickets.value = my.value
             
                 break;
             case "close":
-                filteredTickets.value = closeRequestsForMe.value
+                // filteredTickets.value = closeRequestsForMe.value
                 initialTickets.value = closeRequestsForMe.value
 
                 break;
 
             case "unassigned":
-                filteredTickets.value = unassigned.value
+                // filteredTickets.value = unassigned.value
                 initialTickets.value = unassigned.value
                 
                 break;
 
             case "assigned":
-                filteredTickets.value = assigned.value
+                // filteredTickets.value = assigned.value
                 initialTickets.value = assigned.value
 
                 break;
             case "info":
-                filteredTickets.value = infoMe.value
+                // filteredTickets.value = infoMe.value
                 initialTickets.value = infoMe.value
                
                 break;
             case "approval":
-                filteredTickets.value = approval.value
+                // filteredTickets.value = approval.value
                 initialTickets.value = approval.value
           
                 break;
             case "mention":
-                filteredTickets.value = mentions.value
+                // filteredTickets.value = mentions.value
                 initialTickets.value = mentions.value
          
                 break;
             case "closedTickets":
-                filteredTickets.value = closedTickets.value
+                // filteredTickets.value = closedTickets.value
                 initialTickets.value = closedTickets.value
              
                 break;
 
             case "info2":
-                filteredTickets.value = info.value
+                // filteredTickets.value = info.value
                 initialTickets.value = info.value
+
+                break;
         
         }
         }
@@ -628,13 +724,14 @@ export const useTicketStore = defineStore("tickets", () => {
          }
 
 
-        function ticketReset(ticket){
+        function ticketReset(ticket2){
+            debugger
                 toast.info("Reseting Ticket")
-                ticket.priority = ticket.initialPriority
-                ticket.location = ticket.initialLocation
-                ticket.ticketType = ticket.initialType
-                ticket.currentHandler = null;
-                ticket.assignedTo = null;
+                // ticket2.priorityId = ticket2.initialPriority
+                // ticket2.location = ticket2.initialLocation
+                // ticket2.ticketType = ticket2.initialType
+                // ticket2.currentHandler = null;
+                // ticket2.assignedTo = null;
             
                
                 
@@ -644,16 +741,17 @@ export const useTicketStore = defineStore("tickets", () => {
             
                 data.append("user", JSON.stringify(user.value))
                 data.append("token", JSON.stringify(token.value))
-                 data.append("ticketId", JSON.stringify(ticket._id))
+                data.append("id", ticket2._id)
 
 
       
-            axios.post(globalStore.globalUrl + "updateTicket", data).then((result)=>{
-                    if(result.data != false){
-                        getTickets5()
+            axios.post(globalStore.globalUrl + "resetTicket", data).then((result)=>{
+                        debugger
+                        getTickets5(1)
+
                         toast.clear()
                         toast.success("Success")
-                    }
+                    
             
                 }).catch((error)=>{
                     console.log(error)
@@ -955,7 +1053,7 @@ export const useTicketStore = defineStore("tickets", () => {
          
          axios.post(globalStore.globalUrl + "reassignDepartment", data).then((result)=>{
            
-            getTickets()
+            getTickets(1)
          }).catch((error)=>{
           
          })
@@ -986,8 +1084,9 @@ export const useTicketStore = defineStore("tickets", () => {
     
     
                 if(event.target.value == "Unassigned" && ticket2.assignedTo != null){
+                    debugger
                     var data = new FormData();
-                    var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
+                    var approver = support.value.filter((user)=>user.mailAddress == event.target.value)[0]
                     data.append('token', token.value)
                     data.append('user', JSON.stringify(user.value))
                     data.append('comment', comment)
@@ -1005,7 +1104,7 @@ export const useTicketStore = defineStore("tickets", () => {
         debugger
                                if(result.data == true){
                                   toast.success("Unassigned")
-                                   getTickets5()
+                                   getTickets5(1)
                                }else{
                       
                                }
@@ -1015,7 +1114,7 @@ export const useTicketStore = defineStore("tickets", () => {
     
                    
                 }else if(ticket2.assignedTo != null && event.target.value != "Unassigned"){
-                     var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
+                     var approver = support.value.filter((user)=>user.mailAddress == event.target.value)[0]
                      console.log("this is the approver");
                      console.log(approver)
                      console.log(event.target.value)
@@ -1036,7 +1135,7 @@ export const useTicketStore = defineStore("tickets", () => {
                         if(result.data == true){
                             debugger
                             toast.success("Reassigned Successfully")
-                            getTickets5()
+                            getTickets5(1)
                           
                         }else{
                   
@@ -1047,10 +1146,11 @@ export const useTicketStore = defineStore("tickets", () => {
     
     
                 }else if(ticket2.assignedTo == null && event.target.value != "Unassigned"){
+                    debugger
                     console.log("these are the support")
                     console.log(support.value)
                
-                    var approver = support.value.filter((user)=> user.empName == event.target.value)[0]
+                    var approver = support.value.filter((user)=> user.mailAddress == event.target.value)[0]
     
                            console.log("from approver branch")
                            console.log(approver)
@@ -1072,14 +1172,14 @@ export const useTicketStore = defineStore("tickets", () => {
                                if(result.data == true){
                                 debugger
                                 toast.success("Assigned Successfully")
-                                   getTickets5()
+                                   getTickets5(1)
                            
                                }else{
                               
                                }
                            }).catch((error)=>{
                           
-                           })
+                        })
                 }
                 
                 
@@ -1101,7 +1201,7 @@ function  assignTicket(event, ticket2){
     
     
                 if(event.target.value == "Unassigned" && ticket2.assignedTo != null){
-                    var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
+                    var approver = support.value.filter((user)=>user.mailAddress == event.target.value)[0]
                     var data = new FormData();
                     data.append('token', token.value)
                     data.append('user', JSON.stringify(user.value))
@@ -1118,7 +1218,7 @@ function  assignTicket(event, ticket2){
     }).then((result)=>{
                                if(result.data == true){
                                 toast.success("Success")
-                                   getTickets()
+                                   getTickets(1)
                                }else{
                       
                                }
@@ -1128,7 +1228,7 @@ function  assignTicket(event, ticket2){
     
                    
                 }else if(ticket2.assignedTo != null && event.target.value != "Unassigned"){
-                     var approver = support.value.filter((user)=>user.empName == event.target.value)[0]
+                     var approver = support.value.filter((user)=>user.mailAddress == event.target.value)[0]
                      var data = new FormData();
                      
                      data.append('token', token)
@@ -1145,7 +1245,7 @@ function  assignTicket(event, ticket2){
     }).then((result)=>{
                         if(result.data == true){
                             toast.success("Success")
-                            getTickets()
+                            getTickets(1)
                           
                         }else{
                   
@@ -1159,7 +1259,7 @@ function  assignTicket(event, ticket2){
                     console.log("these are the support")
                     console.log(support.value)
              
-                    var approver = support.value.filter((user)=> user.empName == event.target.value)[0]
+                    var approver = support.value.filter((user)=> user.mailAddress == event.target.value)[0]
     
                            console.log("from approver branch")
                            console.log(approver)
@@ -1182,7 +1282,7 @@ function  assignTicket(event, ticket2){
         toast.success("Success")
                                if(result.data == true){
                                 
-                                   getTickets()
+                                   getTickets(1)
                            
                                }else{
                               
@@ -1198,9 +1298,9 @@ function  assignTicket(event, ticket2){
 
  return {
     support, unassigned, currentPage, itemsPerPage, authStore, globalStore, tickets, ticket, filteredTickets, initialTickets, closedTickets, assigned, approval, 
-    my, closeRequestsForMe, myCloseRequests, info, reject, infoMe, sort, mentions, selectedItem, timePassed,
+    my, closeRequestsForMe, myCloseRequests, info, reject, infoMe, sort, mentions, selectedItem, timePassed, pages, currentPage,
     sortedTickets, paginator, locations, files, helpCheck, searchCheck, passedTime, locations, details, proceedCheck, leaderCheck,
-    selectTicket, setTicketType, setPriority, reassignDepartment, assignTicket2,
+    selectTicket, setTicketType, setPriority, reassignDepartment, assignTicket2, setPriorityForTable,
     ticketReset, handlePageChanged, setLocation, cancelDepartmentReassign, search, submit, setFile, removeFile, setContact,
     getLocations, getTeams, getTickets, getSupport, downloadExcel, comparator, getTickets2, setRowColor, selectItem, 
     getSelectedItem, filter, showDetails, getTickets3, getTickets4, getTickets5, assignTicket, cancelDepartmentReassign

@@ -138,7 +138,7 @@
   <script>
 
   import axios from "axios";
-  import SignalRService from './signalRService.js'
+  import SignalRService from './signalRservice'
   import {useAuthStore} from "../stores/authentication"
    import {useGlobalStore} from "../stores/globalStore"
    import {useTicketStore} from "../stores/ticket"
@@ -218,10 +218,12 @@
 
       SignalRService.startConnection()
         .then(() => {
+          debugger
           SignalRService.invoke("Subscribe", vm.ticketId, name)
           SignalRService.on('Receive', vm.handleReceive);
           SignalRService.on("File", vm.handleFile);
           SignalRService.on("NotificationReceive", vm.handleNotification);
+          console.log("signal r initialized")
 
         })
         .catch((error) => {
@@ -280,7 +282,7 @@
    
 
       handleReceive(message) {
-
+        debugger
         var vm = this;
     
         var messageJson = JSON.parse(message)
@@ -326,9 +328,10 @@ this.$nextTick(() => {
         var message = this.message
         var ticketId = this.ticketId
         this.message = ''
+        debugger
 
         SignalRService.invoke('SendMessage', message, userString, ticketId).then((result)=>{
-          SignalRService.invoke("SendNotificationFromClient", message, Currentuser.empName, user, ticketId )
+          SignalRService.invoke("SendNotificationFromClient", message, JSON.stringify(Currentuser), JSON.stringify(user), ticketId )
 
         })
           .catch((error) => {
@@ -342,10 +345,11 @@ this.$nextTick(() => {
       },
 
       sendChatFiles(event) {
+        debugger
         var vm = this;
         vm.chatFilesCheck = !vm.chatFilesCheck
         var id = vm.ticketId;
-        var user = vm.authStore.getUser
+        var user = vm.authStore.user
         var userString = JSON.stringify(user)
 
       var data = new FormData();
@@ -361,7 +365,7 @@ this.$nextTick(() => {
       axios.post(this.globalStore.globalUrl + "uploadFiles", data).then((result)=>{
         var files = JSON.stringify(result.data);
         vm.chatFiles = []
-       
+        debugger
         SignalRService.invoke("UploadFile", files, userString, id).catch((error) => {
             console.error('Error invoking SignalR method:', error);
           });

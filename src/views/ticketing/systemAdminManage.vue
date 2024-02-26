@@ -6,10 +6,10 @@
          <div class="flex flex-row items-end w-full justify-end hover:cursor-pointer sticky top-0 " @click="hideProblemDetails" > <div class="flex flex-col justify-center" style="border-radius: 200%; width:20px; height:20px; background-color: black; padding: 2px;"> <font-awesome-icon icon="fa-solid fa-xmark" class="text-white"/></div></div>
         <div id="text" style="word-wrap: break-word; max-width:100%"></div>
         </div>
-   <div class=" flex flex-row   text-lg  h-full w-full  bg-[rgb(248,248,248)] ml-[30px]  " id="app"  >
+   <div class=" flex flex-row   text-lg  h-full w-full  bg-gray-200 ml-[30px]  " id="app"  >
 
 
-    <div class="flex flex-col fixed left-[50px] h-screen customborder  bg-gray-200  pt-2" id="sidePanel" v-if="mainStore.getSidePanelCheck">
+    <div class="flex flex-col fixed left-[50px] h-screen customborder   pt-2" id="sidePanel" v-if="mainStore.sidePanelCheck">
        
 
         <div @click="filter($event, 'all')" :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
@@ -87,21 +87,29 @@
     </div>
 
 
-  <div class="h-[92vh]  p-5 bg-[rgb(248,248,248)] flex flex-col w-full mx-2">  
-  <div class="flex flex-row items-center justify-between "><div class="ml-[400px] text-2xl">{{ getSelectedItem() }}</div>
-<div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
+  <div class="h-[92vh]  bg-gray-200  flex flex-col items-center w-full mx-2 p-5">  
+  
+<div class="flex flex-row mb-[10px] items-center justify-between w-full">
+    <div class=" text-2xl ml-[40vw] shadow-black shadow-md font-bold border border-solid border-gray-400 p-3 bg-white">{{ getSelectedItem() }}</div>
+
+
+<div class="flex flex-row">
+    <div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white shadow-md shadow-black hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
     Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-4"/>
 </div>  
-<FilterButton/>
+    <FilterButton/>
 <ClearButton/>
 </div>
 </div>
-    <div class="   overflow-x-auto   mx-2 customerborder w-full   overflow-y-scroll" style="max-height: 80vh; min-height: auto;">
+</div>
+
+
+    <div class="   overflow-x-auto   mx-2 customerborder  bg-white shadow-md shadow-black   w-[90vw] " style="max-height: 80vh; min-height: auto;">
        
     <table class="w-full text-md text-left text-gray-500 dark:text-gray-400 ">
-        <thead class="text-md text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400">
+        <thead class="text-md text-white uppercase ">
             <tr>
-                <th scope="col" class="table-header2 px-6 py-3 ">
+                <th scope="col" class="table-header2  px-6 py-3 ">
                     Issue No.
                 </th>
 <!-- 
@@ -115,9 +123,9 @@
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Location
                 </th>
-                <!-- <th scope="col" class="table-header2 px-6 py-3 ">
+                <th scope="col" class="table-header2 px-6 py-3 ">
                     priority
-                </th> -->
+                </th>
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Status
                 </th>
@@ -143,7 +151,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr  class="hover:bg-gray-200 hover:text-black" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
+            <tr  class="hover:bg-gray-200 hover:text-black hover:cursor-pointer" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
                 <td @click="showDetails(ticket._id)"  scope="row" class="table-row2  font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {{ ticket.number }}
                 </td>
@@ -158,14 +166,14 @@
                     {{ ticket.requestDate }}
                 </td>
                 <td  class="table-row2 px-6">
-                    <select @change="setLocation($event, ticket._id)" class="w-[80px] border border-black border-solid">
-                       <option selected>{{ticket.location}}</option>
+                    <select v-model="sortedTickets[ticketCounter].location" @change="setLocation($event, ticket._id)" class="w-[80px] border border-black border-solid" value>
+                       
                        <option v-for="(location, locationCounter) in locations"  :value="location.name">{{location.name}}</option>
                     </select>
                    </td>
-                <!-- <td  class="table-row2 px-6 ">
-                    <select name="" id="" class="p-1 border border-solid border-black" @change="setPriority($event, ticket)">
-                        <option :value="ticket.priority.priority" selected>{{ticket.priority.priority}}</option>
+                <td  class="table-row2 px-6 ">
+                    <select name="" id="" v-model="sortedTickets[ticketCounter].priority.priority" class="p-1 border border-solid border-black" @change="setPriorityForTable($event, ticket)">
+                     
                         
                         <option value="Priority 1">Priority 1</option>
                         <option value="Priority 2">Priority 2</option>
@@ -174,7 +182,7 @@
                         <option value="Priority 5">Priority 5</option>
                         <option value="Priority 5">Priority 6</option>
                     </select>
-                </td> -->
+                </td>
 
                 <td @click="showDetails(ticket._id)" class="table-row2 px-6 ">
                     {{ticket.status}}
@@ -190,8 +198,8 @@
                 <td  class="table-row2 ">
                     <template v-if="ticket.assignedTo ">
                         
-                        <select  name="" id="" @change="assignTicket2($event, ticket)" class="bg-white w-[100px] border border-solid border-black">
-                            <option :value="ticket.assignedTo.empName" selected>{{ ticket.assignedTo.empName }}</option>
+                        <select v-model="sortedTickets[ticketCounter].assignedTo.mailAddress"  name="" id="" @change="assignTicket2($event, ticket)" class="bg-white w-[100px] border border-solid border-black">
+                            <!-- <option :value="ticket.assignedTo.mailAddress" selected>{{ ticket.assignedTo.mailAddress }}</option> -->
                             <option value="Unassigned" >Unassigned</option>
                             <option v-for="(user, userCounter) in ticket.users"  :key="userCounter" :value="user">{{user}}</option>
                         </select>
@@ -207,7 +215,7 @@
                    <template v-if="ticket.currentHandler">{{ ticket.currentHandler.empName }}</template> 
                 </td>
                 <td class="table-row2 pr-[20px]">
-                <button @click="ticketReset(ticket)" class="p-2 bg-green-200 text-black border border-solid border-gray-500">Reset</button>
+                <button @click="ticketReset(ticket)" class="p-2 bg-green-200 text-black border border-solid border-gray-500"><font-awesome-icon :icon="['fas', 'retweet']" /></button>
                 </td>
             </tr>
            
@@ -217,7 +225,7 @@
     </table>
 </div>
 
-<Pagination @page-Changed="handlePageChanged" :items="filteredTickets.length" ref="paginator" :itemsPerPage="itemsPerPage"/>
+<Pagination @changePage="getTickets5"/>
 
 
 </div>
@@ -245,11 +253,11 @@ import { useUserStore } from "../../stores/users";
 import {storeToRefs} from "pinia"
 
 var {getTickets5, getLocations, handlePageChanged, assignTicket2, getSelectedItem, selectItem, comparator, filter, 
-showDetails, downloadExcel, ticketReset, setLocation
+showDetails, downloadExcel, ticketReset, setLocation, setPriorityForTable
 } = useTicketStore()
 
 
-getTickets5()
+getTickets5(1)
 
 getLocations()
 
@@ -347,7 +355,11 @@ function hideProblemDetails(event){
    padding:20px;
    background-color: white;
    border-bottom:1px solid lightslategray;
-   margin-bottom: 5px;
+   font-weight: bold;
+   box-shadow: 0px 2px 2px;
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
    
    
  }
@@ -360,22 +372,26 @@ function hideProblemDetails(event){
 
  table th{
     border-bottom:1px solid gray;
-    background-color: lightgray;
+    background-color: rgb(2,54,61) ;
  }
 
  table td {
     border-bottom: 1px solid gray;
  }
 
+
  #sidePanel{
-    background-color: rgb(230, 230, 230);
-    padding:4px
+    background-color:rgb(195, 212, 214);
+    padding:4px;
+    border-right:1px solid gray
  }
  
 
  #sidePanel div{
    background-color: white;
+   
    margin-bottom: 5px;
+
  }
 
 

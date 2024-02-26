@@ -10,7 +10,7 @@
     </div>
 </div>
 
-    <div class="w-full h-[92vh] overflow-y-scroll ml-[30px] flex flex-row" ref="app">
+    <div class="w-full px-[100px] h-screen  ml-[30px] flex flex-row" ref="app" id="app">
 
      
 
@@ -117,7 +117,7 @@
      </div>
     
 
-        <div class=" w-[70vw] h-auto p-10 flex flex-col items-center" id="article">
+        <div class=" w-[70vw] h-[430vh]  p-10 bg-white shadow-md shadow-black mr-2 mt-4 flex flex-col items-center" id="article">
          <article class=" p-3 lg:prose-lg w-full">
             <h1 class="underline" ref="intro">1 Introduction</h1>
             <p>This Help Desk system is designed to faciliate company service givers give services to other employees much more easily. It automates mundanes task, keeps records of 
@@ -196,8 +196,8 @@
 
         </div>
 
-        <div class="w-[25vw] h-auto  " >
-            <div class=" bg-gray-200 border border-solid border-black h-auto w-full ">
+        <div class="w-[25vw] h-auto   " >
+            <div class=" bg-white shadow-md shadow-black mt-[2vh] h-auto w-full ">
                 <article class=" p-10  md:prose-lg w-full">
                     <h2>Table of Contents</h2>
                     <h3 @click="scrollToSection('intro')" class="hover:cursor-pointer">1 Introduction</h3>
@@ -408,10 +408,14 @@
         },
 
         scrollToTop(){
-            this.$refs.app.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            debugger
+            var element = document.getElementById("app")
+            element.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            // this.$refs.app.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         },
 
         scrollToSection(sectionRef) {
+           
       const element = this.$refs[sectionRef];
       if (element) {
         const rect = element.getBoundingClientRect();

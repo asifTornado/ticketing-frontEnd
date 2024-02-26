@@ -147,6 +147,7 @@
      
 	 data.append("token", token);
 	 data.append("totalUser", JSON.stringify(user))
+	 data.append("page", 1)
   
 	 if(userType == "power" || userType == "admin"){
 		axios.post(this.globalStore.globalUrl + "getAllTickets", data).then((result)=>{
@@ -158,6 +159,7 @@
          }).catch((error)=>vm.$toast.warning(error))
 	 }else if(userType == "departmentPower"  || userType == "leader" || userType == "Ticket Manager (Department)"){
 		data.append("user", user.mailAddress)
+		data.append("page", 1)
     axios.post(this.globalStore.globalUrl + "getDepartmentTickets", data).then((result)=>{
     vm.tickets = result.data;
     vm.getData(result.data)

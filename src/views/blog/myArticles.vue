@@ -8,7 +8,7 @@
 
 <div class="flex flex-row justify-end w-full ">
 
-    <div class="flex flex-row mt-5 justify-center ">
+    <div class="flex flex-row mt-5 justify-center bg-white shadow-md shadow-black  ">
         <div @click="this.$router.push('/blog/insertArticle')" class="bg-blue-500 p-3 text-white font-bold w-[100px] rounded-md mr-10 flex flex-col justify-center items-center h-full hover:cursor-pointer " v-if="checkUser()">Insert Article</div>
      <input v-model="searchTerm" type="search" name="" placeholder="Search Article" id="" class="focus:outline-none text-bold text-lg border-b-2 border-t-2 border-l-2 border-solid border-l-gray-500 border-t-gray-500 border-b-gray-500 p-3 w-[200px]">
      <div class="flex flex-col justify-center bg-gray-300 items-center p-3 border-t-2 border-r-2 border-b-2 border-solid border-r-gray-500 border-t-gray-500 border-b-gray-500 hover:cursor-pointer" @click="search()"><font-awesome-icon icon="fa-solid fa-search"/></div>

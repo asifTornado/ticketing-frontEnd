@@ -192,7 +192,7 @@ const router = createRouter({
    
 
 
-    {
+  {
       path: 'manage',
       name: 'leaderManage',
     
@@ -251,6 +251,14 @@ const router = createRouter({
 
       component: () => import('../views/locations/main.vue')
     },
+
+      
+    {
+      path: 'priorities',
+      name: 'priorities',
+
+      component: () => import('../views/ticketing/priorities.vue')
+    },  
 
 
     {

@@ -1,6 +1,6 @@
 <template>
 
-<div class="bg-white h-[92vh] w-full">
+<div class="bg-white h-[screen] w-full">
 
 
    

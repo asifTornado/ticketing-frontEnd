@@ -2,7 +2,7 @@
     
 
     <div class="w-full h-full px-10 ml-[30px] mt-[10px]">
-  <div class="flex flex-row justify-center items-center bg-gray-300 p-4 rounded-md">  <label class="text-black text-4xl font-bold">Insert Article</label></div>
+  <div class="flex flex-row justify-center items-center bg-white shadow-md shadow-black p-4 rounded-md">  <label class="text-black text-4xl font-bold">Insert Article</label></div>
     
 
 
@@ -14,13 +14,13 @@
 
 <div class="flex flex-col my-10">
     <label class="text-4xl font-bold mb-2">Headline</label>
-    <input class="border-2 border-gray-400 border-solid p-3" type="text" v-model="headline" placeholder="Insert Article Headline" id="">
+    <input class=" p-3 bg-white shadow-md shadow-black" type="text" v-model="headline" placeholder="Insert Article Headline" id="">
 </div>
 
 <label class="text-2xl font-bold">Article</label>
 
-<div class=" bg-white" id="editor" >
-  <QuillEditor :options="options" v-model:content="content" contentType="html" />
+<div class="shadow-md shadow-black bg-white" id="editor" >
+  <QuillEditor :options="options" v-model:content="content" class="" contentType="html" />
  
 
 </div>
@@ -28,7 +28,7 @@
 
 <div class="flex flex-row justify-end items-center mr-10 mt-20 ">
     
-    <div class="bg-emerald-500 text-white font-bold p-4 rounded-md hover:cursor-pointer" @click="insertArticle">Insert</div>
+    <div class="bg-emerald-500 shadow-md shadow-black text-white font-bold p-4 rounded-md hover:cursor-pointer" @click="insertArticle">Insert</div>
 </div>
 
 
@@ -57,7 +57,7 @@
    export default{
     data(){
         return{
-            content: '<p>2333</p>',
+        content: '<p>2333</p>',
       _content: '',
       editorOption: {
         placeholder: 'core',
@@ -94,7 +94,7 @@
         var headline = this.headline;
 
         var data = new FormData();
-        data.append("user", user)
+        data.append("user", JSON.stringify(user))
         data.append("token", token)
         data.append("content", content)
         data.append("headline", headline)
@@ -102,12 +102,13 @@
         axios.post(vm.$globalUrl + "createBlog", data, {
   headers: {
     'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
+
   }
 }).then((result)=>{
             if(result.data == true){
                 vm.content = ''
                 vm.headline = ''
+                vm.$toast.success("Article Inserted Successfully")
             }else{
                 vm.$toast.warning(result.data)
             }

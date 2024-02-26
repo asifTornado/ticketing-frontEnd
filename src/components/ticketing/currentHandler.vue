@@ -59,16 +59,16 @@
     </div></div>
  </div>
 
+ <CommentModal ref="commentModal" :ticket="ticket" @rating="setRating" @modal-Call="handleModalCall" @cancel="cancel" @file-Change="handleFileChange" @comment-Change="handleCommentChange" @info-Change="handleInfoChange" @call="handleCall" @approver-Change="handleApproverChange" @remove-File="handleRemoveFile"  />
 
 
-   <CommentModal ref="commentModal" :ticket="ticket" @rating="setRating" @modal-Call="handleModalCall" @cancel="cancel" @file-Change="handleFileChange" @comment-Change="handleCommentChange" @info-Change="handleInfoChange" @call="handleCall" @approver-Change="handleApproverChange" @remove-File="handleRemoveFile"  />
-   <div class="flex flex-row w-[97vw] h-[90vh] ml-[40px]   " ref="main">
+ <div class="flex flex-row p-[20px]  w-[97vw] h-[90vh] ml-[40px] bg-gray-200  " ref="main">
     
       
   
 
    
-       <div class="  w-2/6 h-[92vh]  overflow-y-scroll   p-2 border bg-gray-100  ">
+       <div class="  w-[30vw] h-[83vh] bg-white shadow-md shadow-black mr-[20px]  overflow-y-scroll   p-2 border  ">
 
          <vue-collapsible-panel-group accordion>
             <vue-collapsible-panel :expanded="true">
@@ -376,8 +376,8 @@
 
    
 
-       <div class="w-2/6 h-[92vh] pt-2 relative  text-center bg-blue overflow-y-scroll overflow-x-clip">
-         <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress ">
+       <div class=" h-[83vh] w-[30vw] mr-[20px] pt-2 relative bg-white shadow-md shadow-black  text-center bg-blue overflow-y-scroll overflow-x-clip">
+         <div class="flex flex-row w-full py-2 px-2  m-3 items-center" v-if="ticket.ticketingHead && authStore.user && ticket.ticketingHead._id == authStore.user._id ">
             
           <div>  <span class="font-bold">Set Ticket Priority:</span>
       
@@ -392,7 +392,7 @@
 
          <div>  <span class="font-bold">Set Ticket Type:</span>
       
-            <select class="ml-4 border border-solid border-black p-1" v-model="priority" @change="setTicketType">
+            <select class="ml-4 border border-solid border-black p-1" v-model="priority" @change="ticketsStore.setTicketType($event, ticket)">
                <option value="Incident">Incident</option>
                <option value="Problem">Problem</option>
     
@@ -419,7 +419,7 @@
 
 
 
-       <div class="flex flex-row w-2/6 justify-start " style="z-index:1">
+       <div class="flex flex-row w-[30vw] h-[83vh] bg-white shadow-md shadow-black justify-start " style="z-index:1">
              <div class="border border-solid flex flex-col w-full p-4  " style="z-index: 99;"  >
                     
                <div class="font-bold flex flex-row text-4xl pb-2">

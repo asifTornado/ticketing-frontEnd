@@ -163,7 +163,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr  class="hover:bg-gray-200 hover:text-black" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
+            <tr  class="hover:bg-gray-200 hover:text-black hover:cursor-pointer" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
                 <td @click="showDetails(ticket._id)"  scope="row" class="table-row2  font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {{ ticket.number }}
                 </td>

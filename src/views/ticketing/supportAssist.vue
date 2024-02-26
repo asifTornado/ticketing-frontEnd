@@ -1,14 +1,14 @@
 <template>
 
     <div class="fixed w-[300px] h-[200px] overflow-y-scroll p-3 flex-col bg-yellow-100" id="tooltip" ref="tooltip" style="display:none; z-index:999">
-        <div class="flex flex-row items-end w-full justify-end hover:cursor-pointer sticky top-0 " @click="hideProblemDetails" > <div class="flex flex-col justify-center" style="border-radius: 200%; width:20px; height:20px; background-color: black; padding: 2px;"> <font-awesome-icon icon="fa-solid fa-xmark" class="text-white"/></div></div>
+        <div class="flex flex-row items-end w-full justify-end hover:cursor-pointer sticky top-0 " @click="hideProblemDetails" > <div class="flex flex-col justify-center" style="border-radius: 200%; width:20px; height:20px; background-color: black; padding: 2px;"> </div></div>
        <div id="text" style="word-wrap: break-word; max-width:100%"></div>
        </div>
     <FilterDrawer />
-    <div class=" flex flex-row  ml-[30px]  text-lg  h-[92vh] w-full  bg-[rgb(248,248,248)] " id="app"   v-if="tickets">
+    <div class=" flex flex-row  ml-[30px]  text-lg  h-[92vh] w-full  bg-gray-400 " id="app"   v-if="tickets">
  
  
-     <div class="flex flex-col h-screen customborder  bg-white ml-[20px]   absolute   " id="sidePanel" style="z-index: 999999999999999;"  v-if="mainStore.getSidePanelCheck">
+     <div class="flex flex-col h-screen customborder  bg-white ml-[20px]   absolute   " id="sidePanel" style="z-index: 999999999999999;"  v-if="mainStore.sidePanelCheck">
  
          <div @click="filter($event, 'all')"  :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
                <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
@@ -82,22 +82,28 @@
  
      </div>
  
- <div class="h-[92vh]  bg-[rgb(248,248,248)] flex flex-col w-full mx-2 p-5">
+ <div class="h-[92vh]  bg-gray-200 flex flex-col items-center w-full mx-2 p-5">
     
 
 
 
 
 
-    <div class="flex flex-row items-center justify-between "><div class="ml-[400px] mb-[10px] border border-solid border-black text-2xl bg-white p-[10px] font-bold">{{ getSelectedItem() }}</div>
-<div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
+    <div class="flex flex-row w-full  items-center justify-between ">
+        
+    <div class="ml-[400px] mb-[10px] border border-solid ml-[40vw] border-black shadow-md shadow-black text-2xl bg-white p-[10px] font-bold">{{ getSelectedItem() }}</div>
+
+
+<div class="flex flex-row">
+    <div class="flex flex-row">  <div @click="downloadExcel" class="p-2 bg-white shadow-md shadow-black hover:cursor-pointer border border-solid border-gray-400 rounded-sm mt-2 mb-2 mr-2">
     Download As Excel<font-awesome-icon icon="fa-solid fa-table" class="ml-4"/>
 </div>  
 <FilterButton/>
 <ClearButton/>
 </div>
 </div>
-     <div class="relative overflow-x-auto   mx-2 shadow-md customerborder w-full  max-h-[80vh] overflow-y-scroll">
+</div>
+     <div class="relative overflow-x-auto bg-white   mx-2 shadow-md shadow-black customerborder w-[90vw]  max-h-[80vh] overflow-y-scroll">
      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
          <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400">
              <tr>
@@ -125,7 +131,7 @@
              </tr>
          </thead>
          <tbody>
-             <tr  class="hover:bg-gray-200 hover:text-black" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
+             <tr  class="hover:bg-gray-200 hover:text-black hover:cursor-pointer" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
                  <td @click="showDetails(ticket._id)" scope="row" class="cursor-pointer table-row2 px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-white">
                      {{ ticket.number }}
                  </td>
@@ -159,7 +165,7 @@
      </table>
  </div>
 
- <Pagination @page-Changed="handlePageChanged" :items="filteredTickets.length" :itemsPerPage="itemsPerPage" ref="paginator"/>
+ <Pagination @changePage="getTickets3" ref="paginator"/>
 
 </div>
   
@@ -202,7 +208,7 @@
      var {sortedTickets, tickets, unassigned, assigned, infoMe, selectedItem, filteredTickets, itemsPerPage, currentPage} =  storeToRefs(useTicketStore())
      
 
-   getTickets3()
+   getTickets3(1)
 
 
     function handlePageChanged(page){
@@ -294,23 +300,28 @@
 
  table th{
     border-bottom:1px solid gray;
-    background-color: lightgray;
+    background-color: rgb(2,54,61);
+    color:white
  }
 
  table td {
     border-bottom: 1px solid gray;
  }
 
+
  #sidePanel{
-    background-color: rgb(230, 230, 230);
+    background-color:rgb(195, 212, 214);
+    padding:4px;
+    border-right:1px solid gray
  }
  
 
  #sidePanel div{
    background-color: white;
+   
    margin-bottom: 5px;
- }
 
+ }
 
  .selected{
     display: flex;
@@ -327,6 +338,9 @@
   border-right-width: 0.25rem; 
   border-right-style: solid;  
   border-right-color: #10B981;
+  margin-top: 1vh;
+  box-shadow: 0px 2px 2px ;
+  font-weight: bold;
 
 
  }
@@ -343,6 +357,9 @@
   cursor: default;
   background-color: transparent;
   border: none;
+  margin-top: 1vh;
+  box-shadow: 0px 2px 2px ;
+  font-weight: bold;
 
  }
 

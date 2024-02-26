@@ -8,21 +8,21 @@
     </div>
  </div>
 </div>
-<div class="flex flex-col justify-center items-center h-[92vh] overflow-y-scroll w-full p-10" @click="cancel($event)" id="body">
+<div class="flex flex-col  bg-gray-200  items-center h-[92vh] overflow-y-scroll w-full p-10" @click="cancel($event)" id="body">
 
-    <div class="flex flex-row justify-center items-center text-3xl font-bold underline">Locations</div>
+    <div class="flex flex-row  text-3xl font-bold underline">Locations</div>
      
-    <div class="flex flex-col w-[40%] h-[70vh] mb-2  mt-2  items-center">
-        <div class="flex flex-row  w-full h-auto mb-2 p-3 bg-gray-200 justify-between" v-for="(location, locationCounter) in locations">
+    <div class="flex flex-col w-[40%] max-h-[70vh]  p-[20px]  mb-2  mt-2  items-center">
+        <div class="flex flex-row  w-full h-auto mb-2 p-3  justify-between border border-solid border-blue-100 bg-white shadow-md shadow-black" v-for="(location, locationCounter) in locations">
          <div class="flex flex-row"> <span class="text-lg font-bold mr-10  ">Location {{locationCounter + 1}}:</span> <span class="">{{ location.name }}</span> </div>
          <font-awesome-icon icon="fa-solid fa-trash" class="text-red-600 hover:cursor-pointer" @click="deleteLocation(location._id)"/>
-        </div>
+    </div>
     </div>
 
 
-    <div class="flex flex-row w-full justify-end">
+    <div class="flex flex-row w-full justify-center ml-[200px]">
 
-<div class="h-auto w-auto p-2 bg-blue-500 text-white font-bold text-lg hover:cursor-pointer" @click="addLocation">Add New Location</div>
+<div class="h-auto w-auto p-2 bg-blue-500 text-white font-bold text-lg hover:cursor-pointer shadow-md shadow-black" @click="addLocation">Add New Location</div>
 </div>
 </div>
 

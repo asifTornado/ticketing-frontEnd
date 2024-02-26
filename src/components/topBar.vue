@@ -36,11 +36,11 @@
 
 
   
-  <div  v-if="token != null && route.path.split('/')[1] == 'ticketing'" class="noprint text-white hover:cursor-pointer mr-2 text-sm flex flex-row justify-between items-center align-middle  " @click="router.push('/ticketing/blog/knowledge')"><div class=" w-40 p-2 border  hover:shadow-md    border-solid text-black border-black" style="transition: 0.2s;" onmouseover="this.style.boxShadow = '3px 3px 0px black';"
+  <div  v-if="token != null && route.path.split('/')[1] == 'ticketing'" class="noprint text-white bg-white  hover:cursor-pointer mr-2 text-sm flex flex-row justify-between items-center align-middle  " @click="router.push('/ticketing/blog/knowledge')"><div class=" w-40 p-2 border  hover:shadow-md    border-solid text-black border-black" style="transition: 0.2s;" onmouseover="this.style.boxShadow = '3px 3px 0px black';"
      onmouseout="this.style.boxShadow = '0px 0px 0px rgba(0, 0, 0, 0)';">
                                                                                                                                                                                       <font-awesome-icon icon="fa-solid fa-circle-question " size="lg" class="mr-2"/> <span class="text-sm ">Knowledge Base</span>
                                                                                                                                                                                   </div></div>
-     <div  v-if="token != null" class="noprint text-white hover:cursor-pointer mr-2 text-sm flex flex-row justify-between items-center align-middle  " @click="logout()"><div class=" w-24 p-2 border     border-solid text-black border-black" style="transition: 0.2s;" onmouseover="this.style.boxShadow = '3px 3px 0px black';"
+     <div  v-if="token != null" class="noprint text-white hover:cursor-pointer mr-2 text-sm flex flex-row bg-white justify-between items-center align-middle  " @click="logout()"><div class=" w-24 p-2 border     border-solid text-black border-black" style="transition: 0.2s;" onmouseover="this.style.boxShadow = '3px 3px 0px black';"
      onmouseout="this.style.boxShadow = '0px 0px 0px rgba(0, 0, 0, 0)';" >
                                                                                                                                                                                       <font-awesome-icon icon="fa-solid fa-right-from-bracket " size="lg" class="mr-2"/> <span class="text-sm ">Logout</span>
                                                                                                                                                                                   </div></div>
@@ -50,7 +50,7 @@
      <font-awesome-icon icon="fa-solid fa-gear" size="2x" class="hover:cursor-pointer " 
        />
      
-     <div style="position:absolute; display:none; right:10px; top:52px;" class="bg-white border-2 border-solid border-black w-32 flex-col  justify-center items-center " id="popup" ref="popup"  >
+     <div style="position:absolute; display:none; right:10px; top:52px;" class="bg-white shadow shadow-md border-2 border-solid border-black w-32 flex-col  justify-center items-center " id="popup" ref="popup"  >
           <div  class="flex flex-row p-3 hover:bg-blue-200 w-full justify-center hover:cursor-pointer" @click="router.push('/ticketing/guide')">Guide</div>
           <div class="flex flex-row p-3 hover:bg-blue-200 w-full justify-center hover:cursor-pointer" @click="router.push('/ticketing/profile')">Profile</div>
           <div class="flex flex-row p-3 hover:bg-blue-200 w-full justify-center hover:cursor-pointer" @click="router.push('/ticketing/blog/insertArticle')" v-if="user && user.userType == 'admin'">Insert Article</div>
