@@ -79,7 +79,7 @@
       <template v-else-if="message.type == 'files'">  
         <div class="text-xs flex flex-row justify-end mb-2">{{message.time}} </div>
         <div class="bg-blue-500 p-3  text-white " style="word-wrap: break-word; max-width:50%"  v-for="(file, fileCounter) in message.files" :key="fileCounter" >
-          <a :href="this.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
+          <a :href="globalStore.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
           </div>
         <div class="text-xs flex flex-row justify-end">{{message.from.empName}} </div>
     </template>
