@@ -775,12 +775,12 @@ export const useTicketStore = defineStore("tickets", () => {
 
         function setFile(event){
             for(var x of event.target.files){
-                files.data.push(x)
+                files.value.push(x)
             }
         }
 
         function removeFile(counter){
-            files.data.splice(counter, 1)
+            files.value.splice(counter, 1)
         }
 
 

@@ -466,7 +466,7 @@
    <div class="w-2/4 text-lg font-bold text-black text-right">
       <div class="flex flex-col ">
  
-         <div v-for="(file, fileCounter) in ticket.actions[0].files" :key="fileCounter"><a :href="globalUrl + 'uploads/' + file.fileName" target="__blank" class="underline" >{{file.originalName}}</a></div>
+         <div v-for="(file, fileCounter) in ticket.actions[0].files" :key="fileCounter"><a :href="globalStore.globalUrl + 'uploads/' + file.fileName" target="__blank" class="underline" >{{file.originalName}}</a></div>
       </div>
         
    </div>
@@ -644,7 +644,7 @@
 <div class="text-start" v-if="ticket.actions[ticket.actions.length - 1].files">
     <span class="underline"> Files:</span> <br/>
     <div v-for="(file, fileCounter) in ticket.actions[ticket.actions.length - 1].files">
-       <a :href="globalUrl +'uploads/' + file.fileName" target="__blank" class="underline text-blue-900">{{file.originalName}}</a> 
+       <a :href="globalStore.globalUrl +'uploads/' + file.fileName" target="__blank" class="underline text-blue-900">{{file.originalName}}</a> 
     </div>
  </div>
 
@@ -669,7 +669,7 @@
 <div class="text-start" v-if="ticket.actions[ticket.actions.length - 2].files">
     <span class="underline"> Files:</span> <br/>
     <div v-for="(file, fileCounter) in ticket.actions[ticket.actions.length - 2].files">
-       <a :href="globalUrl +'uploads/' + file.fileName" target="__blank" class="underline text-blue-900">{{file.originalName}}</a> 
+       <a :href="globalStore.globalUrl +'uploads/' + file.fileName" target="__blank" class="underline text-blue-900">{{file.originalName}}</a> 
     </div>
  </div>
 
@@ -698,7 +698,7 @@
 <div class="text-start" v-if="ticket.actions[ticket.actions.length - 1].files">
    <span class="underline"> Additional Files:</span> <br/>
    <div v-for="(file, fileCounter) in ticket.actions[ticket.actions.length - 1].files" :key="fileCounter">
-   <a :href="globalUrl +'uploads/' + file.fileName" class="underline text-purple-900" target="__blank">{{ file.originalName }}</a>
+   <a :href="globalStore.globalUrl +'uploads/' + file.fileName" class="underline text-purple-900" target="__blank">{{ file.originalName }}</a>
 </div></div>
 
 </div>
@@ -721,7 +721,7 @@
     <template v-else-if="message.type == 'files'">  
       <div class="text-xs flex flex-row justify-end mb-2">{{message.time}} </div>
       <div class="bg-blue-500 p-3  text-white " style="word-wrap: break-word; max-width:50%"  v-for="(file, fileCounter) in message.files" :key="fileCounter" >
-        <a :href="this.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
+        <a :href="globalStore.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
         </div>
       <div class="text-xs flex flex-row justify-end">{{message.from.empName}} </div>
   </template>
@@ -740,7 +740,7 @@
       <div class="text-xs flex flex-row justify-end ">{{message.time}} </div>
       
       <div class="bg-gray-200 p-3  text-black w-[200px]" style="word-wrap: break-word;"  v-for="(file, fileCounter) in message.files" :key="fileCounter" >
-        <a :href="this.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
+        <a :href="globalStore.globalUrl + 'uploads/' + file.fileName" target="_blank" class="underline"> {{file.originalName}} </a>
         </div>
       <div class="text-xs flex flex-row justify-end">{{message.from.empName}} </div>
   </template>

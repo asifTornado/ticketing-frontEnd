@@ -117,7 +117,7 @@
 <div class="text-start" v-if="action.files">
     <span class="underline"> Files:</span> <br/>
     <div v-for="(file, fileCounter) in action.files">
-       <a :href="globalUrl +'uploads/' + file.fileName" target="__blank" class="underline">{{file.originalName}}</a> 
+       <a :href="globalStore.globalUrl +'uploads/' + file.fileName" target="__blank" class="underline">{{file.originalName}}</a> 
     </div>
  </div>
 
@@ -167,7 +167,7 @@
 <div class="text-start" v-if="action.files">
    <span class="underline"> Additional Files:</span> <br/>
    <div v-for="(file, fileCounter) in action.files" :key="fileCounter">
-   <a :href="globalUrl +'uploads/' + file.fileName" target="__blank" class="underline">{{ file.originalName }}</a>
+   <a :href="globalStore.globalUrl +'uploads/' + file.fileName" target="__blank" class="underline">{{ file.originalName }}</a>
 </div></div>
 
 </div>
@@ -201,7 +201,7 @@
 <div class="text-start" v-if="action.files">
    <span class="underline"> Additional Files:</span> <br/>
    <div v-for="(file, fileCounter) in action.files" :key="fileCounter">
-   <a :href="globalUrl +'uploads/' + file.fileName" target="__blank">{{ file.originalName }}</a>
+   <a :href="globalStore.globalUrl +'uploads/' + file.fileName" target="__blank">{{ file.originalName }}</a>
 </div></div>
 
 </div>
@@ -234,7 +234,7 @@
 <div class="text-start" v-if="action.files">
    <span class="underline"> Additional Files:</span> <br/>
    <div v-for="(file, fileCounter) in action.files" :key="fileCounter">
-   <a :href="globalUrl +'uploads/' + file.fileName" class="underline" target="__blank">{{ file.originalName }}</a>
+   <a :href="globalStore.globalUrl +'uploads/' + file.fileName" class="underline" target="__blank">{{ file.originalName }}</a>
 </div></div>
 
 </div>
@@ -288,7 +288,7 @@
 <div class="text-start" v-if="action.files">
    <span class="underline"> Additional Files:</span> <br/>
    <div v-for="(file, fileCounter) in action.files" :key="fileCounter">
-   <a :href="globalUrl +'uploads/' + file.fileName" class="underline" target="__blank">{{ file.originalName }}</a>
+   <a :href="globalStore.globalUrl +'uploads/' + file.fileName" class="underline" target="__blank">{{ file.originalName }}</a>
 </div></div>
 
 </div>
@@ -308,12 +308,19 @@
 
 
 <script>
+
+import {useGlobalStore} from "../../stores/globalStore.js"
+import { mapStores } from "pinia";
 export default{
     data(instance){
         return {
              action:instance.ticket.actions[instance.ticket.actions.length - 1],
              ticket:instance.ticket
         }
+    },
+
+    computed:{
+       ...mapStores(useGlobalStore)
     },
 
    
