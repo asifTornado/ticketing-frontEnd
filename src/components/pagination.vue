@@ -38,7 +38,7 @@ var {getTickets2} = useTicketStore();
 
 
 // var totalPages = ref(Math.ceil(pages/2))
-var itemsPerPage = ref(3)
+var itemsPerPage = ref(10)
 const skipValue = computed(() => (currentPage.value - 1) * itemsPerPage.value);
 debugger
 

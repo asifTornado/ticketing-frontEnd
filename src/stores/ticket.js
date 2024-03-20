@@ -16,6 +16,7 @@ export const useTicketStore = defineStore("tickets", () => {
     var toast = useToast()
     var pages = ref(1)
     var currentPage = ref(1)
+    var fixedAssignedToMe = ref(0)
 
     var ticket = ref({
         department:'',
@@ -153,12 +154,12 @@ export const useTicketStore = defineStore("tickets", () => {
 
 
                    
-                    unassigned.value = tickets.value.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
-                    accepted.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress)
-                    assigned.value = tickets.value.filter((ticket)=>ticket.assigned == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.accepted == false)
-                    approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
-                 //    vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress);
-                    info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
+                    unassigned.value = tickets.value.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
+                    accepted.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler._id == user.value._id && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo._id == user.value._id)
+                    assigned.value = tickets.value.filter((ticket)=>ticket.assigned == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.currentHandler != null && ticket.accepted == false)
+                    approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead._id == user.value._id && ticket.currentHandler._id == ticket.higherApprover._id)
+                 //    vm.myCloseRequests = vm.tickets.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler._id == user._id);
+                    info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.prevHandler && ticket.prevHandler._id == user.value._id)
                     
                     filter(null, selectedItem.value)
                     getSupport()
@@ -193,7 +194,7 @@ export const useTicketStore = defineStore("tickets", () => {
                console.log("these are the data")
                console.log(result.data)
 
-                tickets.value = result.data.filter((ticket)=>ticket.raisedBy.mailAddress == user.value.mailAddress)
+                tickets.value = result.data.filter((ticket)=>ticket.raisedBy._id == user.value._id)
                 initialTickets.value = tickets.value
                 // filteredTickets.value = tickets.value
                 // pages.value = Math.ceil(result.data.count/10)
@@ -211,14 +212,15 @@ export const useTicketStore = defineStore("tickets", () => {
                  })
   
                  unassigned.value = tickets.value.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
-                 assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.value.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
-                 info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.value.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.value.mailAddress)
-                 approval.value = result.data.filter((ticket)=>ticket.currentHandler  && ticket.currentHandler.mailAddress == user.value.mailAddress && ( ticket.status == 'Ticket Submitted - Seeking Additional Approval'  || ticket.status == "Ticket Submitted - Seeking Department Head's Approval"));
-                 closeRequestsForMe.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler && ticket.currentHandler.mailAddress == user.value.mailAddress && ticket.madeCloseRequest == true);
-                 my.value = tickets.value.filter((ticket)=> ticket.raisedBy.mailAddress == user.value.mailAddress );
-                 infoMe.value = result.data.filter((ticket)=>ticket.currentHandler &&  ticket.currentHandler.mailAddress == user.value.mailAddress && ticket.status == "Open (Seeking Information...)");
-                 reject.value = tickets.value.filter((ticket)=>!ticket.currentHandler && ticket.raisedBy.mailAddress == user.value.mailAddress && ticket.beenRejected == true)
-                 closedTickets.value = tickets.value.filter((ticket)=>ticket.raisedBy.mailAddress == user.value.mailAddress && ticket.status == "Closed Ticket")
+                 assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo._id == user.value._id && ticket.currentHandler != null && ticket.status != "Closed Ticket")
+               
+                 info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.prevHandler && ticket.prevHandler._id == user.value._id)
+                 approval.value = result.data.filter((ticket)=>ticket.currentHandler  && ticket.currentHandler._id == user.value._id && ( ticket.status == 'Ticket Submitted - Seeking Additional Approval'  || ticket.status == "Ticket Submitted - Seeking Department Head's Approval"));
+                 closeRequestsForMe.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler && ticket.currentHandler._id == user.value._id && ticket.madeCloseRequest == true);
+                 my.value = tickets.value.filter((ticket)=> ticket.raisedBy._id == user.value._id );
+                 infoMe.value = result.data.filter((ticket)=>ticket.currentHandler &&  ticket.currentHandler._id == user.value._id && ticket.status == "Open (Seeking Information...)");
+                 reject.value = tickets.value.filter((ticket)=>!ticket.currentHandler && ticket.raisedBy._id == user.value._id && ticket.beenRejected == true)
+                 closedTickets.value = tickets.value.filter((ticket)=>ticket.raisedBy._id == user.value._id && ticket.status == "Closed Ticket")
 
                  filter(null, selectedItem.value)
 
@@ -271,10 +273,12 @@ export const useTicketStore = defineStore("tickets", () => {
         currentPage.value = page
 
         unassigned.value = tickets.value.filter((ticket)=>ticket.status != "Rejected" && ticket.assignedTo == null && ticket.status != "Closed Ticket")
-        assigned.value =  assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.value.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
-        approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
+        assigned.value =  assigned.value = tickets.value.filter((ticket)=> ticket.assignedTo && ticket.assignedTo._id == user.value._id && ticket.currentHandler != null && ticket.status != "Closed Ticket")
+        debugger
+        fixedAssignedToMe.value = assigned.value.length;
+        approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead._id == user.value._id && ticket.currentHandler._id == ticket.higherApprover._id)
         // myCloseRequests = tickets.value.filter((ticket)=>ticket.madeCloseRequest == true && ticket.prevHandler && ticket.prevHandler.mailAddress ==user.mailAddress);
-        info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
+        info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.prevHandler && ticket.prevHandler._id == user.value._id)
 
 
 
@@ -305,7 +309,7 @@ export const useTicketStore = defineStore("tickets", () => {
         }
       }).then((result)=>{
     debugger
-    assigned.value = result.data.filter((ticket)=> ticket.assignedTo && ticket.assignedTo.mailAddress == user.value.mailAddress && ticket.currentHandler != null && ticket.status != "Closed Ticket")
+    assigned.value = result.data.filter((ticket)=> ticket.assignedTo && ticket.assignedTo._id == user.value._id && ticket.currentHandler != null && ticket.status != "Closed Ticket")
 
 }).catch((error)=>{
  console.log(error)
@@ -337,12 +341,12 @@ export const useTicketStore = defineStore("tickets", () => {
     
     //    filteredTickets.value = tickets.value
     //    initialTickets.value = tickets.value
-       unassigned.value = tickets.value.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
-       accepted.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler.mailAddress == user.mailAddress && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo.mailAddress == user.mailAddress)
-       assigned.value = tickets.value.filter((ticket)=>ticket.assigned == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler != null && ticket.accepted == false)
-       approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.currentHandler.mailAddress == ticket.higherApprover.mailAddress)
+       unassigned.value = tickets.value.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
+       accepted.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler._id == user.value._id && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo._id == user.value._id)
+       assigned.value = tickets.value.filter((ticket)=>ticket.assigned == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.currentHandler != null && ticket.accepted == false)
+       approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead._id == user.value._id && ticket.currentHandler._id == ticket.higherApprover._id)
        myCloseRequests.value = tickets.value.filter((ticket)=>ticket.status == "Closed Ticket");
-       info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead.mailAddress == user.mailAddress && ticket.prevHandler && ticket.prevHandler.mailAddress == user.mailAddress)
+       info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.prevHandler && ticket.prevHandler._id == user.value._id)
         
        console.log("before calling get Support")
 
@@ -852,7 +856,7 @@ export const useTicketStore = defineStore("tickets", () => {
                        
                        
                          for(var x of team.value.leaders){
-                         if(x.mailAddress == user.value.mailAddress){
+                         if(x._id == user.value._id){
               
                            leaderCheck.value = true
                            vm.$refs.main.style.filter = 'blur(10px)'
@@ -1299,7 +1303,7 @@ function  assignTicket(event, ticket2){
  return {
     support, unassigned, currentPage, itemsPerPage, authStore, globalStore, tickets, ticket, filteredTickets, initialTickets, closedTickets, assigned, approval, 
     my, closeRequestsForMe, myCloseRequests, info, reject, infoMe, sort, mentions, selectedItem, timePassed, pages, currentPage,
-    sortedTickets, paginator, locations, files, helpCheck, searchCheck, passedTime, locations, details, proceedCheck, leaderCheck,
+    sortedTickets, paginator, locations, files, helpCheck, searchCheck, passedTime, locations, details, proceedCheck, leaderCheck, fixedAssignedToMe,
     selectTicket, setTicketType, setPriority, reassignDepartment, assignTicket2, setPriorityForTable,
     ticketReset, handlePageChanged, setLocation, cancelDepartmentReassign, search, submit, setFile, removeFile, setContact,
     getLocations, getTeams, getTickets, getSupport, downloadExcel, comparator, getTickets2, setRowColor, selectItem, 

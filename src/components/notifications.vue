@@ -21,11 +21,11 @@ import {useNotificationStore} from "../stores/notification";
 
 
 var {token, user} = storeToRefs(useAuthStore())
-var {showNotifications} = useNotificationStore()
+var {showNotifications, getNotifications} = useNotificationStore()
 
 var {notifications} = storeToRefs(useNotificationStore())
 
-
+getNotifications()
 
 
 </script>

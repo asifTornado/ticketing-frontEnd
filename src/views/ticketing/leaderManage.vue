@@ -116,7 +116,7 @@ asds
     <div class=" relative overflow-x-auto  bg-white   shadow-md shadow-black customerborder w-[90vw]  max-h-[80vh]  " style="max-height: 80vh; min-height: auto;">
        
     <table class="w-full text-md text-left text-gray-500 dark:text-gray-400 ">
-        <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400 table-header2">
+        <thead class="text-xs sticky top-0 text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400 table-header2">
             <tr>
                 <th scope="col" class="table-header2 px-6 py-3 ">
                     Issue No.
@@ -216,7 +216,10 @@ asds
                         <select  name=""  id="" @change="assignTicket($event, ticket)" class="bg-white border border-solid border-black w-[100px]">
                             <option :value="ticket.assignedTo.mailAddress" selected>{{ ticket.assignedTo.mailAddress }}</option>
                             <option value="Unassigned" >Unassigned</option>
-                            <option v-for="(user, userCounter) in ticket.users"  :key="userCounter" :value="user">{{user}}</option>
+                        <template v-for="(user, userCounter) in ticket.users"  :key="userCounter">
+                            <option v-if="user != ticket.assignedTo.mailAddress"   :value="user">{{user}}</option>
+
+                        </template>
                         </select>
                     </template> 
                     <template v-else>

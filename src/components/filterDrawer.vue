@@ -121,7 +121,7 @@ function filter(){
 
            if(filters.value.length < 1){
             ticketStore.filteredTickets = tickets
-            ticketStore.paginator.onClickHandler(1)
+            // ticketStore.paginator.onClickHandler(1)
             return
            }
     
@@ -161,7 +161,7 @@ function filter(){
 
           
             ticketStore.filteredTickets = filteredTickets
-            ticketStore.paginator.onClickHandler(1)
+            // ticketStore.paginator.onClickHandler(1)
             
             
            }

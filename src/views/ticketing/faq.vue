@@ -200,14 +200,13 @@
             <div class=" bg-white shadow-md shadow-black mt-[2vh] h-auto w-full ">
                 <article class=" p-10  md:prose-lg w-full">
                     <h2>Table of Contents</h2>
-                    <h3 @click="scrollToSection('intro')" class="hover:cursor-pointer">1 Introduction</h3>
-                    <h3 @click="scrollToSection('usage')" class="hover:cursor-pointer">2 Usage</h3>
-                    <h4  @click="scrollToSection('types')" class="ml-5 hover:cursor-pointer">2.1 User Types</h4>
-                    <h4   @click="scrollToSection('differentTypes')"  class="ml-5 hover:cursor-pointer">2.2 Different User Types</h4>
-                    <h5  @click="scrollToSection('normal')" class="ml-10 hover:cursor-pointer">2.2.1 Normal Users</h5>
+                    <h3    @click="scrollToSection('intro')" class="hover:cursor-pointer">1 Introduction</h3>
+                    <h3    @click="scrollToSection('usage')" class="hover:cursor-pointer">2 Usage</h3>
+                    <h4    @click="scrollToSection('types')" class="ml-5 hover:cursor-pointer">2.1 User Types</h4>
+                    <h4    @click="scrollToSection('differentTypes')"  class="ml-5 hover:cursor-pointer">2.2 Different User Types</h4>
+                    <h5    @click="scrollToSection('normal')" class="ml-10 hover:cursor-pointer">2.2.1 Normal Users</h5>
                     <h5    @click="scrollToSection('leader')" class="ml-10 hover:cursor-pointer">2.2.2 Team Leaders</h5>
                     <h5    @click="scrollToSection('support')" class="ml-10 hover:cursor-pointer">2.2.3 Support Users</h5>
-
                     <h5    @click="scrollToSection('admin')" class="ml-10 hover:cursor-pointer">2.2.4 Admin</h5>
                     <h3    @click="scrollToSection('workflow')" class="hover:cursor-pointer">3 Basic Workflow</h3>
                     <h4    @click="scrollToSection('flowchart')" class="ml-5 hover:cursor-pointer">3.1 Workflow Flowchart</h4>
@@ -409,8 +408,7 @@
 
         scrollToTop(){
             debugger
-            var element = document.getElementById("app")
-            element.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            window.scrollTo({ top: 30, behavior: 'smooth' });
             // this.$refs.app.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         },
 

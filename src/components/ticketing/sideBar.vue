@@ -22,10 +22,7 @@
     </div>
 
     
- <!-- <div @click="clickedTab($event, 'item8', '/ticketing/power/analytics')" :class="{selectedTab: selectedItem == 'item8', unselectedTab:selectedItem != 'item8'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
-  <div  class=" absolute right-[-85px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999; visibility:hidden">Dashboard</div>  
-  <font-awesome-icon icon="fa-solid fa-gauge-high" size="2x" class=" hover:cursor-pointer"/>
-</div> -->
+
 </template>
 
 <template v-if="userType == 'Ticket Manager (Department)'" >
@@ -70,7 +67,7 @@
     </div>
     <div @click="clickedTab($event, 'item3', '/ticketing/support/assist', 'all')" :class="{selectedTab: selectedItem == 'item3', unselectedTab:selectedItem != 'item3'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
       <div class="  absolute right-[-53px] top-[12px] p-3 bg-gray-600 text-white"  style="visibility: hidden; z-index: 9999999999999999999999999999;">Assist</div> 
-   <div class="relative"><div style="position: absolute; bottom: -10px; right:-4px" class="bg-red-600 text-white flex flex-col justify-center items-center w-[14px] font-bold text-lg" v-if="assigned">{{assigned.length}}</div>      <font-awesome-icon icon="fa-solid fa-headset" size="2x" class=" hover:cursor-pointer"/></div>
+   <div class="relative"><div style="position: absolute; bottom: -10px; right:-4px" class="bg-red-600 text-white flex flex-col justify-center items-center w-[14px] font-bold text-lg" >{{fixedAssignedToMe}}</div>      <font-awesome-icon icon="fa-solid fa-headset" size="2x" class=" hover:cursor-pointer"/></div>
     </div>
 
 
@@ -263,7 +260,7 @@ var {selectedItem:selectedItem2} = storeToRefs(useTicketStore())
 
 var {sidePanelCheck} = storeToRefs(useMainStore())
 
-var {assigned} = storeToRefs(useTicketStore())
+var {fixedAssignedToMe} = storeToRefs(useTicketStore())
 
 
 var userType = ref(null)

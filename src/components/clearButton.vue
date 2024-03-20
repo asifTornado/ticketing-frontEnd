@@ -7,17 +7,21 @@
 
 </template>
 
-<script>
-export default{
+<script setup>
+import { useMainStore } from '../stores/store';
+import { mapStores } from 'pinia';
+import { useTicketStore } from '../stores/ticket';
 
-methods:{
-  clear(){
-    this.mainStore.setFilteredTickets(this.mainStore.getInitialTickets)
-  }
+var mainStore = useMainStore()
+var ticketStore = useTicketStore()
+
+
+var clear = () => {
+  // mainStore.setFilteredTickets(mainStore.getInitialTickets)
+  ticketStore.filteredTickets = ticketStore.initialTickets
 }
 
 
-}
 
 
 

@@ -6,6 +6,7 @@ import { useGlobalStore } from "./globalStore";
 import { useRouter } from "vue-router";
 import { useMainStore } from "./store";
 import {useToast} from 'vue-toast-notification';
+import axios from "axios";
 
 export const useNotificationStore = defineStore("notification", ()=>{
 
@@ -33,8 +34,8 @@ export const useNotificationStore = defineStore("notification", ()=>{
     data.append("id", id);
     data.append("user", JSON.stringify(user.value))
     
-    
-    axios.post(globalUrl + 'deleteNotification', data).then((result)=>{
+    debugger
+    axios.post(globalUrl.value + 'deleteNotification', data).then((result)=>{
 
     
       getNotifications()

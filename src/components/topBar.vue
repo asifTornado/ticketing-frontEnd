@@ -73,7 +73,7 @@
 
 
 <script setup>
-// import notifications from './notifications.vue'
+import notifications from './notifications.vue'
 import {ref, defineEmits} from "vue"
 import {useRouter, useRoute} from "vue-router"
 import {useAuthStore} from "../stores/authentication"
