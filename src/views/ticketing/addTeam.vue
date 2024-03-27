@@ -16,7 +16,7 @@
            
         <div class="flex flex-row w-full  items-center ">   
             <select  v-model="monitors[leaderCounter]" class="mt-2 border border-solid border-black p-1">
-            <option v-for="(monitorList, LeaderListCounter) in monitorsList" :key="leaderListCounter" :value="monitorsList">{{monitorList}}</option>
+            <option v-for="(monitorList, LeaderListCounter) in monitorsList" :key="leaderListCounter" :value="monitorList">{{monitorList}}</option>
            </select>
            <font-awesome-icon icon="fa-solid fa-plus" size="lg" class="mr-4 ml-4" @click="addMonitor(event, leaderCounter)"/>
            <font-awesome-icon icon="fa-solid fa-minus" size="lg" @click="removeMonitor(event, leaderCounter)"/>
@@ -74,17 +74,12 @@
        
      <div class="flex flex-row w-3/4 mr-10">
         <label for="" class="">Select Subordinate</label>
-        <vss :options="subordinatesList" :searchable="true" v-model="subordinates[counter].user"/>
+        <vss :options="subordinatesList" :searchable="true" v-model="subordinates[counter]"/>
     </div>
     
            
     <div class="flex flex-row justify-center items-center" >
-        <label for="" class="mr-2">Select Rank</label>
-        <select class="h-12 w-12 border border-solid border-gray-200" v-model="subordinates[counter].rank">
-          <option v-for="(x, count) in subordinates.length" class="p-2">
-                {{count + 2}}
-          </option>
-        </select>
+        
 
 
         <div>
@@ -299,6 +294,7 @@ export default{
     methods:{ 
 
         insertDepartment(){
+            debugger
             var vm = this;
             var newDepartment;
             if(vm.hasServices){
@@ -335,7 +331,7 @@ export default{
                 var rankCheck = true;
 
                 for(var x of vm.subordinates){
-                    if(x.user == null || x.user == undefined){
+                    if(x == null || x == undefined){
                         userCheck = false
                         return
                     }
@@ -348,23 +344,12 @@ export default{
 
             
 
-                for(var x of vm.subordinates){
-                    if(x.rank == null || x.rank == undefined){
-                        rankCheck = false
-                        return
-                    }
-                }
-
-
-                if(rankCheck == false){
-                    vm.$toast.warning("Please select ranks for all subordinates first")
-                    return
-                }
+            
 
 
                 vm.subordinates = vm.subordinates.map((sub)=>{
-                    var user = vm.users.filter((user)=>user.mailAddress == sub.user)
-                    return {user:user[0], rank:sub.rank}
+                    var user = vm.users.filter((user)=>user.mailAddress == sub)[0]
+                    return user
                 })
                 
                 if(vm.leaders == null || vm.leaders == undefined ){
@@ -387,10 +372,12 @@ export default{
                 if(vm.monitors.includes("")){
                     vm.$toast.warning("Please fill up all the monitor boxes")
                 }
-
+                debugger
+                console.log(vm.monitors)
+                console.log(vm.users)
                 vm.monitors = vm.monitors.map((monitor)=>{
-                    var monitor = vm.users.filter((user)=>user.mailAddress == monitor)[0]
-                    return monitor
+                    var user = vm.users.filter((u)=> u.mailAddress == monitor)[0]
+                    return user;
                 })
 
                 vm.head = vm.users.filter((user)=>user.mailAddress == vm.head)[0]
@@ -438,7 +425,7 @@ export default{
 
         addSubordinate(){
             var vm = this;
-            var newSubordinate = {user:null, rank:vm.subordinates.length + 2}
+            var newSubordinate = ""
             vm.subordinates.push(newSubordinate)
         },
 

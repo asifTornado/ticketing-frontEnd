@@ -9,7 +9,7 @@
    <div class=" flex flex-row   text-lg  h-full w-full  bg-gray-200 ml-[30px]  " id="app"  >
 
 
-    <div class="flex flex-col fixed left-[50px] h-screen customborder   pt-2" id="sidePanel" v-if="mainStore.sidePanelCheck">
+    <div class="flex flex-col fixed left-[50px] h-screen customborder   pt-2" style="z-index: 999;" id="sidePanel" v-if="mainStore.sidePanelCheck">
        
 
         <div @click="filter($event, 'all')" :class="{selected:selectedItem == 'all', notSelected:selectedItem != 'all'}">
@@ -57,7 +57,7 @@
 
 
          
-         <div @click="filter($event, 'close')" :class="{selected:selectedItem == 'close', notSelected:selectedItem != 'close'}">
+         <div @click="filter($event, 'closedTickets')" :class="{selected:selectedItem == 'closedTickets', notSelected:selectedItem != 'closedTickets'}">
               <div class="flex flex-row  w-full items-center hover:cursor-pointer ">
 
                 <div class="w-1/6 hover:cursor-pointer "><font-awesome-icon icon="fa-solid fa-file-export"  class=" hover:cursor-pointer " /></div>
@@ -104,12 +104,12 @@
 </div>
 
 
-    <div class="   overflow-x-auto   mx-2 customerborder  bg-white shadow-md shadow-black   w-[90vw] " style="max-height: 80vh; min-height: auto;">
+    <div class="overflow-x-auto   mx-2 customerborder  bg-white shadow-md shadow-black   w-[90vw] " style="max-height: 80vh; min-height: auto;">
        
-    <table class="w-full text-md text-left text-gray-500 dark:text-gray-400 ">
-        <thead class="text-md text-white uppercase ">
+    <table class="w-full text-md text-left text-gray-500 dark:text-gray-400 " style="z-index: 1;">
+        <thead class="text-md text-white uppercase sticky top-0" style="z-index:1">
             <tr>
-                <th scope="col" class="table-header2  px-6 py-3 ">
+                <th scope="col" class="table-header2  px-6 py-3 " >
                     Issue No.
                 </th>
 <!-- 
@@ -117,7 +117,7 @@
                     Ticket Type
                 </th> -->
                 
-                <th scope="col" class="table-header2 px-6 py-3 ">
+                <th scope="col" class="table-header2 px-6 py-3 " >
                     Req. Date
                 </th>
                 <th scope="col" class="table-header2 px-6 py-3 ">
@@ -152,8 +152,8 @@
         </thead>
         <tbody>
             <tr  class="hover:bg-gray-200 hover:text-black hover:cursor-pointer" v-for="(ticket, ticketCounter) in sortedTickets" :key="ticketCounter">
-                <td @click="showDetails(ticket._id)"  scope="row" class="table-row2  font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ ticket.number }}
+                <td @click="showDetails(ticket._id)"  scope="" class="table-row2   font-medium text-gray-900  dark:text-white" >
+                    {{ ticket._id }}
                 </td>
                 <!-- <td  class="table-row2 ">
                     <select name="" id="" class="p-1 border border-solid border-black" @change="setTicketType($event, ticket)">
@@ -245,7 +245,7 @@
 
 <script setup>
 
-import {ref} from "vue"
+import {ref, onMounted} from "vue"
 import { useAuthStore } from "../../stores/authentication";
 import { useMainStore } from "../../stores/store";
 import { useTicketStore } from "../../stores/ticket";
@@ -256,8 +256,9 @@ var {getTickets5, getLocations, handlePageChanged, assignTicket2, getSelectedIte
 showDetails, downloadExcel, ticketReset, setLocation, setPriorityForTable
 } = useTicketStore()
 
-
-getTickets5(1)
+onMounted(()=>{
+    getTickets5(1)
+})
 
 getLocations()
 
@@ -310,36 +311,37 @@ function hideProblemDetails(event){
 
 
 
- #sidePanel div div  label{
-   margin-right: 10px;
- }
-
-#arrow{
-    position: absolute;
-    top:10px
-}
 
 .table-header2{
     font-size: 15px;
 }
 
-.table-row2{
-    font-size:12px;
-    font-weight: 400;
-    padding-left: 20px;
-}
+
+ #sidePanel div div  label{
+   margin-right: 10px;
+ }
+
+ .selected{
+    display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 1.25rem; 
+  cursor: default;
+  background-color: transparent;
+  box-shadow: 0px 2px 2px;
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
 
 
-.selected{
-    background-color: rgb(237,237,237);
-   border-right: 2px solid #34d399;
-   display:flex;
-   flex-direction: row;
-   justify-content:space-around;
-   justify-items: center;
-   width:100%;
-  padding:20px;
-  margin-bottom: 5px;
+  cursor: pointer;
+  background-color: rgb(237, 237, 237);
+  border-right-width: 0.25rem; 
+  border-right-style: solid;   
+  border-right-color: #10B981;
 
 
  }
@@ -347,38 +349,40 @@ function hideProblemDetails(event){
 
 
  .notSelected{
-    display:flex;
-   flex-direction: row;
-   justify-content:space-around;
-   justify-items: center;
-   width:100%;
-   padding:20px;
-   background-color: white;
-   border-bottom:1px solid lightslategray;
-   font-weight: bold;
-   box-shadow: 0px 2px 2px;
+    display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 1.25rem; 
+  cursor: default;
+  background-color: transparent;
+  box-shadow: 0px 2px 2px;
   border: none;
   margin-top: 10px;
   margin-bottom: 10px;
-   
-   
+  font-weight: bold;
+
  }
 
  .notSelected:hover{
-   background-color: white;
-    border-right: 2px solid #34d399;
+    cursor: pointer;
+  background-color: rgb(237, 237, 237);
+  border-right-width: 0.25rem; 
+  border-right-style: solid;   
+  border-right-color: #10B981;
 
  }
 
  table th{
-    border-bottom:1px solid gray;
-    background-color: rgb(2,54,61) ;
+    border-bottom:1px solid rgb(184, 181, 181);
+    background-color: rgb(2,54,61);
+    color:white;
  }
 
  table td {
     border-bottom: 1px solid gray;
  }
-
 
  #sidePanel{
     background-color:rgb(195, 212, 214);
@@ -393,6 +397,12 @@ function hideProblemDetails(event){
    margin-bottom: 5px;
 
  }
+
+
+ tbody tr td:hover{
+  cursor: pointer;
+ }
+ 
 
 
 </style>

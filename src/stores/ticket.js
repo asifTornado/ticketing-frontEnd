@@ -344,10 +344,10 @@ export const useTicketStore = defineStore("tickets", () => {
        unassigned.value = tickets.value.filter((ticket)=>ticket.assigned == false && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.status != 'Submitted Ticket - Seeking Supervisor Approval')
        accepted.value = tickets.value.filter((ticket)=>ticket.currentHandler && ticket.currentHandler._id == user.value._id && ticket.accepted == true && ticket.assigned == true && ticket.assignedTo && ticket.assignedTo._id == user.value._id)
        assigned.value = tickets.value.filter((ticket)=>ticket.assigned == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.currentHandler != null && ticket.accepted == false)
-       approval.value = tickets.value.filter((ticket)=>ticket.higherApprover  && ticket.ticketingHead && ticket.currentHandler  && ticket.ticketingHead._id == user.value._id && ticket.currentHandler._id == ticket.higherApprover._id)
+       approval.value = tickets.value.filter((ticket)=>  ticket.approvalRequired == true);
        myCloseRequests.value = tickets.value.filter((ticket)=>ticket.status == "Closed Ticket");
        info.value = tickets.value.filter((ticket)=>ticket.ask == true && ticket.ticketingHead && ticket.ticketingHead._id == user.value._id && ticket.prevHandler && ticket.prevHandler._id == user.value._id)
-        
+       closedTickets.value = tickets.value.filter((ticket)=>ticket.raisedBy._id == user.value._id && ticket.status == "Closed Ticket")
        console.log("before calling get Support")
 
        filter(null, selectedItem.value)

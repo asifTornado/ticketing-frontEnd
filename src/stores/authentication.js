@@ -18,7 +18,7 @@ export const useAuthStore = defineStore("auth", () => {
        var userEmails = ref([])
        var router = useRouter()
        var email = ref('')
-       var password = ref("hello world")
+       var password = ref("")
        var passwordCheck = ref(null)
        var passwordRef = ref(null)
        var toast = useToast()
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       function showPassword(event){
      
-        if(passwordCheck.value.checked == true){
+        if(passwordCheck.value == true){
           passwordRef.value.type = 'text'
   
         }else{

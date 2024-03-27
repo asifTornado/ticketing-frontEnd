@@ -143,7 +143,7 @@
     <tbody>
         <tr class="hover:bg-gray-200 hover:text-black hover:cursor-pointer"   v-for="(ticket, ticketCounter) in ticketStore.filteredTickets" :key="ticketCounter">
             <td @click="ticketStore.showDetails(ticket._id)"  scope="row" class=" table-row2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
-                {{ ticket.number }}
+                {{ ticket._id }}
             </td>
     
             <td @click="ticketStore.showDetails(ticket._id)"  class=" table-row2 px-6 py-4">

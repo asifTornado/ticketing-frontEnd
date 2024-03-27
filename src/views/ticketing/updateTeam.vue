@@ -1,5 +1,5 @@
 <template>
-    <div class=" w-full ml-[30px] flex flex-col px-[100px] pt-[20px]"  id="app">
+    <div class="h-screen w-full ml-[30px]  flex flex-col px-[100px] pt-[20px]"  id="app">
 
         <div class="h-20  w-full flex flex-row justify-between p-2 items-center">
 
@@ -76,19 +76,14 @@
         <div v-for="(subs, counter) in subordinates" :key="counter" class="flex flex-row w-full justify-center items-center mt-10">
        
      <div class="flex flex-row w-3/4 mr-10">
-        <label for="" class="">Select Subordinasdate</label>
+        <label for="" class="">Select Subordinates</label>
         
-        <vss :options="subordinatesList" v-model="subordinates[counter].user"/>
+        <vss :options="subordinatesList" v-model="subordinates[counter]"/>
     </div>
     
            
     <div class="flex flex-row justify-center items-center" >
-        <label for="" class="mr-2">Select Rank</label>
-        <select class="h-12 w-12 border border-solid border-gray-200" v-model="subordinates[counter].rank">
-          <option v-for="(x, count) in subordinates.length" :key="count" class="p-2" >
-                {{count + 2}}
-          </option>
-        </select>
+       
 
 
         <div>
@@ -150,12 +145,7 @@
 
        
 <div class="flex flex-row justify-center items-center" >
-    <label for="" class="mr-2">Select Rank</label>
-    <select class="h-12 w-12 border border-solid border-gray-200" v-model="serviceSubordinateList[serviceCounter][counter].rank">
-      <option v-for="(x, count) in serviceSubordinateList[serviceCounter].length" class="p-2" :key="count">
-            {{count + 2}}
-      </option>
-    </select>
+   
 
 
     <div>
@@ -305,7 +295,7 @@ export default{
                 var fieldCheck = true
 
                  for(var x of vm.subordinates){
-                     if(x.user == null || x.user == undefined){
+                     if(x == null || x == undefined){
                          vm.$toast.warning("Please select subordinates for all subordinates fields first")
                          fieldCheck = false
                      }
@@ -316,9 +306,9 @@ export default{
                  }
 
                 vm.subordinates = vm.subordinates.map((sub)=>{
-                    
-                    var user = vm.users.filter((user)=>user.mailAddress == sub.user)
-                    return {user:user[0], rank:parseInt(sub.rank, 10)}
+                    debugger
+                    var user = vm.users.filter((user)=>user.mailAddress == sub)[0]
+                    return user
                 })
                  
            
@@ -503,11 +493,7 @@ if(counter < 1){
                     vm.hasServices = true
                     vm.servicesHead = result.data.head.mailAddress
                 }else{
-                    vm.subordinates = result.data.subordinates.map((sub)=>{
-                        var user = sub.user;
-                        sub.user = user.mailAddress
-                        return sub
-                    });
+                    vm.subordinates = result.data.subordinates.map((x)=> x.mailAddress)
                     vm.leaders = result.data.leaders.map((leader) => leader.mailAddress)
               
                     vm.problemTypes = result.data.problemTypes

@@ -1414,14 +1414,22 @@
 
 
                var newObject = {
-                user:user2.user,
+                user:user2,
                 numbers:0
                }
 
                console.log("these are the tickets")
                console.log(vm.tickets)
 
-               var tickets = vm.tickets.filter((ticket)=>ticket.assignedTo && ticket.assignedTo.mailAddress == user2.user.mailAddress)
+               var tickets = vm.tickets.filter((ticket)=>{
+                  debugger
+                     if(ticket.assignedTo && ticket.assignedTo._id == user2._id){
+                         return true
+                     }else{
+                        return false
+                     }
+
+               })
 
                newObject.numbers = tickets.length;
 

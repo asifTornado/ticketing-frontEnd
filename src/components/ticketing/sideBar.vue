@@ -1,6 +1,6 @@
 <template>
 
-<div  class="flex flex-col justify-between w-[50px] bg-[rgb(2,54,61)]  h-full  no-print " style="z-index: 999; position: fixed ;">
+<div  class="flex flex-col justify-between w-[50px] bg-[rgb(2,54,61)]  h-full  no-print " style="z-index: 99999999; position: fixed ;">
     <div><template v-if="userType == 'leader'" >
  
     <div @click="clickedTab($event, 'item1', '/ticketing/newTicket')" :class="{selectedTab: selectedItem == 'item1', unselectedTab:selectedItem != 'item1'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
@@ -121,7 +121,7 @@
 </template>
 
 
-<template v-if="userType == 'admin'">
+<template v-if="userType == 'admin'" >
         <div @click="clickedTab($event, 'item1', '/ticketing/newTicket')" :class="{selectedTab: selectedItem == 'item1', unselectedTab:selectedItem != 'item1'}" @mouseenter="showToolTip($event)" @mouseleave="hideToolTip($event)">
          <div class=" absolute right-[-90px] top-[12px] p-3 bg-gray-600 text-white" style="z-index:9999999999999999; visibility:hidden">Raise Issue</div>  
          <font-awesome-icon icon="fa-solid fa-ticket" size="x" class=" hover:cursor-pointer"/>
@@ -329,6 +329,7 @@ function selectItem(item) {
   justify-items: center;
   padding:20px;
   color:rgb(129,154,157);
+  z-index: 99999;
 
 }
 
@@ -336,6 +337,7 @@ function selectItem(item) {
    cursor: pointer;
    background-color: rgb(47,170,187);
    color:white;
+   z-index: 99999;
 }
 
 .selectedTab{
@@ -347,6 +349,7 @@ function selectItem(item) {
   padding:20px;
   color:white;
   background-color: rgb(47,170,187);
+  z-index: 99999;
 }
 
 </style>

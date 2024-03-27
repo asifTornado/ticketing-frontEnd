@@ -1,8 +1,8 @@
 <template>
   
-  <div class=" w-full h-full flex flex-row justify-center items-start mt-[100px]"  ref="login" id="login">
+  <div class=" w-full h-full flex flex-row bg-white justify-center items-start pt-[100px] "  ref="login" id="login">
  
-<img src="../assets/front.jpg" class="shadow-2xl shadow-black mt-10 mr-24" style="filter:grayscale(0.4)" alt="" srcset="">
+<img src="../assets/front.jpg" class=" shadow-black mt-10 mr-24" style="filter:grayscale(0.4)" alt="" srcset="">
 <div class="w-96 h-50   hover:shadow-blue-500 mt-20">
 
 <form @submit.prevent="authStore.login" style="box-shadow: 10px 10px 1px rgba(0, 0, 0, 0.5)"    class="bg-white drop-shadow-md   rounded-b-md    pb-8 mb-4 h-auto " id="form">
@@ -23,9 +23,9 @@
 <div class="mb-2 px-4">
 
 
-   <input type="password" v-model="authStore.password" class="shadow h-14 appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-blue-400 focus:outline-1" id="password" placeholder="Password" name="password" ref="password" >
+   <input type="password" v-model="authStore.password" class="shadow h-14 appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-blue-400 focus:outline-1" id="password" placeholder="Password" name="password" ref="passwordRef" >
    <div class="flex flex-row mb-5 mt-3">
-    <input type="checkbox" class="mr-1 w-8" @change="authStore.showPassword($event)" ref="passwordCheck"/>
+    <input type="checkbox" class="mr-1 w-8" @change="showPassword($event)" />
     <label>Show Password</label>
    </div>
   </div>
@@ -49,6 +49,7 @@
 
 <script setup>
 import axios from 'axios'
+import {ref} from "vue"
 
 import VueJwtDecode from 'vue-jwt-decode'
 import { storeToRefs } from 'pinia';
@@ -58,7 +59,19 @@ import {useAuthStore} from '../stores/authentication'
 
 
 
+var passwordCheck = ref(false)
+ var passwordRef = ref(null)
 
+  function showPassword(event){
+    passwordCheck.value = !passwordCheck.value
+     debugger
+        if(passwordCheck.value == true){
+          passwordRef.value.type = 'text'
+  
+        }else{
+          passwordRef.value.type = 'password'
+        }
+      };
 
 
 var authStore = useAuthStore()
